@@ -54,7 +54,7 @@ namespace AlgoHex
 /** \class Parametrization3DT Parametrization3DT.hh
 
     Brief Description.
-  
+
     A more elaborate description follows.
 */
 
@@ -468,4 +468,3 @@ private:
 #include "Parametrization3DT_impl.hh"
 
 #endif
-

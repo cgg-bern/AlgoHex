@@ -46,7 +46,7 @@ namespace AlgoHex
 /** \class FrameFieldOptimizer3DT FrameFieldOptimizer3DT.hh
 
     Brief Description.
-  
+
     A more elaborate description follows.
 */
 
@@ -230,4 +230,3 @@ private:
 #include "FrameFieldOptimizer3DT_impl.hh"
 
 #endif
-

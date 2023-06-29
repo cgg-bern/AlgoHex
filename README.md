@@ -84,5 +84,3 @@ A command-line executable is provided, which reads a tetrahedral mesh and output
 ```
 Two modes of the hexahedral meshing pipeline are available in AlgoHex. The default mode includes all four major components of frame field based hexahedral meshing pipeline, while the mode `--hexme-pipeline` comprises only a subset as described in [HexMe](https://www.algohex.eu/publications/hex-me-if-you-can/).
 For more information on the usage, please execute `./Build/bin/HexMeshing -h`.
-
-
