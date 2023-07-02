@@ -1,4 +1,5 @@
-![](./algohex_results.png)
+
+![algohex_results](https://github.com/cgg-bern/AlgoHex/assets/137911074/38e7d3be-1adf-48a9-ae5a-1f075f0d9cd3)
 
 AlgoHex
 ======
@@ -10,7 +11,8 @@ If you use `AlgoHex` in your scientific work, please cite us.
 ## How does AlgoHex work?
 
 AlgoHex automatically converts tetrahedral meshes to hexahedral meshes. The complete pipeline consists of four major steps (see the figure below): initialization of feature-aligned smooth frame field, locally meshable frame field generation, parameterization, and hexahedral mesh extraction. The frame field initialization follows the approach of [On Smooth 3D Frame Field Design](https://arxiv.org/abs/1507.03351). Locally meshable frame field is obtained via the state-of-the-art method [Locally Meshable Frame Fields](https://www.algohex.eu/publications/locally-meshable-frame-fields/). Parameterization of the frame field includes seamless mapping ([Locally Meshable Frame Fields](https://www.algohex.eu/publications/locally-meshable-frame-fields/), [CubeCover](http://www.mi.fu-berlin.de/en/math/groups/ag-geom/publications/db/2011_Nieser-Reitebuch-Polthier_CubeCover.pdf)), robust quantization ([QGP3D](http://graphics.cs.uos.de/papers/Volume_Parametrization_Quantization-SIGGRAPH2022.pdf)) and Integer-grid mapping. For hexahedral mesh extraction, we use the [libHexEx](https://www.graphics.rwth-aachen.de/software/libHexEx).
-![](algohex_pipeline.png)
+![algohex_pipeline](https://github.com/cgg-bern/AlgoHex/assets/137911074/e705c323-2b32-41e2-8e01-d78516dd0e07)
+
 
 ### File Format
 The input to the algorithm is a tetrahedral mesh with user-specified feature tags, and the output is a hexahedral mesh. The input tetrahedral mesh can be in VTK or OpenVolumeMesh file format. A typical dataset with feature tags as the input to AlgoHex is [HexMe](https://www.algohex.eu/publications/hex-me-if-you-can/). The output hexahedral mesh is in OpenVolumeMesh file format. Note that the result may be an incomplete hexahedral mesh, as the frame field may not be globally hex-meshable.
