@@ -1,0 +1,17 @@
+                 AlgoHex is copyright (C) 2019-2023
+
+                           David Bommes
+                      david.bommes@unibe.ch
+
+Code contributions to AlgoHex have been provided by Heng Liu, David
+Bommes (parameterization), Martin Heistermann (restructure of spherical
+harmonics projection, hierarchical stop watch), Denis Kalmykov (SDP
+projection of spheircal harmonics).
+
+Code in the folder BinarySpacePartitionTrees is from OpenFlipper,
+copyright (c) 2001-2015, RWTH-Aachen University, Department of Computer
+Graphics and Multimedia.
+
+Code in OpenNL folder is copyright (c) 2004-2010, Bruno Levy.
+
+

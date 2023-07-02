@@ -1,0 +1,6 @@
+.DS_Store
+/build*/
+/external
+*.swp
+.idea/
+CMakeLists.txt.user
