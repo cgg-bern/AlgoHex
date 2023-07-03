@@ -25,13 +25,13 @@ The CMake-based build system will automatically download missing dependencies un
 - [CoMISo](https://www.graphics.rwth-aachen.de/software/comiso)
 - [GMM](http://getfem.org/gmm.html)
 - [TinyAD](https://github.com/patr-schm/TinyAD)
-- [QGP3D](https://github.com/HendrikBrueckler/QGP3D) (As dependencies of QGP3D, Gurobi and GMP must be installed on your system)
+- [QGP3D](https://github.com/HendrikBrueckler/QGP3D) (As dependencies of QGP3D, [Gurobi](https://www.gurobi.com/) and GMP must be installed on your system)
 - [Eigen](http://eigen.tuxfamily.org)
 - [CLI11](https://github.com/CLIUtils/CLI11.git)
+- IPOPT (Manually install on your system, macOS: `brew install ipopt`, Linux: `sudo apt-get install coinor-libipopt-dev`)
 - SuiteSparse (optional)
+- googletest (optional, for unit tests)
 
-
-To compile unit tests, you need to install googletest (gtest). It will not be automatically downloaded. On Debian, you can do this as `apt install libgtest-dev`.
 
 ## Building
 
