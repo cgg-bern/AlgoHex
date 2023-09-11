@@ -8,6 +8,21 @@ AlgoHex
 
 If you use `AlgoHex` in your scientific work, please cite us.
 
+## BibTeX
+```
+@article{liu2023locally,
+  title={Locally Meshable Frame Fields},
+  author={LIU, HENG and BOMMES, DAVID},
+  journal={ACM Trans. Graph},
+  volume={42},
+  number={4},
+  year={2023}
+  publisher = {ACM},
+  address = {New York, NY, USA},
+  doi = {10.1145/3592457}
+}
+```
+
 ## How does AlgoHex work?
 
 AlgoHex automatically converts tetrahedral meshes to hexahedral meshes. The complete pipeline consists of four major steps (see the figure below): initialization of feature-aligned smooth frame field, locally meshable frame field generation, parameterization, and hexahedral mesh extraction. The frame field initialization follows the approach of [On Smooth 3D Frame Field Design](https://arxiv.org/abs/1507.03351). Locally meshable frame field is obtained via the state-of-the-art method [Locally Meshable Frame Fields](https://www.algohex.eu/publications/locally-meshable-frame-fields/). Parameterization of the frame field includes seamless mapping ([Locally Meshable Frame Fields](https://www.algohex.eu/publications/locally-meshable-frame-fields/), [CubeCover](http://www.mi.fu-berlin.de/en/math/groups/ag-geom/publications/db/2011_Nieser-Reitebuch-Polthier_CubeCover.pdf)), robust quantization ([QGP3D](http://graphics.cs.uos.de/papers/Volume_Parametrization_Quantization-SIGGRAPH2022.pdf)) and Integer-grid mapping. For hexahedral mesh extraction, we use the [libHexEx](https://www.graphics.rwth-aachen.de/software/libHexEx).
