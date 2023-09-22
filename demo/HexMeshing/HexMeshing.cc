@@ -99,7 +99,7 @@ void load_tetmesh(const Args &args, MeshT &tetmesh)
       return;
     }
 
-    initialize_feature_properties(args, tetmesh);
+//    initialize_feature_properties(args, tetmesh);
   }
 }
 
@@ -624,6 +624,7 @@ void initialize_feature_properties(const Args &args, MeshT &tetmesh)
   }
   else
   {
+    std::cout << "No prescribed feature tags found. Set boundary faces to feature faces and edges w.r.t. dihedral angle threshold "<<args.dihedral_angle<<" to feature edges." << std::endl;
     //Feature faces
     auto feature_fprop = tetmesh.template request_face_property<int>("AlgoHex::FeatureFaces", 0);
     for (const auto fhi: tetmesh.faces())
