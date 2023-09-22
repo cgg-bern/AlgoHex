@@ -30,12 +30,12 @@ AlgoHex automatically converts tetrahedral meshes to hexahedral meshes. The comp
 
 
 ### File Format
-The input to the algorithm is a tetrahedral mesh with user-specified feature tags, and the output is a hexahedral mesh. The input tetrahedral mesh can be in VTK or OpenVolumeMesh file format. A typical dataset with feature tags as the input to AlgoHex is [HexMe](https://www.algohex.eu/publications/hex-me-if-you-can/). The output hexahedral mesh is in OpenVolumeMesh file format. Note that the result may be an incomplete hexahedral mesh, as the frame field may not be globally hex-meshable.
+The input to the algorithm is a tetrahedral mesh with user-specified feature tags, and the output is a hexahedral mesh. The input tetrahedral mesh can be in VTK v2.0 (ASCII) or OpenVolumeMesh file format. A typical dataset with feature tags as the input to AlgoHex is [HexMe](https://www.algohex.eu/publications/hex-me-if-you-can/). The output hexahedral mesh is in OpenVolumeMesh file format. Note that the result may be an incomplete hexahedral mesh, as the frame field may not be globally hex-meshable.
 
 ## Dependencies
 
 The CMake-based build system will automatically download missing dependencies unless `ALGOHEX_DOWNLOAD_MISSING_DEPS` is disabled (enabled by default if building AlgoHex standalone, disabled if built inside a bigger project using `add_subdirectory`). All dependencies are listed below:
-- [OpenVolumeMesh](www.openvolumemesh.org)
+- [OpenVolumeMesh](https://www.openvolumemesh.org)
 - [libHexEx](https://www.graphics.rwth-aachen.de/software/libHexEx)
 - [CoMISo](https://www.graphics.rwth-aachen.de/software/comiso)
 - [GMM](http://getfem.org/gmm.html)
