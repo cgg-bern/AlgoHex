@@ -6,6 +6,7 @@
  *  All contributors are stated in CREDITS.txt.                              *
 \*===========================================================================*/
 #include <CLI/CLI.hpp>
+#include <mpi.h>
 #include "HexMeshing.hh"
 
 #ifdef _WIN32
@@ -15,12 +16,13 @@
 #endif
 
 
-int main(int argc, const char *argv[])
+int main(int argc, char *argv[])
 {
 
 #ifdef _WIN32
   SetErrorMode(0);
 #endif
+  MPI_Init(&argc, &argv);
 
   AlgoHex::Args args;
 
