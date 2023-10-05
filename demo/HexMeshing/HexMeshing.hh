@@ -64,7 +64,7 @@ template<typename MeshT>
 void write_ovmb_file(const std::string &filename, MeshT &mesh);
 
 template<typename MeshT>
-auto read_ovmb_file(const std::string &filename, MeshT &mesh);
+void read_ovmb_file(const std::string &filename, MeshT &mesh);
 
 template<class MeshT>
 void initialize_feature_properties(const Args &args, MeshT &tetmesh);

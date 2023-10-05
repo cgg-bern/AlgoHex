@@ -92,14 +92,15 @@ void load_tetmesh(const Args &args, MeshT &tetmesh)
     {
       OpenVolumeMesh::IO::FileManager fm;
       fm.readFile(args.inFileName, tetmesh);
+    } else if (file_type == "ovmb")
+    {
+      read_ovmb_file(args.inFileName, tetmesh);
     }
     else
     {
       std::cerr << "Error: the file type is not supported!" << std::endl;
       return;
     }
-
-//    initialize_feature_properties(args, tetmesh);
   }
 }
 
@@ -973,7 +974,7 @@ void write_ovmb_file(const std::string &filename, MeshT &mesh)
 }
 
 template<typename MeshT>
-auto read_ovmb_file(const std::string &filename, MeshT &mesh)
+void read_ovmb_file(const std::string &filename, MeshT &mesh)
 {
   OVM::IO::ReadOptions ro;
   OVM::IO::PropertyCodecs propCodecs = OVM::IO::g_default_property_codecs;
