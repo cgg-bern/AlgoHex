@@ -84,7 +84,8 @@ function(algohex_download_gmm)
             URL_HASH SHA256=7163d5080efbe6893d1950e4b331cd3e9160bb3dcf583d206920fba6af7b1e56
             )
         if (${ALGOHEX_USE_LOCAL_GMM})
-        set(GMM_INCLUDE_DIR $<BUILD_INTERFACE:${ALGOHEX_EXTERNAL}/gmm/include> PARENT_SCOPE)
+            add_library(GMM::GMM INTERFACE IMPORTED)
+            target_include_directories(GMM::GMM INTERFACE $<BUILD_INTERFACE:${ALGOHEX_EXTERNAL}/gmm/include>)
     endif()
 endfunction()
 
@@ -95,7 +96,9 @@ function(algohex_download_tinyad)
             GIT_TAG                  main
             )
     if (${ALGOHEX_USE_LOCAL_TINYAD})
-        set(TINYAD_INCLUDE_DIR $<BUILD_INTERFACE:${ALGOHEX_EXTERNAL}/tinyad/include> PARENT_SCOPE)
+        add_library(tinyad::tinyad INTERFACE IMPORTED)
+        target_include_directories(tinyad::tinyad INTERFACE
+            $<BUILD_INTERFACE:${ALGOHEX_EXTERNAL}/tinyad/include>)
     endif()
 endfunction()
 
@@ -104,8 +107,8 @@ endfunction()
 function(algohex_download_comiso)
     algohex_download_project(CoMISo
             GIT_REPOSITORY https://www.graphics.rwth-aachen.de:9000/CoMISo/CoMISo.git
-            GIT_TAG        cgg2
-    )
+            GIT_TAG        f0862af9dbc52cb55d3c222419afc781387061f5 # cgg2 branch, 2022-11-17
+   )
     if (${ALGOHEX_USE_LOCAL_COMISO})
         add_subdirectory(${ALGOHEX_EXTERNAL}/CoMISo)
     endif()

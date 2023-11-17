@@ -38,14 +38,14 @@ endif()
 
 
 # GMM
-find_package(GMM)
-if(NOT GMM_FOUND)
+#find_package(GMM)
+if(NOT TARGET GMM:GMM)
 	algohex_download_gmm()
 endif()
 
 # TINYAD
 find_package(TINYAD)
-if(NOT TINYAD_FOUND)
+if(NOT TARGET tinyad::tinyad)
     algohex_download_tinyad()
 endif()
 
