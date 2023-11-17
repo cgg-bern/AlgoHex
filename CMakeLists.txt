@@ -261,6 +261,8 @@ target_link_libraries(AlgoHex PUBLIC
         CoMISo::CoMISo
         HexEx::HexEx
         Eigen3::Eigen
+        GMM::GMM
+        tinyad::tinyad
         )
 
 
@@ -284,8 +286,6 @@ target_include_directories(AlgoHex
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
         #    PRIVATE
         #"${CMAKE_CURRENT_BINARY_DIR}/src"
-        ${GMM_INCLUDE_DIR} # TODO: use target
-        ${TINYAD_INCLUDE_DIR}
         )
 
 option(ALGOHEX_BUILD_DEMO "Build AlgoHex demo commandline tool" ${ALGOHEX_IS_ROOT})
