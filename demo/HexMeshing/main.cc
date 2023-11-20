@@ -5,8 +5,11 @@
  *  For license information see LICENSE.txt in the AlgoHex root directory.   *
  *  All contributors are stated in CREDITS.txt.                              *
 \*===========================================================================*/
+#include <CoMISo/Config/config.hh>
 #include <CLI/CLI.hpp>
-#include <mpi.h>
+#if COMISO_MPI_AVAILABLE == 1
+#  include <mpi.h>
+#endif
 #include "HexMeshing.hh"
 
 #ifdef _WIN32
@@ -22,7 +25,9 @@ int main(int argc, char *argv[])
 #ifdef _WIN32
   SetErrorMode(0);
 #endif
+#if COMISO_MPI_AVAILABLE == 1
   MPI_Init(&argc, &argv);
+#endif
 
   AlgoHex::Args args;
 
