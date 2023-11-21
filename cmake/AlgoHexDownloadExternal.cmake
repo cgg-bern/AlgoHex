@@ -107,7 +107,7 @@ endfunction()
 function(algohex_download_comiso)
     algohex_download_project(CoMISo
             GIT_REPOSITORY https://www.graphics.rwth-aachen.de:9000/CoMISo/CoMISo.git
-            GIT_TAG        f0862af9dbc52cb55d3c222419afc781387061f5 # cgg2 branch, 2022-11-17
+            GIT_TAG        0dde6f43f124fbb32c844be399293209dd5ca855 # cgg2 branch, 2023-11-20
    )
     if (${ALGOHEX_USE_LOCAL_COMISO})
         add_subdirectory(${ALGOHEX_EXTERNAL}/CoMISo)
