@@ -23,7 +23,7 @@ If you use `AlgoHex` in your scientific work, please cite us.
 }
 ```
 
-![algohex_doi](https://zenodo.org/badge/DOI/10.5281/zenodo.10048240.svg)
+<a href="https://zenodo.org/records/10048240"> ![algohex_doi](https://zenodo.org/badge/DOI/10.5281/zenodo.10048240.svg) </a>
 
 ## How does AlgoHex work?
 
