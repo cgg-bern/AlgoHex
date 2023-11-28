@@ -306,6 +306,11 @@ endif ()
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
 
+if(NOT WIN32
+        AND NOT CMAKE_INSTALL_PREFIX
+        AND PROJECT_IS_TOP_LEVEL)
+      set(CMAKE_INSTALL_PREFIX "/opt/cgg-bern/${PROJECT_NAME}")
+endif()
 
 set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/AlgoHex)
 

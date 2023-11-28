@@ -25,3 +25,8 @@ target_link_libraries(HexMeshing
         AlgoHex
         CLI11::CLI11)
 
+install(TARGETS HexMeshing
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        )
