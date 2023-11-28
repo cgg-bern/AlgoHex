@@ -27,15 +27,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gfortran \
     clang
 
-RUN echo "Downloading Gurobi..." \
+RUN echo "Downloading Gurobi..." && \
             mkdir -p /opt && \
             cd /opt && \
             wget -q https://packages.gurobi.com/10.0/gurobi10.0.3_linux64.tar.gz && \
-	    echo 82f916db110c42ce8ce13c10a14eba97c7acd63c3c0c59f98186c5085780ca83  gurobi10.0.3_linux64.tar.gz | sha256sum --check && \ 
+            echo 82f916db110c42ce8ce13c10a14eba97c7acd63c3c0c59f98186c5085780ca83  gurobi10.0.3_linux64.tar.gz | sha256sum --check && \ 
             tar xf gurobi10.0.3_linux64.tar.gz && \
             ln -s gurobi1003 gurobi
 
-RUN mkdir -p /usr/src/coin-or && \
+RUN echo "Downloading Linuxdeploy..." && \
+    wget -q https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage -o /opt/linuxdeploy && chmod +x /opt/linuxdeploy
+
+RUN echo "Downloading coinbrew (for ipopt)" && \
+    mkdir -p /usr/src/coin-or && \
     mkdir -p /opt/coin-or && \
     cd /usr/src/coin-or && \
     wget https://raw.githubusercontent.com/coin-or/coinbrew/master/coinbrew \
@@ -57,8 +61,13 @@ RUN mkdir /app/build && cd /app/build && \
     -D CMAKE_CXX_COMPILER=clang++ \
     -D CMAKE_C_COMPILER=clang \
     -D CMAKE_CXX_FLAGS="-march=native" \
-    .. && ninja
+    ..
 #-D CMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
+
+RUN ninja
+RUN ninja install DESTDIR=AppDir
+
+RUN /opt/linuxdeploy --appdir AppDir --output appimage
 
 RUN ln -s /app/build/Build/bin/* /usr/local/bin
 #RUN apt-get clean && rm -rf /var/lib/apt/lists/

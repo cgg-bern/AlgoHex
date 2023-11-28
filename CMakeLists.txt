@@ -8,19 +8,20 @@
 
 cmake_minimum_required(VERSION 3.21)
 
-# AutoMOC/AutoUIC
-if (${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.17")
-    cmake_policy(SET CMP0100 NEW)
-endif ()
-
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+cmake_policy(SET CMP0090 NEW)
+cmake_policy(SET CMP0100 NEW)
 
 project(AlgoHex
         VERSION 0.0.1
         LANGUAGES C CXX
         )
+
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
 set(CMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY ON)
-option(BUILD_SHARED_LIBS "Build shared library (*.dll, *.so, *.dylib) instead of static library (*.a, *.lib)" ON)
+set(CMAKE_EXPORT_NO_PACKAGE_REGISTRY ON)
+
+option(BUILD_SHARED_LIBS "Build shared library (*.dll, *.so, *.dylib) instead of static library (*.a, *.lib)" OFF)
 
 if (PROJECT_IS_TOP_LEVEL)
     set(ALGOHEX_TARGET_PREFIX "")
@@ -306,10 +307,36 @@ endif ()
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
 
-if(NOT WIN32
-        AND NOT CMAKE_INSTALL_PREFIX
-        AND PROJECT_IS_TOP_LEVEL)
-      set(CMAKE_INSTALL_PREFIX "/opt/cgg-bern/${PROJECT_NAME}")
+if(PROJECT_IS_TOP_LEVEL)
+    if (NOT WIN32
+        AND NOT CMAKE_INSTALL_PREFIX)
+        set(CMAKE_INSTALL_PREFIX "/opt/cgg-bern/${PROJECT_NAME}")
+    endif()
+
+    set_target_properties(${ALGOHEX_TARGETS}
+        PROPERTIES
+        BUILD_RPATH_USE_ORIGIN TRUE
+        INSTALL_RPATH_USE_LINK_PATH TRUE
+        )
+
+    file(RELATIVE_PATH relDir
+        ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}
+        ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR})
+
+    set(CMAKE_INSTALL_RPATH $ORIGIN $ORIGIN/${relDir})
+
+    if(TARGET HexMeshing)
+        SET (ALGOHEX_TARGETS "AlgoHex HexMeshing LocalMeshabilityCheck")
+    else()
+        SET (ALGOHEX_TARGETS "AlgoHex")
+    endif()
+
+    install(TARGETS ${ALGOHEX_TARGETS}
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+            )
+
 endif()
 
 set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/AlgoHex)

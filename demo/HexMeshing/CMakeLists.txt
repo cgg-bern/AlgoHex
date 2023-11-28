@@ -26,7 +26,14 @@ target_link_libraries(HexMeshing
         CLI11::CLI11)
 
 install(TARGETS HexMeshing
+    CONFIGURATIONS RelWithDebInfo Release
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        )
+
+set_target_properties(HexMeshing
+    PROPERTIES
+        BUILD_RPATH_USE_ORIGIN TRUE
+        INSTALL_RPATH_USE_LINK_PATH TRUE
         )
