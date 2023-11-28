@@ -53,11 +53,12 @@ if (PROJECT_IS_TOP_LEVEL)
     set(CMAKE_CXX_STANDARD ${ALGOHEX_CXX_STANDARD})
     set(CMAKE_CXX_STANDARD_REQUIRED YES)
     set(CMAKE_CXX_EXTENSIONS OFF)
-endif ()
 
-if (NOT CMAKE_BUILD_TYPE)
-    message(STATUS "No build type selected, default to Release")
-    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
+    if (NOT CMAKE_BUILD_TYPE)
+        message(STATUS "No build type selected, default to Release")
+        set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
+    endif()
+
 endif()
 
 
@@ -179,6 +180,9 @@ add_library(AlgoHex
         src/AlgoHex/LocallyMeshableField/VertexOptimizeT_impl.hh
         )
 
+# Debug builds of the code in these files is notoriously slow, so we want to make sure
+# to always enable the optimizer. Turn this off if needed when debugging this code:
+
 set_source_files_properties(
         src/AlgoHex/SphericalHarmonics/SHCoeffRotation.cc
         src/AlgoHex/SphericalHarmonics/SHCoeffs.cc
@@ -228,7 +232,7 @@ set_target_properties(AlgoHex PROPERTIES
         CXX_VISIBILITY_PRESET hidden
         )
 
-    if (PROJECT_IS_TOP_LEVEL)
+if (PROJECT_IS_TOP_LEVEL)
     set_target_properties(AlgoHex PROPERTIES
             LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
             RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
