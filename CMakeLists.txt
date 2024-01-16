@@ -318,35 +318,40 @@ write_basic_package_version_file(
         COMPATIBILITY SameMajorVersion
 )
 
-install(FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/AlgoHexConfigVersion.cmake"
-        "${CMAKE_CURRENT_BINARY_DIR}/AlgoHexConfig.cmake"
-        DESTINATION ${INSTALL_CONFIGDIR})
+option(ALGOHEX_NO_INSTALL "Do not try to use cmake install/export functionality" ON)
 
-install(DIRECTORY
-        "${CMAKE_CURRENT_BINARY_DIR}/src/AlgoHex/Config"
-        DESTINATION include/AlgoHex)
+if(NOT ALGOHEX_NO_INSTALL)
+
+    install(FILES
+            "${CMAKE_CURRENT_BINARY_DIR}/AlgoHexConfigVersion.cmake"
+            "${CMAKE_CURRENT_BINARY_DIR}/AlgoHexConfig.cmake"
+            DESTINATION ${INSTALL_CONFIGDIR})
+
+    install(DIRECTORY
+            "${CMAKE_CURRENT_BINARY_DIR}/src/AlgoHex/Config"
+            DESTINATION include/AlgoHex)
 
 # Install Header Files
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/AlgoHex
-        DESTINATION include
-        FILES_MATCHING PATTERN "*.hh"
-        )
+    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/AlgoHex
+            DESTINATION include
+            FILES_MATCHING PATTERN "*.hh"
+            )
 
-install(TARGETS AlgoHex
-        EXPORT AlgoHexTargets
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-        )
+    install(TARGETS AlgoHex
+            EXPORT AlgoHexTargets
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+            )
 
-install(EXPORT AlgoHexTargets
-        FILE AlgoHexTargets.cmake
-        NAMESPACE AlgoHex::
-        DESTINATION ${INSTALL_CONFIGDIR}
-        )
+    install(EXPORT AlgoHexTargets
+            FILE AlgoHexTargets.cmake
+            NAMESPACE AlgoHex::
+            DESTINATION ${INSTALL_CONFIGDIR}
+            )
 
-export(EXPORT AlgoHexTargets
-        NAMESPACE AlgoHex::)
-export(PACKAGE AlgoHex)
+    export(EXPORT AlgoHexTargets
+            NAMESPACE AlgoHex::)
+    export(PACKAGE AlgoHex)
 
+endif()
