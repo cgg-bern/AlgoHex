@@ -39,8 +39,11 @@ endif()
 
 if(NOT TARGET Eigen3::Eigen)
     FetchContent_Declare(eigen
-        GIT_REPOSITORY https://gitlab.com/libeigen/eigen
-        GIT_TAG 3.4.0
+        #GIT_REPOSITORY https://gitlab.com/libeigen/eigen
+        #GIT_TAG 3.4.0
+        # temporary fix, 2025-01-16: my (mh) MR is not merged yet, but is required to fix a build error:
+        GIT_REPOSITORY https://gitlab.com/mheistermann/eigen
+        GIT_TAG fix/spqr-index-vs-storageindex
         SOURCE_DIR "${EXTERNAL_DIR}/eigen"
     )
     FetchContent_Populate(eigen)
