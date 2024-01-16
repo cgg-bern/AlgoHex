@@ -254,16 +254,13 @@ if (OpenMP_CXX_FOUND)
     target_link_libraries(AlgoHex PUBLIC OpenMP::OpenMP_CXX OpenMP::OpenMP_C)
 endif ()
 
-if (TARGET QGP3D::QGP3D)
-    target_link_libraries(AlgoHex PUBLIC QGP3D::QGP3D)
-endif ()
-
 target_link_libraries(AlgoHex PUBLIC
         OpenVolumeMesh::OpenVolumeMesh
         CoMISo::CoMISo
         HexEx::HexEx
         Eigen3::Eigen
         GMM::GMM
+        QGP3D::QGP3D
         tinyad::tinyad
         )
 
