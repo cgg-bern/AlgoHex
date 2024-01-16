@@ -22,6 +22,8 @@ project(AlgoHex
 set(CMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY ON)
 option(BUILD_SHARED_LIBS "Build shared library (*.dll, *.so, *.dylib) instead of static library (*.a, *.lib)" ON)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     set(ALGOHEX_IS_ROOT TRUE)
     set(ALGOHEX_TARGET_PREFIX "")
