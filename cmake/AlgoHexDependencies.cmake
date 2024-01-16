@@ -46,7 +46,7 @@ if(NOT TARGET Eigen3::Eigen)
     FetchContent_Populate(eigen)
     message("Downloaded Eigen3 to ${eigen_SOURCE_DIR}")
     add_library(Eigen3::Eigen INTERFACE IMPORTED)
-    target_include_directories(Eigen3::Eigen INTERFACE "${eigen_SOURCE_DIR}")
+    target_include_directories(Eigen3::Eigen INTERFACE "$<BUILD_INTERFACE:${eigen_SOURCE_DIR}>")
     #target_compile_definitions(Eigen3::Eigen INTERFACE -DEIGEN_HAS_STD_RESULT_OF=0)
 endif()
 
