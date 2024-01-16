@@ -75,7 +75,7 @@ endif()
 if(NOT TARGET CoMISo)
     FetchContent_Declare(comiso
         GIT_REPOSITORY https://gitlab.vci.rwth-aachen.de:9000/CoMISo/CoMISo.git
-        GIT_TAG 088d8b2e923e22aba54e31a9ac8887b864def666 # cgg2 2023-11-01
+        GIT_TAG f7383759204fc5c5f56c5534a49817d9b80b1592 # cgg2 2024-01-16
         SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/CoMISo" # case matters
         )
     set(COMISO_NO_INSTALL YES)
