@@ -27,14 +27,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gfortran \
     clang
 
-RUN echo "Downloading Gurobi..." \
-            mkdir -p /opt && \
-            cd /opt && \
-            wget -q https://packages.gurobi.com/10.0/gurobi10.0.3_linux64.tar.gz && \
-	    echo 82f916db110c42ce8ce13c10a14eba97c7acd63c3c0c59f98186c5085780ca83  gurobi10.0.3_linux64.tar.gz | sha256sum --check && \ 
-            tar xf gurobi10.0.3_linux64.tar.gz && \
-            ln -s gurobi1003 gurobi
-
 RUN mkdir -p /usr/src/coin-or && \
     mkdir -p /opt/coin-or && \
     cd /usr/src/coin-or && \
@@ -43,13 +35,16 @@ RUN mkdir -p /usr/src/coin-or && \
 
 RUN cd /usr/src/coin-or && ./coinbrew fetch Ipopt@3.14.13
 RUN cd /usr/src/coin-or && ./coinbrew build Ipopt@3.14.13 --prefix=/opt/coin-or --parallel-jobs 8
-# TODO: can set --parallel-jobs in build step
+RUN cd /usr/src/coin-or && ./coinbrew fetch Bonmin@1.8.9
+RUN apt-get install -y libopenmpi-dev
+RUN cd /usr/src/coin-or && ./coinbrew build Bonmin@1.8.9 --prefix=/opt/coin-or --parallel-jobs 8 ADD_FFLAGS=-fallow-argument-mismatch
 
 FROM base-packages AS build
 
 COPY . /app
 
 ENV IPOPT_HOME=/opt/coin-or
+ENV CBC_DIR=/opt/coin-or
 
 RUN mkdir /app/build && cd /app/build && \
     cmake -G Ninja \
@@ -57,6 +52,7 @@ RUN mkdir /app/build && cd /app/build && \
     -D CMAKE_CXX_COMPILER=clang++ \
     -D CMAKE_C_COMPILER=clang \
     -D CMAKE_CXX_FLAGS="-march=native" \
+    -D BONMIN_ROOT_DIR=/opt/coin-or \
     .. && ninja
 #-D CMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
 
