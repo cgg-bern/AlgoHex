@@ -372,14 +372,16 @@ void parameterization(const Args &args, MeshT &tetmesh, nlohmann::json &json_dat
   }
 
   // generate integer-grid map
-  if (invalid_elements_seamless.first == 0 && invalid_elements_seamless.second == 0 && COMISO_GUROBI_AVAILABLE)
+  if (invalid_elements_seamless.first == 0 && invalid_elements_seamless.second == 0)
   {
+    std::cout << "Info: Parameterizing using robust quantization-based pipeline." << std::endl;
     // update frames to benefit from valid seamless map when generating IGM
     param.import_frames_from_parametrization();
     param.parametrize_robust_quantization(args.num_hex_cells);
   }
   else
   {
+    std::cout << "WARNING: Parameterizing without quantization (non-robust pipeline)." << std::endl;
     // fallback if valid seamless map could not be found, or Gurobi not available
     param.parametrize(args.num_hex_cells, args.anisotropy, true);
   }
