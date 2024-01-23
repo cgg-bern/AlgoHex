@@ -53,14 +53,13 @@ ENV CBC_DIR=/opt/coin-or
 
 RUN mkdir /app/build && cd /app/build && \
     cmake -G Ninja \
-    -D CMAKE_BUILD_TYPE=Debug \
+    -D CMAKE_BUILD_TYPE=Release \
     -D CMAKE_CXX_COMPILER=clang++ \
     -D CMAKE_C_COMPILER=clang \
     -D CMAKE_CXX_FLAGS="-march=native" \
     -D BONMIN_ROOT_DIR=/opt/coin-or \
     ..
 #-D CMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
-#-D CMAKE_BUILD_TYPE=Release \
 
 RUN cd /app/build && ninja
 
