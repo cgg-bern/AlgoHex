@@ -99,8 +99,10 @@ endif()
 
 if(NOT TARGET QGP3D:QGP3D)
     FetchContent_Declare(qgp3d
-        GIT_REPOSITORY https://github.com/HendrikBrueckler/QGP3D
-        GIT_TAG        ace72a30ed21672235f9868b42c858db273445d2 # main branch on 2024-01-16
+        #GIT_REPOSITORY https://github.com/HendrikBrueckler/QGP3D
+        #GIT_TAG        ace72a30ed21672235f9868b42c858db273445d2 # main branch on 2024-01-16
+        GIT_REPOSITORY https://github.com/cgg-bern/QGP3D
+        GIT_TAG fix/cmake-eigen
         SOURCE_DIR "${EXTERNAL_DIR}/QGP3D"
         )
     FetchContent_MakeAvailable(qgp3d)
