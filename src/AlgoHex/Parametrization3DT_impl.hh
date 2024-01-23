@@ -577,7 +577,7 @@ optimize_integer_grid_map(const int _num_hex_cells, const double _anisotropy_alp
 #if COMISO_GUROBI_AVAILABLE
       gb.solve(&fe_problem, constraint_pointers, discrete_constraints, timelimit_);
 #else
-      ALGOHEX_DEBUG_ONLY(std::cerr << "error: Gurobi solver selected, but no Gurobi support compiled in." << std::endl;)
+      std::cerr << "ERROR: Gurobi solver selected, but no Gurobi support compiled in." << std::endl;
       return;
 #endif
     }
@@ -2314,91 +2314,85 @@ setup_constraints(std::vector<COMISO::LinearConstraint> &_constraints,
   }
 
   // add quantization constraints if available
-#if COMISO_GUROBI_AVAILABLE
   int n_quantization_path_constraints = 0;
-  if (!quantization_path_constraints_.empty())
+  // add quantization path constraints if available
+  for (auto &pc: quantization_path_constraints_)
   {
-    // add quantization path constraints if available
-    int count = 0;
-    for (auto &pc: quantization_path_constraints_)
+    // express coordinates of end-point in the coordinate system of the start point
+    COMISO::LinearConstraint::SVectorNC cx(n_complete);
+    COMISO::LinearConstraint::SVectorNC cy(n_complete);
+    COMISO::LinearConstraint::SVectorNC cz(n_complete);
+
+    bool has_transitions = false;
+
+    // initialize endpoint
+    int tvidx = tet_vidx(pc.tetTo, pc.vTo);
+    if(tvidx == -1)
     {
-      // express coordinates of end-point in the coordinate system of the start point
-      COMISO::LinearConstraint::SVectorNC cx(n_complete);
-      COMISO::LinearConstraint::SVectorNC cy(n_complete);
-      COMISO::LinearConstraint::SVectorNC cz(n_complete);
+      std::cerr << "ERROR: path constraint has vTo not incident to tetTo" << std::endl;
+      continue; // skip this constraint
+    }
 
-      bool has_transitions = false;
+    int bidx_to = 3 * global_idx_[pc.tetTo][tvidx];
+    cx.coeffRef(bidx_to) = 1.0;
+    cy.coeffRef(bidx_to + 1) = 1.0;
+    cz.coeffRef(bidx_to + 2) = 1.0;
 
-      // initialize endpoint
-      int tvidx = tet_vidx(pc.tetTo, pc.vTo);
-      if(tvidx == -1)
+    // transform backwards along path
+    for (int i = pc.pathHalffaces.size() - 1; i >= 0; --i)
+    {
+      // get next backward transformation (transition for parametrization is inverse to that of the frames!!!)
+      HFH h = mesh_.opposite_halfface_handle(pc.pathHalffaces[i]);
+
+      // get transition function (param transforms inversely to frame-field)
+      int tf = tq_.inverse_transition_idx(transition_hfprop_[h]);
+
+      // cut face? ---> apply transition
+      if (is_on_cut_fprop_[mesh_.face_handle(h)])
       {
-        std::cerr << "ERROR: path constraint has vTo not incident to tetTo" << std::endl;
-        continue; // skip this constraint
+        // get indices of vertex on cut and corresponding cells to compute translation of transition function
+        VH vh = mesh_.halfedge(mesh_.halfface(h).halfedges()[0]).to_vertex();
+        HFH h_opp = mesh_.opposite_halfface_handle(h);
+        CH ch = mesh_.incident_cell(h);
+        CH ch_opp = mesh_.incident_cell(h_opp);
+
+        int bidx_from = 3 * global_idx_[ch][tet_vidx(ch, vh)];
+        int bidx_to = 3 * global_idx_[ch_opp][tet_vidx(ch_opp, vh)];
+
+        transform_constraint(cx, cy, cz, tf, bidx_from, bidx_to);
       }
+    }
 
-      int bidx_to = 3 * global_idx_[pc.tetTo][tvidx];
-      cx.coeffRef(bidx_to) = 1.0;
-      cy.coeffRef(bidx_to + 1) = 1.0;
-      cz.coeffRef(bidx_to + 2) = 1.0;
+    // subtract starting point
+    tvidx = tet_vidx(pc.tetFrom, pc.vFrom);
+    if(tvidx == -1)
+    {
+      std::cerr << "ERROR: path constraint has vFrom not incident to tetFrom" << std::endl;
+      continue; // skip this constraint
+    }
 
-      // transform backwards along path
-      for (int i = pc.pathHalffaces.size() - 1; i >= 0; --i)
-      {
-        // get next backward transformation (transition for parametrization is inverse to that of the frames!!!)
-        HFH h = mesh_.opposite_halfface_handle(pc.pathHalffaces[i]);
+    int bidx_from = 3 * global_idx_[pc.tetFrom][tvidx];
+    cx.coeffRef(bidx_from) -= 1.0;
+    cy.coeffRef(bidx_from + 1) -= 1.0;
+    cz.coeffRef(bidx_from + 2) -= 1.0;
 
-        // get transition function (param transforms inversely to frame-field)
-        int tf = tq_.inverse_transition_idx(transition_hfprop_[h]);
-
-        // cut face? ---> apply transition
-        if (is_on_cut_fprop_[mesh_.face_handle(h)])
-        {
-          // get indices of vertex on cut and corresponding cells to compute translation of transition function
-          VH vh = mesh_.halfedge(mesh_.halfface(h).halfedges()[0]).to_vertex();
-          HFH h_opp = mesh_.opposite_halfface_handle(h);
-          CH ch = mesh_.incident_cell(h);
-          CH ch_opp = mesh_.incident_cell(h_opp);
-
-          int bidx_from = 3 * global_idx_[ch][tet_vidx(ch, vh)];
-          int bidx_to = 3 * global_idx_[ch_opp][tet_vidx(ch_opp, vh)];
-
-          transform_constraint(cx, cy, cz, tf, bidx_from, bidx_to);
-        }
-      }
-
-      // subtract starting point
-      tvidx = tet_vidx(pc.tetFrom, pc.vFrom);
-      if(tvidx == -1)
-      {
-        std::cerr << "ERROR: path constraint has vFrom not incident to tetFrom" << std::endl;
-        continue; // skip this constraint
-      }
-
-      int bidx_from = 3 * global_idx_[pc.tetFrom][tvidx];
-      cx.coeffRef(bidx_from) -= 1.0;
-      cy.coeffRef(bidx_from + 1) -= 1.0;
-      cz.coeffRef(bidx_from + 2) -= 1.0;
-
-      if (pc.offset[0] != INT_MAX)
-      {
-        _constraints.push_back(COMISO::LinearConstraint(cx, -pc.offset[0], COMISO::NConstraintInterface::NC_EQUAL));
-        ++n_quantization_path_constraints;
-      }
-      if (pc.offset[1] != INT_MAX)
-      {
-        _constraints.push_back(COMISO::LinearConstraint(cy, -pc.offset[1], COMISO::NConstraintInterface::NC_EQUAL));
-        ++n_quantization_path_constraints;
-      }
-      if (pc.offset[2] != INT_MAX)
-      {
-        _constraints.push_back(COMISO::LinearConstraint(cz, -pc.offset[2], COMISO::NConstraintInterface::NC_EQUAL));
-        ++n_quantization_path_constraints;
-      }
+    if (pc.offset[0] != INT_MAX)
+    {
+      _constraints.push_back(COMISO::LinearConstraint(cx, -pc.offset[0], COMISO::NConstraintInterface::NC_EQUAL));
+      ++n_quantization_path_constraints;
+    }
+    if (pc.offset[1] != INT_MAX)
+    {
+      _constraints.push_back(COMISO::LinearConstraint(cy, -pc.offset[1], COMISO::NConstraintInterface::NC_EQUAL));
+      ++n_quantization_path_constraints;
+    }
+    if (pc.offset[2] != INT_MAX)
+    {
+      _constraints.push_back(COMISO::LinearConstraint(cz, -pc.offset[2], COMISO::NConstraintInterface::NC_EQUAL));
+      ++n_quantization_path_constraints;
     }
   }
   std::cerr << "#quantization path constraints = " << n_quantization_path_constraints << std::endl;
-#endif
 
   // store pointers to constraints
   _constraint_pointers.reserve(_constraints.size());
@@ -3748,7 +3742,6 @@ void
 Parametrization3DT<TetMeshT>::
 quantize_qgp3d(const int _num_hex_cells)
 {
-#if COMISO_GUROBI_AVAILABLE
   // tetMesh: your mc3d::TetMesh
   qgp3d::Quantizer quantizer(mesh_);
 
@@ -3780,10 +3773,6 @@ quantize_qgp3d(const int _num_hex_cells)
   quantizer.quantize(scaling, quantization_path_constraints_, nHexahedra);
 
   std::cerr << "#hexahedra after QGP3D quantization = " << nHexahedra << std::endl;
-#else
-  std::cerr << "Warning: quantize qgp3d was called despite Gurobi is not available ----> no quantization performed"
-            << std::endl;
-#endif
 }
 
 
@@ -3871,7 +3860,6 @@ void
 Parametrization3DT<TetMeshT>::
 check_quantization_path_constraints()
 {
-#if COMISO_GUROBI_AVAILABLE
   // debug code: compute differences in seamless map
   int j=0;
   int n_valid=0;
@@ -3967,7 +3955,6 @@ check_quantization_path_constraints()
   }
 
   std::cerr << "#invalid path constraints = " << n_invalid << ", #valid path constraints = " << n_valid << std::endl;
-#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -3979,7 +3966,6 @@ void
 Parametrization3DT<TetMeshT>::
 export_quantization_constraint_paths(ExportTetMeshT &_export_mesh)
 {
-#if COMISO_GUROBI_AVAILABLE
 
   _export_mesh.clear();
   auto pci_ep = _export_mesh.template request_edge_property<int>("PathConstraintIndex");
@@ -4013,7 +3999,6 @@ export_quantization_constraint_paths(ExportTetMeshT &_export_mesh)
     // increment index
     ++i;
   }
-#endif
 }
 
 
