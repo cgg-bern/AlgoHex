@@ -968,7 +968,7 @@ void write_ovmb_file(const std::string &filename, MeshT &mesh)
   OVM::IO::register_eigen_codecs(propCodecs);
   OVM::IO::register_algohex_codecs(propCodecs);
 
-  std::ofstream off(filename.c_str(), std::ios::out);
+  std::ofstream off(filename.c_str(), std::ios::binary);
   OVM::IO::ovmb_write(off, mesh, wo, propCodecs);
   off.close();
 }
@@ -981,7 +981,7 @@ void read_ovmb_file(const std::string &filename, MeshT &mesh)
   OVM::IO::register_eigen_codecs(propCodecs);
   OVM::IO::register_algohex_codecs(propCodecs);
 
-  std::ifstream iff(filename.c_str(), std::ios::in);
+  std::ifstream iff(filename.c_str(), std::ios::binary);
   OVM::IO::ovmb_read(iff, mesh, ro, propCodecs);
   iff.close();
 }
