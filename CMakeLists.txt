@@ -20,6 +20,7 @@ endif()
 
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake-library/finders)
 
 project(AlgoHex
         VERSION 0.0.1
@@ -73,7 +74,7 @@ endif()
 
 # try to find Mosek before getting the other dependencies, so we don't load
 # an incompatible FindMOSEK.cmake from any of them
-find_package("MOSEK")
+find_package(Mosek)
 
 set(ALGOHEX_EXTERNAL "${CMAKE_CURRENT_SOURCE_DIR}/external")
 
