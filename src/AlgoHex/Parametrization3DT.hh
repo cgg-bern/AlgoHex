@@ -31,9 +31,7 @@
 #include "BarrierElements.hh"
 #include "LinearLeastSquaresElements.hh"
 
-#if COMISO_GUROBI_AVAILABLE
 #include <QGP3D/Quantizer.hpp>
-#endif
 
 #ifdef ALGOHEX_VERBOSE
 #define ALGOHEX_DEBUG_ONLY(x) x
@@ -116,11 +114,7 @@ public:
 
   typedef std::pair<unsigned int, COMISO::VariableType> PairUiV;
 
-#if COMISO_GUROBI_AVAILABLE
   using QPathConstraint = qgp3d::PathConstraint;
-#else
-  using QPathConstraint = int;
-#endif
 
   // constructors
   Parametrization3DT(TetMesh &_m,

@@ -42,8 +42,8 @@ if(NOT TARGET Eigen3::Eigen)
         #GIT_REPOSITORY https://gitlab.com/libeigen/eigen
         #GIT_TAG 3.4.0
         # temporary fix, 2025-01-16: my (mh) MR is not merged yet, but is required to fix a build error:
-        GIT_REPOSITORY https://gitlab.com/mheistermann/eigen
-        GIT_TAG fix/spqr-index-vs-storageindex
+        GIT_REPOSITORY https://gitlab.com/libeigen/eigen
+        GIT_TAG 464c1d097891a1462ab28bf8bb763c1683883892 # master 2025-03-10
         SOURCE_DIR "${EXTERNAL_DIR}/eigen"
     )
     FetchContent_Populate(eigen)
@@ -78,7 +78,7 @@ endif()
 if(NOT TARGET CoMISo)
     FetchContent_Declare(comiso
         GIT_REPOSITORY https://gitlab.vci.rwth-aachen.de:9000/CoMISo/CoMISo.git
-        GIT_TAG f7383759204fc5c5f56c5534a49817d9b80b1592 # cgg2 2024-01-16
+        GIT_TAG 95609ed64337d0fd3c528f70c80334a74b81bb51 # cgg2-mh 2024-08-05
         SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/CoMISo" # case matters
         )
     set(COMISO_NO_INSTALL YES)
@@ -91,16 +91,27 @@ endif()
 if(NOT TARGET CLI11::CLI11)
     FetchContent_Declare(cli11
         GIT_REPOSITORY https://github.com/CLIUtils/CLI11.git
-        GIT_TAG        v2.3.2
+        GIT_TAG        v2.5.0
         SOURCE_DIR "${EXTERNAL_DIR}/CLI11"
         )
     FetchContent_MakeAvailable(cli11)
 endif()
 
+# important: MC3D before QGP3D
+if(NOT TARGET MC3D:MC3D)
+    FetchContent_Declare(mc3d
+        GIT_REPOSITORY https://github.com/cgg-bern/MC3D
+        GIT_TAG        gmp-finder
+        SOURCE_DIR "${EXTERNAL_DIR}/MC3D"
+        )
+    FetchContent_MakeAvailable(mc3d)
+endif()
+
+
 if(NOT TARGET QGP3D:QGP3D)
     FetchContent_Declare(qgp3d
         GIT_REPOSITORY https://github.com/HendrikBrueckler/QGP3D
-        GIT_TAG        ace72a30ed21672235f9868b42c858db273445d2 # main branch on 2024-01-16
+        GIT_TAG        1acfb740547cc2fba38a7466825b1794fb31d7e2 # main on  2025-01-30: "Priority bug fixed"
         SOURCE_DIR "${EXTERNAL_DIR}/QGP3D"
         )
     FetchContent_MakeAvailable(qgp3d)
