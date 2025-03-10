@@ -100,7 +100,7 @@ endif()
 if(NOT TARGET QGP3D:QGP3D)
     FetchContent_Declare(qgp3d
         GIT_REPOSITORY https://github.com/HendrikBrueckler/QGP3D
-        GIT_TAG        aa1b40af59696f3d4767fc9a9f2e30e120fbd435 # Main on  2024-07-16
+        GIT_TAG        1acfb740547cc2fba38a7466825b1794fb31d7e2 # main on  2025-01-30: "Priority bug fixed"
         SOURCE_DIR "${EXTERNAL_DIR}/QGP3D"
         )
     FetchContent_MakeAvailable(qgp3d)
