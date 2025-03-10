@@ -6,7 +6,7 @@
 #*  All contributors are stated in CREDITS.txt.                              *
 #\*===========================================================================*/
 
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.14)
 
 if (NOT CMAKE_BUILD_TYPE)
     message(STATUS "No build type selected, default to Release")
