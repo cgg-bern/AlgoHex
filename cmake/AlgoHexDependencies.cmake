@@ -42,8 +42,8 @@ if(NOT TARGET Eigen3::Eigen)
         #GIT_REPOSITORY https://gitlab.com/libeigen/eigen
         #GIT_TAG 3.4.0
         # temporary fix, 2025-01-16: my (mh) MR is not merged yet, but is required to fix a build error:
-        GIT_REPOSITORY https://gitlab.com/mheistermann/eigen
-        GIT_TAG fix/spqr-index-vs-storageindex
+        GIT_REPOSITORY https://gitlab.com/libeigen/eigen
+        GIT_TAG 464c1d097891a1462ab28bf8bb763c1683883892 # master 2025-03-10
         SOURCE_DIR "${EXTERNAL_DIR}/eigen"
     )
     FetchContent_Populate(eigen)
