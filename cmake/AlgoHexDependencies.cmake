@@ -97,6 +97,17 @@ if(NOT TARGET CLI11::CLI11)
     FetchContent_MakeAvailable(cli11)
 endif()
 
+# important: MC3D before QGP3D
+if(NOT TARGET MC3D:MC3D)
+    FetchContent_Declare(mc3d
+        GIT_REPOSITORY https://github.com/cgg-bern/MC3D
+        GIT_TAG        gmp-finder
+        SOURCE_DIR "${EXTERNAL_DIR}/MC3D"
+        )
+    FetchContent_MakeAvailable(mc3d)
+endif()
+
+
 if(NOT TARGET QGP3D:QGP3D)
     FetchContent_Declare(qgp3d
         GIT_REPOSITORY https://github.com/HendrikBrueckler/QGP3D
