@@ -75,13 +75,19 @@ if(NOT TARGET tinyad::tinyad)
     add_library(tinyad::tinyad ALIAS TinyAD)
 endif()
 
-if(NOT TARGET CoMISo)
+if(NOT TARGET CoMISo::CoMISo)
     FetchContent_Declare(comiso
         GIT_REPOSITORY https://gitlab.vci.rwth-aachen.de:9000/CoMISo/CoMISo.git
-        GIT_TAG 95609ed64337d0fd3c528f70c80334a74b81bb51 # cgg2-mh 2024-08-05
+        GIT_TAG 06dffe343b106ca701eff09555984dda2c489587 # master 2025-09-19
         SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/CoMISo" # case matters
         )
     set(COMISO_NO_INSTALL YES)
+    set(COMISO_ENABLE_DEFAULT OFF CACHE BOOL "" FORCE)
+    set(COMISO_ENABLE_TINYAD ON CACHE BOOL "" FORCE)
+    set(COMISO_ENABLE_IPOPT ON CACHE BOOL "" FORCE)
+    set(COMISO_ENABLE_GUROBI ON CACHE BOOL "" FORCE)
+    set(COMISO_ENABLE_SUITESPARSE_CHOLMOD ON CACHE BOOL "" FORCE)
+    #set(COMISO_ENABLE_
     FetchContent_MakeAvailable(comiso)
     if (NOT TARGET CoMISo::CoMISo)
         error(FATAL_ERROR "CoMISo target missing")

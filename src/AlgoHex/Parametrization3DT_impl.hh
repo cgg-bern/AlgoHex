@@ -532,7 +532,6 @@ optimize_integer_grid_map(const int _num_hex_cells, const double _anisotropy_alp
 
   // configure comiso solver
   COMISO::COMISOSolver comiso;
-  comiso.solver().set_noisy(2);
   comiso.solver().misolver().set_local_iters(0);
   comiso.solver().misolver().set_inital_full(true);
   comiso.solver().misolver().set_final_full(true);
@@ -564,7 +563,7 @@ optimize_integer_grid_map(const int _num_hex_cells, const double _anisotropy_alp
   for (unsigned int i = 0; i < max_stiffening_iters_; ++i)
   {
     if (opt_type_ == OPT_COMISO)
-      comiso.solve(&fe_problem, constraint_pointers, discrete_constraints, 0.0, false, true);
+      comiso.solve(&fe_problem, constraint_pointers, discrete_constraints, 0.0, false);
     else if (opt_type_ == OPT_GUROBI)
     {
 #if COMISO_GUROBI_AVAILABLE
