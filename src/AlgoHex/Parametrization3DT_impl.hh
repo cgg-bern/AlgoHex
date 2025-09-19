@@ -35,13 +35,6 @@
 #include <CoMISo/NSolver/GUROBISolver.hh>
 #endif
 
-#if COMISO_SUITESPARSE_AVAILABLE
-
-#include <Eigen/CholmodSupport>
-
-#endif
-
-
 //== NAMESPACES ===============================================================
 
 namespace AlgoHex
