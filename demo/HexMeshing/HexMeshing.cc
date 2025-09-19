@@ -505,7 +505,7 @@ void hexMeshing_from_seamless_map(const Args &args)
   //re-run seamless map generation
   auto invalid_elements_seamless = param.parametrize_complete(args.num_hex_cells, args.anisotropy, false);
 
-  if (invalid_elements_seamless.first == 0 && invalid_elements_seamless.second == 0 && COMISO_GUROBI_AVAILABLE)
+  if (invalid_elements_seamless.first == 0 && invalid_elements_seamless.second == 0)
   {
     param.parametrize_robust_quantization(args.num_hex_cells);
   }
