@@ -97,6 +97,16 @@ if(NOT TARGET CLI11::CLI11)
     FetchContent_MakeAvailable(cli11)
 endif()
 
+# important: TS3D before MC3D
+if(NOT TARGET TS3D:TS3D)
+    FetchContent_Declare(ts3d
+        GIT_REPOSITORY https://github.com/cgg-bern/TrulySeamless3D
+        GIT_TAG        cgg
+        SOURCE_DIR "${EXTERNAL_DIR}/TrulySeamless3D"
+        )
+    FetchContent_MakeAvailable(ts3d)
+endif()
+
 # important: MC3D before QGP3D
 if(NOT TARGET MC3D:MC3D)
     FetchContent_Declare(mc3d
