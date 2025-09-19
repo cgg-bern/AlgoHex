@@ -3762,7 +3762,11 @@ quantize_qgp3d(const int _num_hex_cells)
 
   // Compute a quantization and retrieve the corresponding spacing constraints
   quantization_path_constraints_.clear();
-  quantizer.quantize(scaling, quantization_path_constraints_, nHexahedra);
+  auto result = quantizer.quantize(scaling, quantization_path_constraints_, nHexahedra);
+  if (result != qgp3d::Quantizer::RetCode::SUCCESS) {
+      std::cerr << "ERROR: QGP3D quantization failed! Code " << result << std::endl;
+      throw std::runtime_error("QGP3D failed");
+  }
 
   std::cerr << "#hexahedra after QGP3D quantization = " << nHexahedra << std::endl;
 }
