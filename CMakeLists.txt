@@ -74,7 +74,17 @@ endif()
 
 # try to find Mosek before getting the other dependencies, so we don't load
 # an incompatible FindMOSEK.cmake from any of them
-find_package(Mosek)
+find_package(Mosek QUIET) # optional dependency
+
+
+find_package(CHOLMOD CONFIG)
+if (NOT CHOLMOD_FOUND)
+    if(APPLE)
+        message(FATAL_ERROR "Dependency CHOLMOD (from SuiteSparse) not found. You will also require OpenMP. You can install both using Homebrew with 'brew install libomp suitesparse', and setting the environment variable OpenMP_ROOT=/opt/homebrew/opt/libomp/ .")
+    else()
+        message(FATAL_ERROR "Dependency CHOLMOD (from SuiteSparse) not found. This *may* also be caused by missing OpenMP.")
+    endif()
+endif()
 
 set(ALGOHEX_EXTERNAL "${CMAKE_CURRENT_SOURCE_DIR}/external")
 
