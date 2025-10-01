@@ -12,7 +12,7 @@ if(NOT TARGET GMM::GMM)
         URL_HASH SHA224=8f4951901a55a1d1987d8199ed0e0b36ff2da26c870a4c3d55694a14
         SOURCE_DIR "${EXTERNAL_DIR}/gmm"
     )
-    FetchContent_Populate(gmm)
+    FetchContent_MakeAvailable(gmm)
 
     message("Downloaded GMM to ${gmm_SOURCE_DIR}")
     set(GMM_INCLUDE_DIR "${gmm_SOURCE_DIR}/include")
@@ -45,8 +45,9 @@ if(NOT TARGET Eigen3::Eigen)
         GIT_REPOSITORY https://gitlab.com/libeigen/eigen
         GIT_TAG 464c1d097891a1462ab28bf8bb763c1683883892 # master 2025-03-10
         SOURCE_DIR "${EXTERNAL_DIR}/eigen"
+        SOURCE_SUBDIR "nonexisting. Do not use Eigen CMake, we use it header-only."
     )
-    FetchContent_Populate(eigen)
+    FetchContent_MakeAvailable(eigen)
     message("Downloaded Eigen3 to ${eigen_SOURCE_DIR}")
     add_library(Eigen3::Eigen INTERFACE IMPORTED)
     target_include_directories(Eigen3::Eigen INTERFACE "$<BUILD_INTERFACE:${eigen_SOURCE_DIR}>")
