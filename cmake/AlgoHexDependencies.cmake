@@ -15,8 +15,9 @@ if(NOT TARGET GMM::GMM)
     FetchContent_MakeAvailable(gmm)
 
     message("Downloaded GMM to ${gmm_SOURCE_DIR}")
-    set(GMM_INCLUDE_DIR "${gmm_SOURCE_DIR}/include")
-    find_package(GMM REQUIRED)
+    add_library(gmm INTERFACE)
+    add_library(GMM::GMM ALIAS gmm)
+    target_include_directories(gmm INTERFACE "${gmm_SOURCE_DIR}/include")
 endif()
 
 if(NOT TARGET OpenVolumeMesh::OpenVolumeMesh)
