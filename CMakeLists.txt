@@ -67,14 +67,24 @@ if (ALGOHEX_IS_ROOT)
 endif ()
 
 if (NOT CMAKE_BUILD_TYPE)
-    message(STATUS "No build type selected, default to Release")
-    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
+    message(STATUS "No build type selected, default to RelWithDebInfo")
+    set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif()
 
 
 # try to find Mosek before getting the other dependencies, so we don't load
 # an incompatible FindMOSEK.cmake from any of them
-find_package(Mosek)
+find_package(Mosek QUIET) # optional dependency
+
+
+find_package(CHOLMOD CONFIG)
+if (NOT CHOLMOD_FOUND)
+    if(APPLE)
+        message(FATAL_ERROR "Dependency CHOLMOD (from SuiteSparse) not found. You will also require OpenMP. You can install both using Homebrew with 'brew install libomp suitesparse', and setting the environment variable OpenMP_ROOT=/opt/homebrew/opt/libomp/ .")
+    else()
+        message(FATAL_ERROR "Dependency CHOLMOD (from SuiteSparse) not found. This *may* also be caused by missing OpenMP.")
+    endif()
+endif()
 
 set(ALGOHEX_EXTERNAL "${CMAKE_CURRENT_SOURCE_DIR}/external")
 

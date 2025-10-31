@@ -12,11 +12,12 @@ if(NOT TARGET GMM::GMM)
         URL_HASH SHA224=8f4951901a55a1d1987d8199ed0e0b36ff2da26c870a4c3d55694a14
         SOURCE_DIR "${EXTERNAL_DIR}/gmm"
     )
-    FetchContent_Populate(gmm)
+    FetchContent_MakeAvailable(gmm)
 
     message("Downloaded GMM to ${gmm_SOURCE_DIR}")
-    set(GMM_INCLUDE_DIR "${gmm_SOURCE_DIR}/include")
-    find_package(GMM REQUIRED)
+    add_library(gmm INTERFACE)
+    add_library(GMM::GMM ALIAS gmm)
+    target_include_directories(gmm INTERFACE "${gmm_SOURCE_DIR}/include")
 endif()
 
 if(NOT TARGET OpenVolumeMesh::OpenVolumeMesh)
@@ -45,8 +46,9 @@ if(NOT TARGET Eigen3::Eigen)
         GIT_REPOSITORY https://gitlab.com/libeigen/eigen
         GIT_TAG 464c1d097891a1462ab28bf8bb763c1683883892 # master 2025-03-10
         SOURCE_DIR "${EXTERNAL_DIR}/eigen"
+        SOURCE_SUBDIR "nonexisting. Do not use Eigen CMake, we use it header-only."
     )
-    FetchContent_Populate(eigen)
+    FetchContent_MakeAvailable(eigen)
     message("Downloaded Eigen3 to ${eigen_SOURCE_DIR}")
     add_library(Eigen3::Eigen INTERFACE IMPORTED)
     target_include_directories(Eigen3::Eigen INTERFACE "$<BUILD_INTERFACE:${eigen_SOURCE_DIR}>")
@@ -75,13 +77,19 @@ if(NOT TARGET tinyad::tinyad)
     add_library(tinyad::tinyad ALIAS TinyAD)
 endif()
 
-if(NOT TARGET CoMISo)
+if(NOT TARGET CoMISo::CoMISo)
     FetchContent_Declare(comiso
         GIT_REPOSITORY https://gitlab.vci.rwth-aachen.de:9000/CoMISo/CoMISo.git
-        GIT_TAG 95609ed64337d0fd3c528f70c80334a74b81bb51 # cgg2-mh 2024-08-05
+        GIT_TAG 06dffe343b106ca701eff09555984dda2c489587 # master 2025-09-19
         SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/CoMISo" # case matters
         )
     set(COMISO_NO_INSTALL YES)
+    set(COMISO_ENABLE_DEFAULT OFF CACHE BOOL "" FORCE)
+    set(COMISO_ENABLE_TINYAD ON CACHE BOOL "" FORCE)
+    set(COMISO_ENABLE_IPOPT ON CACHE BOOL "" FORCE)
+    set(COMISO_ENABLE_GUROBI ON CACHE BOOL "" FORCE)
+    set(COMISO_ENABLE_SUITESPARSE_CHOLMOD ON CACHE BOOL "" FORCE)
+    #set(COMISO_ENABLE_
     FetchContent_MakeAvailable(comiso)
     if (NOT TARGET CoMISo::CoMISo)
         error(FATAL_ERROR "CoMISo target missing")
@@ -97,11 +105,21 @@ if(NOT TARGET CLI11::CLI11)
     FetchContent_MakeAvailable(cli11)
 endif()
 
+# important: TS3D before MC3D
+if(NOT TARGET TS3D:TS3D)
+    FetchContent_Declare(ts3d
+        GIT_REPOSITORY https://github.com/cgg-bern/TrulySeamless3D
+        GIT_TAG        cgg
+        SOURCE_DIR "${EXTERNAL_DIR}/TrulySeamless3D"
+        )
+    FetchContent_MakeAvailable(ts3d)
+endif()
+
 # important: MC3D before QGP3D
 if(NOT TARGET MC3D:MC3D)
     FetchContent_Declare(mc3d
         GIT_REPOSITORY https://github.com/cgg-bern/MC3D
-        GIT_TAG        gmp-finder
+        GIT_TAG        cgg
         SOURCE_DIR "${EXTERNAL_DIR}/MC3D"
         )
     FetchContent_MakeAvailable(mc3d)
@@ -110,8 +128,8 @@ endif()
 
 if(NOT TARGET QGP3D:QGP3D)
     FetchContent_Declare(qgp3d
-        GIT_REPOSITORY https://github.com/HendrikBrueckler/QGP3D
-        GIT_TAG        1acfb740547cc2fba38a7466825b1794fb31d7e2 # main on  2025-01-30: "Priority bug fixed"
+        GIT_REPOSITORY https://github.com/cgg-bern/QGP3D
+        GIT_TAG        cgg
         SOURCE_DIR "${EXTERNAL_DIR}/QGP3D"
         )
     FetchContent_MakeAvailable(qgp3d)

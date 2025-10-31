@@ -38,10 +38,6 @@
 #include "AMIPSFrameElement3D.hh"
 #include "DihedralAngleElementTinyAD.hh"
 
-#if COMISO_SUITESPARSE_AVAILABLE
-#include <Eigen/CholmodSupport>
-#endif
-
 //== NAMESPACES ===============================================================
 
 namespace AlgoHex
