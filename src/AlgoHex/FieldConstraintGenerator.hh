@@ -348,7 +348,7 @@ protected:
             normals[0][2], normals[1][2], third[2];
 
     // compute nearest frame for normals; SVD -> UV^T
-    Eigen::JacobiSVD svd{mat, Eigen::ComputeFullU | Eigen::ComputeFullV};
+    Eigen::JacobiSVD<Eigen::Matrix3d> svd{mat, Eigen::ComputeFullU | Eigen::ComputeFullV};
     Eigen::Matrix3d ortho = svd.matrixU() * svd.matrixV().transpose();
 
     // flip orientation if needed (might be a reflection instead of a rotation):
@@ -385,7 +385,7 @@ protected:
             feature_dir[2], normal_dir[2], third[2];
 
     // compute nearest frame for normals; SVD -> UV^T
-    Eigen::JacobiSVD svd{mat, Eigen::ComputeFullU | Eigen::ComputeFullV};
+    Eigen::JacobiSVD<Eigen::Matrix3d> svd{mat, Eigen::ComputeFullU | Eigen::ComputeFullV};
     Eigen::Matrix3d ortho = svd.matrixU() * svd.matrixV().transpose();
 
     // flip orientation if needed (might be a reflection instead of a rotation):
