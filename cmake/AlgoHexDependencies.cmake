@@ -23,7 +23,7 @@ endif()
 if(NOT TARGET OpenVolumeMesh::OpenVolumeMesh)
     FetchContent_Declare(openvolumemesh
         GIT_REPOSITORY  https://www.graphics.rwth-aachen.de:9000/OpenVolumeMesh/OpenVolumeMesh.git
-        GIT_TAG v3.3.0
+        GIT_TAG 550251899dd9dd16d3df7eccdb38715c838aa8ff # master 2025-11-24
         SOURCE_DIR "${EXTERNAL_DIR}/OpenVolumeMesh"
         )
     FetchContent_MakeAvailable(openvolumemesh)
@@ -40,11 +40,10 @@ endif()
 
 if(NOT TARGET Eigen3::Eigen)
     FetchContent_Declare(eigen
+        URL https://gitlab.com/libeigen/eigen/-/archive/5.0.0/eigen-5.0.0.tar.bz2
+        URL_HASH SHA256=bdca0ec740fb83be21fe038699923f4c589ead9ab904f4058a9c97752e60d50b
         #GIT_REPOSITORY https://gitlab.com/libeigen/eigen
-        #GIT_TAG 3.4.0
-        # temporary fix, 2025-01-16: my (mh) MR is not merged yet, but is required to fix a build error:
-        GIT_REPOSITORY https://gitlab.com/libeigen/eigen
-        GIT_TAG 464c1d097891a1462ab28bf8bb763c1683883892 # master 2025-03-10
+        #GIT_TAG 464c1d097891a1462ab28bf8bb763c1683883892 # master 2025-03-10
         SOURCE_DIR "${EXTERNAL_DIR}/eigen"
         SOURCE_SUBDIR "nonexisting. Do not use Eigen CMake, we use it header-only."
     )
@@ -80,7 +79,7 @@ endif()
 if(NOT TARGET CoMISo::CoMISo)
     FetchContent_Declare(comiso
         GIT_REPOSITORY https://gitlab.vci.rwth-aachen.de:9000/CoMISo/CoMISo.git
-        GIT_TAG 06dffe343b106ca701eff09555984dda2c489587 # master 2025-09-19
+        GIT_TAG 553b8a111c6855e3c74d95f8be7f6b3566d13f57 # master 2025-12-02
         SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/CoMISo" # case matters
         )
     set(COMISO_NO_INSTALL YES)
