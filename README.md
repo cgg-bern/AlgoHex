@@ -42,7 +42,7 @@ The CMake-based build system will automatically download missing dependencies un
 - [CoMISo](https://www.graphics.rwth-aachen.de/software/comiso)
 - [GMM](http://getfem.org/gmm.html)
 - [TinyAD](https://github.com/patr-schm/TinyAD)
-- [QGP3D](https://github.com/HendrikBrueckler/QGP3D) (As dependencies of QGP3D, [Gurobi](https://www.gurobi.com/) and GMP must be installed on your system)
+- [QGP3D](https://github.com/HendrikBrueckler/QGP3D) (Dependencies of QGP3D have to be installed on your system. Either [Coin-OR Bonmin](https://www.coin-or.org/Bonmin/) or the commercial solver [Gurobi](https://www.gurobi.com/) are recommended)
 - [Eigen](http://eigen.tuxfamily.org)
 - [CLI11](https://github.com/CLIUtils/CLI11.git)
 - IPOPT (Manually install on your system, macOS: `brew install ipopt`, Linux: `sudo apt-get install coinor-libipopt-dev`)
@@ -57,13 +57,23 @@ AlgoHex can be compiled independently, resulting in a command-line tool, or comp
 cd AlgoHex
 mkdir build
 cd build
-cmake -DGUROBI_HOME=/path/to/gurobi ..
+cmake ..
 make
+```
+
+## Building a Container
+
+We supply a Dockerfile that can be used to compile in a known environment. You can use Docker or podman.
+
+Example:
+```
+podman build --memory 128G -t algohex .
+podman run --rm --memory 64G --volume .:/work algohex HexMeshing -i /work/demo/HexMeshing/cylinder.ovm -o /work/demo/HexMeshing/cylinder_hex.ovm 2>&1 | tee cyl.log
 ```
 
 ## License
 
-`AlgoHex` is copyright (C) 2019-2023 by David Bommes (see the CREDITS file for more information). `AlgoHex` is free software under the GNU Affero General Public License. For more detailed license information, see LICENSE in the AlgoHex root directory.
+`AlgoHex` is copyright (C) 2019-2025 by David Bommes (see the CREDITS file for more information). `AlgoHex` is free software under the GNU Affero General Public License. For more detailed license information, see LICENSE in the AlgoHex root directory.
 
 ## Usage
 
