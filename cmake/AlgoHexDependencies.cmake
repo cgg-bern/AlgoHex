@@ -23,7 +23,7 @@ endif()
 if(NOT TARGET OpenVolumeMesh::OpenVolumeMesh)
     FetchContent_Declare(openvolumemesh
         GIT_REPOSITORY  https://www.graphics.rwth-aachen.de:9000/OpenVolumeMesh/OpenVolumeMesh.git
-        GIT_TAG v3.3.0
+        GIT_TAG 550251899dd9dd16d3df7eccdb38715c838aa8ff # master 2025-11-24
         SOURCE_DIR "${EXTERNAL_DIR}/OpenVolumeMesh"
         )
     FetchContent_MakeAvailable(openvolumemesh)
