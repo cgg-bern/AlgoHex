@@ -67,9 +67,10 @@ We supply a Dockerfile that can be used to compile in a known environment. You c
 
 Example:
 ```
-podman build --memory 128G -t algohex .
+podman build --memory 64G -t algohex .
 podman run --rm --memory 64G --volume .:/work algohex HexMeshing -i /work/demo/HexMeshing/cylinder.ovm -o /work/demo/HexMeshing/cylinder_hex.ovm 2>&1 | tee cyl.log
 ```
+**Note:** Compiling (and running) AlgoHex requires non-trivial amounts of memory. If you are using Docker/Podman on a non-Linux platform, where a VM is created to run Linux containers, you may have to increase the memory available to the VM (e.g. podman machine). For podman, this can be accomplished by stopping and deleiting the default machine (if it exists), and creating a new one using `podman machine init --memory 16384 --now`.
 
 ## License
 
