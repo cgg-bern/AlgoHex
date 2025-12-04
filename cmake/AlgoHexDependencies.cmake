@@ -40,8 +40,8 @@ endif()
 
 if(NOT TARGET Eigen3::Eigen)
     FetchContent_Declare(eigen
-        URL https://gitlab.com/libeigen/eigen/-/archive/5.0.0/eigen-5.0.0.tar.bz2
-        URL_HASH SHA256=bdca0ec740fb83be21fe038699923f4c589ead9ab904f4058a9c97752e60d50b
+        URL https://gitlab.com/libeigen/eigen/-/archive/5.0.1/eigen-5.0.1.tar.bz2
+        URL_HASH SHA256=e4de6b08f33fd8b8985d2f204381408c660bffa6170ac65b68ae1bd3cd575c0a
         #GIT_REPOSITORY https://gitlab.com/libeigen/eigen
         #GIT_TAG 464c1d097891a1462ab28bf8bb763c1683883892 # master 2025-03-10
         SOURCE_DIR "${EXTERNAL_DIR}/eigen"
