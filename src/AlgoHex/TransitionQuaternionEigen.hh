@@ -30,9 +30,6 @@ namespace AlgoHex
 
 //== CLASS DEFINITION =========================================================
 
-
-
-
 /** \class TransitionQuaternion TransitionQuaternion.hh
 
     Brief Description.
@@ -68,29 +65,16 @@ public:
   bool find_closest_transition_idx_generating_2d(const Quaternion &_q, const std::vector<int> _iv, int &_t) const;
 
   // get the quaternion of transition _i
-  Quaternion transition(const int _i) const
-  {
-    if (_i >= 0) return transitions_[_i];
-    else
-      return inverse_transition(-_i);
-  }
+  Quaternion transition(const int _i) const;
 
   // get the quaternion of the inverse transition
-  Quaternion inverse_transition(const int _i) const
-  {
-    if (_i >= 0)
-      return transition(inverse_transition_idx(_i));
-    else return transition(-_i);
-  }
+  Quaternion inverse_transition(const int _i) const;
 
   // notice that _q has to be a unit quaternion!!!
   Quaternion closest_transition(const Quaternion &_q) const { return transition(closest_transition_idx(_q)); }
 
   // return the index of the transition t s.t. _i*t is_2d_rotation and t closest to _q
-  Quaternion closest_transition_generating_2d(const Quaternion &_q, const int _i) const
-  {
-    return transition(closest_transition_idx_generating_2d(_q, _i));
-  }
+  Quaternion closest_transition_generating_2d(const Quaternion &_q, const int _i) const;
 
   // get the matrix (rounded to int) of transition _i
   Matrix transition_matrix_int(const int _i) const;
@@ -99,19 +83,9 @@ public:
   bool is_2d_rotation(const int _i) const { if (_i >= 0) return is_2d_rotation_[_i]; else return is_2d_rotation(-_i); }
 
   // return the rotation axis
-  int rotation_axis_2d(const int _i) const
-  {
-    if (_i >= 0) return rotation_axis_2d_[_i];
-    else
-      return rotation_axis_2d(-_i);
-  }
+  int rotation_axis_2d(const int _i) const;
 
-  int rotation_angle_2d(const int _i) const
-  {
-    if (_i >= 0)
-      return rotation_angle_deg_2d_[_i];
-    else return rotation_angle_2d(-_i);
-  }
+  int rotation_angle_2d(const int _i) const;
 
   // check quaternions
   void check_quaternions() const;
@@ -125,19 +99,14 @@ private:
 
   void init_mult_table();
 
-
   // test method
   void test_round_to_2d_possibilities();
-
-private:
 
   /// Copy constructor (not used)
   TransitionQuaternion(const TransitionQuaternion &_rhs);
 
   /// Assignment operator (not used)
   TransitionQuaternion &operator=(const TransitionQuaternion &_rhs);
-
-private:
 
   // vector of transition quaternions
   std::vector<Quaternion> transitions_;

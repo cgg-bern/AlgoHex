@@ -22,9 +22,7 @@ class ALGOHEX_EXPORT DihedralFeatureDetector
 public:
   DihedralFeatureDetector(TetMesh &mesh, FaceNormalCache &normals_);
 
-
   std::vector<EH> compute(double angle_threshold_degrees);
-
 
 private:
   TetMesh &mesh_;
@@ -35,7 +33,6 @@ private:
 /// Try to average unoriented normals if they are not too different from one another.
 inline std::optional<Point> normal_average(const std::vector<Point> &normals);
 
-
 class ALGOHEX_EXPORT FieldConstraintGenerator
 {
 public:
@@ -43,38 +40,26 @@ public:
 
   FieldConstraintGenerator(TetMesh &mesh, FaceNormalCache &normals_);
 
-
-
   void add_full_constraints_from_feature_edges(const std::vector<EH> &feature_edges);
-
 
   void add_partial_constraints_from_feature_edges(const std::vector<EH> &feature_edges);
 
-
   void add_alignment_constraints_from_feature_edges(const std::vector<EH> &feature_edges);
 
-
   void add_normal_constraints_from_feature_edges(const std::vector<EH> &feature_edges);
-
 
 protected:
   std::vector<Point> collect_normals(VH vh, const std::vector<EH> &incident_feature_edges);
 
-
   Quaternion computeFullConstraint(const std::vector<Point> &normals);
 
-
-
   Quaternion computeFullConstraint(const std::vector<Point> &normals, const VH &vh, const std::vector<EH> &edges);
-
-
 
 private:
   TetMesh &mesh_;
   FaceNormalCache &normals_;
   VFullConstraints &vertex_full_constraints_;
   VNormalConstraints &vertex_normal_constraints_;
-
 };
 
 
@@ -85,22 +70,16 @@ public:
 
   FieldConstraintGeneratorCellBased(TetMesh &mesh, FaceNormalCache &normals_);
 
-
   void add_partial_constraints(const std::vector<EH> &feature_edges);
-
 
   void add_feature_constraints(const std::vector<EH> &feature_edges);
 
-
   void add_normal_constraints();
-
-
 
 private:
   TetMesh &mesh_;
   FaceNormalCache &normals_;
   CPartialConstraints &cell_partial_constraints_;
-
 };
 
 }

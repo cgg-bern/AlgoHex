@@ -66,6 +66,55 @@ QuaternionSmoothing::project_quaternion(const Quaternion &_qt, const Vec3d &_dir
 
 }
 
+Quaternion QuaternionSmoothing::project_quaternion(const Quaternion &_qt, const int _axis, const Vec3d &_direction)
+{
+  // rotate _q to coordinate system, where _axis_vector is the x-axis
+  Quaternion R;
+  // get corresponding unit vector
+  int vnr = _axis / 2;
+  bool negative = _axis % 2;
+
+  Eigen::Vector3d a(0 == vnr, 1 == vnr, 2 == vnr);
+
+  if (negative)
+    a = -a;
+  R.setFromTwoVectors(a, _direction);
+  Quaternion Rip = R.inverse() * _qt;
+
+  // project rotated quaternion and normalize
+  Quaternion qp;
+  switch (_axis)
+  {
+    case 0 :
+    case 1:qp = Quaternion(Rip.w(), Rip.x(), 0, 0);
+      break;
+    case 2 :
+    case 3:qp = Quaternion(Rip.w(), 0, Rip.y(), 0);
+      break;
+    case 4 :
+    case 5:qp = Quaternion(Rip.w(), 0, 0, Rip.z());
+      break;
+    default:return _qt; // no projection
+  }
+
+  qp.normalize();
+
+  if (!std::isfinite(qp.squaredNorm()))
+  {
+    std::cout << "Warning: projection of quaternion onto direction failed!!!" << std::endl;
+    return _qt;
+  }
+
+  // express solution in original coordinate system
+  qp = R * qp;
+
+  // choose sign according to dot product between quaternions
+  if (qp.dot(_qt) < 0.0)
+    qp = Quaternion(-qp.w(), -qp.x(), -qp.y(), -qp.z());
+
+  return qp;
+}
+
 template<class CT>
 void
 QuaternionSmoothing::smooth_field_quaternion(const TetMesh &mesh, const HFP<int> &trans_prop, const CT &cells,
@@ -719,10 +768,6 @@ QuaternionSmoothing::optimize_quaternions_with_alignment_constraints(const TetMe
                                                     _iter);
 
 }
-
-
-//=============================================================================
-
 
 } // namespace AlgoHex
 //=============================================================================

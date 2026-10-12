@@ -37,12 +37,7 @@ public:
   using VecAxis = std::pair<Vec3d, int>;
   using DC = std::pair<double, CH>;
 
-
-  FrameFieldOptimization(TetMesh &_mesh) : MeshProperties(_mesh),
-                                          mesh_(_mesh)
-  {
-  }
-
+  FrameFieldOptimization(TetMesh &_mesh);
 
   void align_quaternions_to_feature(const int _iterations);
 

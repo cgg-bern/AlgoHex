@@ -17,6 +17,11 @@
 namespace AlgoHex
 {
 
+FrameFieldOptimization::FrameFieldOptimization(TetMesh &_mesh) : MeshProperties(_mesh),
+                                        mesh_(_mesh)
+{
+}
+
 void
 FrameFieldOptimization::
 align_quaternions_to_feature(const int _iterations)

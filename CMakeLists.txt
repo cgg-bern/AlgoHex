@@ -104,6 +104,7 @@ add_library(AlgoHex
         src/AlgoHex/FrameFieldOptimizer3D.hh
         src/AlgoHex/FrameFieldOptimizer3D.cc
         src/AlgoHex/Geometry.hh
+        src/AlgoHex/Geometry.cc
         src/AlgoHex/MeshGeometry.hh
         src/AlgoHex/MeshGeometry.cc
         src/AlgoHex/Parametrization3D.hh
@@ -122,14 +123,20 @@ add_library(AlgoHex
         src/AlgoHex/AxisAlignment.hh
         src/AlgoHex/AxisAlignment.cc
         src/AlgoHex/AMIPSFrameElement3D.hh
+        src/AlgoHex/AMIPSFrameElement3D.cc
         src/AlgoHex/AMIPSFrameElement3DTinyAD.hh
+        src/AlgoHex/AMIPSFrameElement3DTinyAD.cc
         src/AlgoHex/BarrierElements.hh
+        src/AlgoHex/BarrierElements.cc
         src/AlgoHex/DeformationElements3D.hh
+        src/AlgoHex/DeformationElements3D.cc
         src/AlgoHex/DihedralAngleElementTinyAD.hh
         src/AlgoHex/FrameFittingElement3D.hh
+        src/AlgoHex/FrameFittingElement3D.cc
         src/AlgoHex/IntegrabilityElements3D.hh
         src/AlgoHex/LinearLeastSquaresElements.hh
         src/AlgoHex/LogDetElement3D.hh
+        src/AlgoHex/LogDetElement3D.cc
 
         src/AlgoHex/Util/StopWatch.hh
         src/AlgoHex/Util/ScopedStopWatch.hh
@@ -172,9 +179,11 @@ add_library(AlgoHex
         src/AlgoHex/LocallyMeshableField/EdgeMonodromyHelper.hh
         src/AlgoHex/LocallyMeshableField/EdgeMonodromyHelper.cc
         src/AlgoHex/LocallyMeshableField/EnergyFunctions.hh
+        src/AlgoHex/LocallyMeshableField/EnergyFunctions.cc
         src/AlgoHex/LocallyMeshableField/EnsureEdgeMeshability.hh
         src/AlgoHex/LocallyMeshableField/EnsureEdgeMeshability.cc
         src/AlgoHex/LocallyMeshableField/ExpDeformationElements3D.hh
+        src/AlgoHex/LocallyMeshableField/ExpDeformationElements3D.cc
         src/AlgoHex/LocallyMeshableField/FieldAngleCalculator.hh
         src/AlgoHex/LocallyMeshableField/FieldAngleCalculator.cc
         src/AlgoHex/LocallyMeshableField/FixZipperNode.hh

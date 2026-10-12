@@ -15,19 +15,12 @@ namespace AlgoHex
 {
 
 using VFullConstraints = std::vector<std::pair<VH, Quaternion>>;
-
- VFullConstraints &get_vertex_full_constraints(TetMesh &mesh);
-
+VFullConstraints &get_vertex_full_constraints(TetMesh &mesh);
 
 using VNormalConstraints = std::vector<std::pair<VH, TetMesh::PointT>>;
-
- VNormalConstraints &get_vertex_normal_constraints(TetMesh &mesh);
-
-
+VNormalConstraints &get_vertex_normal_constraints(TetMesh &mesh);
 
 using CPartialConstraints = std::vector<std::pair<CH, TetMesh::PointT>>;
-
- CPartialConstraints &get_cell_partial_constraints(TetMesh &mesh);
-
+CPartialConstraints &get_cell_partial_constraints(TetMesh &mesh);
 
 }

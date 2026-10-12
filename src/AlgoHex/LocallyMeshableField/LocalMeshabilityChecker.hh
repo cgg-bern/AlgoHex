@@ -31,65 +31,41 @@ public:
 
   LocalMeshabilityChecker(TetMesh &_mesh);
 
-
   ~LocalMeshabilityChecker() = default;
 
-
-public:
   nlohmann::json &json_data();
-
 
   double check_edge_local_meshability(const bool _align_to_sge = false);
 
-
   double check_local_meshability(const bool _align_to_sge = false);
-
 
   bool check_special_vertices_local_meshability(const bool _align_to_sge = false);
 
-
-
   bool is_on_feature_vertex(const VH _vh) const;
-
-
 
   bool is_on_feature_edge(const VH _vh) const;
 
-
-
   bool is_on_feature_face(const VH _vh) const;
-
 
   bool is_on_singular_node(const VH _vh) const;
 
-
   bool is_zipper_node(const VH _vh) const;
-
-
 
   bool is_on_singular_arc(const VH _vh) const;
 
-
   bool is_singular_vertex(const VH _vh) const;
-
 
   void enable_save_locally_non_meshable(const std::string _filename_base = "locally_non_meshable_");
 
-
   int n_complex_singular_edges() const;
-
 
   int n_singular_edges() const;
 
-
   double len_complex_singular_edges() const;
-
 
   double len_singular_edges() const;
 
-
   bool &verbose();
-
 
 private:
   TetMesh &mesh_;

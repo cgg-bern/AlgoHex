@@ -110,40 +110,12 @@ public:
   typedef Eigen::Matrix<int, 3, 1> Vec3i;
   typedef Eigen::Matrix<int, 4, 1> Vec4i;
 
-
   typedef std::pair<unsigned int, COMISO::VariableType> PairUiV;
 
   using QPathConstraint = qgp3d::PathConstraint;
 
   // constructors
-  Parametrization3D(TetMesh &_m,
-                     OpenVolumeMesh::StatusAttrib &_mesh_status
-          /*OpenVolumeMesh::ColorAttrib<ACG::Vec4f>& _mesh_color*/)
-          : mesh_(_m),
-            mesh_status_(_mesh_status),
-//    mesh_color_(_mesh_color),
-            frame_cprop_(mesh_.request_cell_property<Mat3x3>("AlgoHex::FrameField")),
-            transition_hfprop_(mesh_.request_halfface_property<int>("HalffaceTransiton")),
-            valence_eprop_(mesh_.request_edge_property<int>("edge_valance")),
-            feature_vprop_(mesh_.request_vertex_property<int>("AlgoHex::FeatureVertices", 0)),
-            feature_eprop_(mesh_.request_edge_property<int>("AlgoHex::FeatureEdges", 0)),
-            feature_fprop_(mesh_.request_face_property<int>("AlgoHex::FeatureFaces", 0)),
-            igm_cprop_(mesh_.request_cell_property<std::map<OpenVolumeMesh::VertexHandle, Point> >(
-                    "Parametrization")),
-            is_on_cut_fprop_(mesh_.request_face_property<bool>("CutSurfaceBool")),
-            global_idx_(mesh_.request_cell_property<Vec4i>("GlobalIdx")),
-            max_global_idx_(0),
-            n_helper_variables_(0),
-            cell_weight_(mesh_.request_cell_property<double>("CellWeight")),
-            max_stiffening_iters_(100),
-            stiffening_weight_(4.0),
-            opt_type_(OPT_COMISO),
-            timelimit_(120)
-  {
-    mesh_.set_persistent(igm_cprop_, true);
-    mesh_.set_persistent(frame_cprop_, true);
-    reset_cell_weights();
-  }
+  Parametrization3D(TetMesh &_m, OpenVolumeMesh::StatusAttrib &_mesh_status);
 
 //  parametrize frame field to integer-grid map
 //  input:
@@ -156,7 +128,6 @@ public:
 //        (2) each tet has at most one such alignment constraint (tet mesh is split properly) except for boundary normal + boundary feature
 //  output:
 //    igm_cprop_(mesh_.request_cell_property< std::map<OpenVolumeMesh::VertexHandle, ACG::Vec3d> >("Parametrization"))
-
 
   std::pair<int, int> parametrize_complete(const int _num_hex_cells = 1000, const double _anisotropy_alpha = 1.0,
                                            const bool _with_integer_constraints = true);
@@ -180,7 +151,6 @@ public:
   void set_stiffening_weight(const double _w) { stiffening_weight_ = _w; }
 
   void set_max_stiffening_iters(const unsigned int _n) { max_stiffening_iters_ = _n; }
-
 
   nlohmann::json &json_data() { return json_data_; }
 
@@ -207,9 +177,7 @@ public:
 
   void convertTetrahedralMeshIndexing(const TetMesh &_mesh, TetMesh &_tetMesh);
 
-
 private:
-
   void check_input_mesh() const;
 
   // generate cut surface by initializing
@@ -236,21 +204,16 @@ private:
   void setup_deformation_objective_function(COMISO::FiniteElementSet<FF3DV_PH_AD> &_fe_ff, const double _epsilon,
                                             const double _target_det_scaling);
 
-
   void setup_symmetric_dirichlet_objective_function(COMISO::FiniteElementSet<SDE3D_PH_AD> &_fe_sdirichlet, const double _w,
                                                const double _sizing_scale, const double _inversion_penalty);
 
   void setup_jacobian_smoothness_objective_function( COMISO::FiniteElementSet<JSE3D_AD>& _fe_jacobian_smoothness, const double _w, const double _sizing_scale);
 
-
-
   void setup_domain_deformation_objective_function(COMISO::FiniteElementSet<FF3DV_PH_AD> &_fe_ff,
                                                    const int _domain_idx_base);
 
-
   void setup_ball_barrier_objective_function(COMISO::FiniteElementSet<BB3D_AD_PH> &_fe_bb, const int _domain_idx_base,
                                              const double _radius_scale = 1.0);
-
 
   void setup_dual_deformation_objective_function(COMISO::FiniteElementSet<FFD3DV_PH_AD> &_fe_ffd, const double _epsilon,
                                                  const double _target_det_scaling, const int _domain_idx_base);
@@ -279,11 +242,9 @@ private:
   void add_feature_constraints(std::vector<COMISO::LinearConstraint> &_constraints,
                                std::vector<COMISO::NConstraintInterface *> &_constraint_pointers);
 
-
   void reset_cell_weights();
 
   int update_cell_weights(const std::vector<double> &_x);
-
 
   int tet_vidx(const CH _ch, const VH _vh) const;
 
@@ -315,11 +276,7 @@ private:
   void jacobi_matrix(const Mat3x4d &_P, const Mat3x4d &_U, Mat3d &_J);
 
   // copy cell property
-  void copy_cell_property(OVM::CellPropertyT<std::map<VH, Point>> &_source, OVM::CellPropertyT<std::map<VH, Point>> &_target)
-  {
-    for (auto ch: mesh_.cells())
-      _target[ch] = _source[ch];
-  }
+  void copy_cell_property(OVM::CellPropertyT<std::map<VH, Point>> &_source, OVM::CellPropertyT<std::map<VH, Point>> &_target);
 
   // T(a) = R*a+t
   void transform_constraint(COMISO::LinearConstraint::SVectorNC &_cx,
@@ -336,7 +293,6 @@ private:
                             const int _bidx_from,
                             const int _bidx_to) const;
 
-
   // T(a) = R^-1*(a-t)
   void inverse_transform_constraint(COMISO::LinearConstraint::SVectorNC &_cx,
                                     COMISO::LinearConstraint::SVectorNC &_cy,
@@ -351,7 +307,6 @@ private:
                           const int _transition_function) const;
 
   void check_quantization_path_constraints();
-
 
 public:
   int number_of_invalid_parametric_tets();
@@ -369,18 +324,10 @@ public:
   double degenerate_volume_map();
 
   // interior dihedral angle in param
-  double edge_angle(const EH &_eh)
-  {
-    std::vector<double> ta;
-    return edge_angle(_eh, ta);
-  }
+  double edge_angle(const EH &_eh);
 
   // interior dihedral angle in mesh
-  double mesh_edge_angle(const EH &_eh)
-  {
-    std::vector<double> ta;
-    return mesh_edge_angle(_eh, ta);
-  }
+  double mesh_edge_angle(const EH &_eh);
 
   // as before but in addition to the sum return vector of tet angles
   double edge_angle(const EH &_eh, std::vector<double> &_tet_angles);
@@ -396,7 +343,6 @@ public:
   int incident_feature_faces(const VH _vh, std::vector<FH> &_ffh) const;
 
   inline double clamp(const double _value, const double _min_val, const double _max_val) const;
-
 private:
 
   // mesh, status and color attribs

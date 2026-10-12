@@ -22,14 +22,10 @@ namespace AlgoHex
 class ALGOHEX_EXPORT CellSplit
 {
 public:
-  CellSplit(TetMesh &_mesh) :
-          mesh_(_mesh),
-          target_length_(mesh_.request_vertex_property<double>("target_length")),
-          cell_quaternions_(mesh_.request_cell_property<Quaternion>("FrameFieldQuaternions")) {}
+  CellSplit(TetMesh &_mesh);
 
   ~CellSplit() {}
 
-public:
   VH cell_split(const CH _ch);
 
   bool is_split_ok(const CH _ch) const;
@@ -37,8 +33,6 @@ public:
 private:
   void update_properties(const VH _vh_new, const Quaternion &_old_qt);
 
-
-private:
   TetMesh &mesh_;
   VP<double> target_length_;
   CP<Quaternion> cell_quaternions_;
@@ -48,19 +42,10 @@ private:
 class ALGOHEX_EXPORT FaceSplit
 {
 public:
-  FaceSplit(TetMesh &_mesh) :
-          mesh_(_mesh),
-          target_length_(mesh_.request_vertex_property<double>("target_length")),
-          trans_prop_(mesh_.request_halfface_property<int>("HalffaceTransiton")),
-          cell_quaternions_(mesh_.request_cell_property<Quaternion>("FrameFieldQuaternions")),
-          feature_face_vertex_(mesh_.request_vertex_property<bool>("AlgoHex::FeatureFaceVertices")),
-          feature_face_edge_(mesh_.request_edge_property<bool>("AlgoHex::FeatureFaceEdges")),
-          feature_fprop_(mesh_.request_face_property<int>("AlgoHex::FeatureFaces")),
-          visited_fprop_(mesh_.request_face_property<bool>("visited faces")) {}
+  FaceSplit(TetMesh &_mesh);
 
   ~FaceSplit() {}
 
-public:
   VH face_split(const FH _fh);
 
   bool is_split_ok(const FH _fh) const;
@@ -70,8 +55,6 @@ private:
                          const int _inv_trans, const std::vector<Quaternion> &_old_qts,
                          const int _ff_id, const bool _is_visited_face);
 
-
-private:
   TetMesh &mesh_;
   VP<double> target_length_;
 
@@ -90,26 +73,10 @@ class ALGOHEX_EXPORT EdgeSplit
 public:
   using Point = TetMesh::PointT;
 
-  EdgeSplit(TetMesh &_mesh) :
-          mesh_(_mesh),
-          vo_(mesh_),
-          valence_(mesh_.request_edge_property<int>("edge_valance")),
-          trans_prop_(mesh_.request_halfface_property<int>("HalffaceTransiton")),
-          cell_quaternions_(mesh_.request_cell_property<Quaternion>("FrameFieldQuaternions")),
-          sgl_vt_(mesh_.request_vertex_property<int>("singular_vertex")),
-          feature_edge_vertex_(mesh_.request_vertex_property<bool>("AlgoHex::FeatureEdgeVertices")),
-          feature_edge_(mesh_.request_edge_property<int>("AlgoHex::FeatureEdges")),
-          feature_face_vertex_(mesh_.request_vertex_property<bool>("AlgoHex::FeatureFaceVertices")),
-          feature_face_edge_(mesh_.request_edge_property<bool>("AlgoHex::FeatureFaceEdges")),
-          feature_fprop_(mesh_.request_face_property<int>("AlgoHex::FeatureFaces")),
-          target_length_(mesh_.request_vertex_property<double>("target_length")),
-          sg_edge_pairs_(mesh_.request_edge_property<int>("separate edge pairs")),
-          keep_on_feature_face_(mesh_.request_edge_property<bool>("sge kept on feature face")),
-          visited_fprop_(mesh_.request_face_property<bool>("visited faces")) {}
+  EdgeSplit(TetMesh &_mesh);
 
   ~EdgeSplit() {}
 
-public:
   VH edge_split(const EH _eh, const bool _check_energy = false);
 
   bool is_split_ok(const EH _eh) const;
@@ -131,8 +98,6 @@ private:
 
   bool check_energy(const HEH _heh, Point &_split_pt) const;
 
-
-private:
   TetMesh &mesh_;
   AlgoHex::TransitionQuaternion tq_;
 
@@ -162,28 +127,7 @@ class ALGOHEX_EXPORT EdgeCollapse : public MeshProperties
 public:
   using Point = TetMesh::PointT;
 
-  EdgeCollapse(TetMesh &_mesh) : MeshProperties(_mesh),
-                                mesh_(_mesh),
-                                vo_(mesh_),
-                                valence_(mesh_.request_edge_property<int>("edge_valance")),
-                                trans_prop_(mesh_.request_halfface_property<int>("HalffaceTransiton")),
-                                cell_quaternions_(mesh_.request_cell_property<Quaternion>(
-                                        "FrameFieldQuaternions")),
-                                sgl_vt_(mesh_.request_vertex_property<int>("singular_vertex")),
-                                feature_node_(
-                                        mesh_.request_vertex_property<int>("AlgoHex::FeatureVertices")),
-                                feature_edge_vertex_(
-                                        mesh_.request_vertex_property<bool>("AlgoHex::FeatureEdgeVertices")),
-                                feature_edge_(
-                                        mesh_.request_edge_property<int>("AlgoHex::FeatureEdges")),
-                                feature_face_vertex_(mesh_.request_vertex_property<bool>(
-                                        "AlgoHex::FeatureFaceVertices")),
-                                feature_face_edge_(
-                                        mesh_.request_edge_property<bool>("AlgoHex::FeatureFaceEdges")),
-                                feature_fprop_(
-                                        mesh_.request_face_property<int>("AlgoHex::FeatureFaces")),
-                                keep_on_feature_face_(
-                                        mesh_.request_edge_property<bool>("sge kept on feature face")) {}
+  EdgeCollapse(TetMesh &_mesh);
 
   ~EdgeCollapse() {}
 
@@ -192,7 +136,6 @@ public:
     CollapseOK, DOFError, LinkError
   };
 
-public:
   VH edge_collapse(const HEH _heh, const bool _check_energy = true);
 
   VH edge_collapse_allow_inverted(const HEH _heh);
@@ -247,7 +190,6 @@ private:
 
   int n_incident_special_edges(const VH _vh) const;
 
-private:
   TetMesh &mesh_;
   VertexOptimize vo_;
 
@@ -280,28 +222,17 @@ class ALGOHEX_EXPORT EdgeSwap
 public:
   using Point = TetMesh::PointT;
 
-  EdgeSwap(TetMesh &_mesh) :
-          mesh_(_mesh),
-          valence_(mesh_.request_edge_property<int>("edge_valance")),
-          trans_prop_(mesh_.request_halfface_property<int>("HalffaceTransiton")),
-          cell_quaternions_(mesh_.request_cell_property<Quaternion>("FrameFieldQuaternions")),
-          sgl_vt_(mesh_.request_vertex_property<int>("singular_vertex")),
-          feature_edge_(mesh_.request_edge_property<int>("AlgoHex::FeatureEdges")),
-          feature_edge_vertex_(mesh_.request_vertex_property<bool>("AlgoHex::FeatureEdgeVertices")),
-          feature_face_edge_(mesh_.request_edge_property<bool>("AlgoHex::FeatureFaceEdges")),
-          feature_face_vertex_(mesh_.request_vertex_property<bool>("AlgoHex::FeatureFaceVertices")),
-          feature_fprop_(mesh_.request_face_property<int>("AlgoHex::FeatureFaces")) {}
+  EdgeSwap(TetMesh &_mesh);
 
   ~EdgeSwap() {}
 
-public:
   std::set<EH> edge_swap(const EH _eh);
 
   bool is_swap_ok(const EH _eh) const;
 
   void set_post_remeshing(const bool _post_remesh) { post_remesh_ = _post_remesh; }
 
-public:
+private:
   //make sure the transitions of the deleted halffaces are identity
   bool local_coordinate_transformation(const HEH _heh, const HFH _hf_start, const bool _is_bdy_e);
 
@@ -362,7 +293,6 @@ public:
 
   HFH find_start_halfface(const HEH _heh, const bool _is_bdy_e) const;
 
-private:
   TetMesh &mesh_;
   EP<int> valence_;
   HFP<int> trans_prop_;

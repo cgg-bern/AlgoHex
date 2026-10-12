@@ -22,17 +22,14 @@ public:
 
   FaceNormalCache(const TetMesh &mesh);
 
-
   FaceNormalCache(const FaceNormalCache &) = delete;
 
   Normal operator[](HFH hfh);
-
 
 private:
 
   /// Get normal from cache if available, otherwise compute it (and update cache)
   const Normal &face_normal(FH fh);
-
 
   const TetMesh &mesh_;
   std::map<FH, Normal> face_normal_;

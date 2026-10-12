@@ -65,24 +65,8 @@ public:
     bool ccw;
   };
 
+  FixConstrainedZipperNode(TetMesh &_mesh);
 
-  FixConstrainedZipperNode(TetMesh &_mesh) : MeshProperties(_mesh), ArcZipping(_mesh),
-                                            mesh_(_mesh),
-                                            sg_edge_pairs_(
-                                                    mesh_.request_edge_property<int>("separate edge pairs")),
-                                            keep_on_feature_face_(mesh_.request_edge_property<bool>(
-                                                    "sge kept on feature face", false)),
-                                            sge_(mesh_),
-                                            fac_(mesh_),
-                                            es_(mesh_),
-                                            fs_(mesh_),
-                                            fis_(mesh_),
-                                            tu_(mesh_)
-  {
-    mesh_.set_persistent(keep_on_feature_face_, true);
-  }
-
-public:
   void set_second_stage() { second_stage_ = true; };
 
   int fix_constrained_zipper_node(const VH _vh);
@@ -121,7 +105,6 @@ public:
   bool is_separable_at_vertex(const VH _vh, std::set<HEH> &_ft_hehs);
 
   bool is_valid_feature_face_sector_after(const HEH _heh, const HFH _hfh_s, const HFH _hfh_e, int _trans);
-
 
 private:
   void get_special_sectors_at_special_edge_vertex(const VH vh, std::vector<std::vector<HEH>> &v_sec_hehs,
@@ -175,7 +158,6 @@ private:
 
   bool has_detachable_non_feature_face_singular_edge_at_vertex(const CH _ch_s, int _rt_axis, const VH _vh_query);
 
-private:
   std::vector<FH> shortest_face_path_on_feature_surface(const GDINFO &_gd, VH &_other_vh, const double _weight);
 
   std::vector<FH>
@@ -201,44 +183,12 @@ private:
 
   int split_edges_with_face_property_update(std::set<FH> &_dp_fhs, const std::set<EH> &_ehs, std::set<FH> &_target_fhs);
 
-  bool is_other_feature_edge_vertex(const VH _vh, const std::set<VH> &_excluded_vhs) const
-  {
-    if (feature_edge_vertex_[_vh])
-    {
-      if (_excluded_vhs.find(_vh) != _excluded_vhs.end())
-        return false;
-    }
-    else
-      return false;
+  bool is_other_feature_edge_vertex(const VH _vh, const std::set<VH> &_excluded_vhs) const;
 
-    return true;
-  }
+  bool is_other_singular_vertex(const VH _vh, const std::set<VH> &_excluded_vhs) const;
 
-  bool is_other_singular_vertex(const VH _vh, const std::set<VH> &_excluded_vhs) const
-  {
-    if (sgl_vt_[_vh] != 0)
-    {
-      if (_excluded_vhs.find(_vh) != _excluded_vhs.end())
-        return false;
-    }
-    else
-      return false;
+  int n_bad_vertices_in_face(const FH _fh, const std::set<VH> &_excl_vhs) const;
 
-    return true;
-  }
-
-  int n_bad_vertices_in_face(const FH _fh, const std::set<VH> &_excl_vhs) const
-  {
-    int n = 0;
-    for (auto fv_it = mesh_.fv_iter(_fh); fv_it.valid(); ++fv_it)
-      if ((sgl_vt_[*fv_it] != 0 || feature_edge_vertex_[*fv_it]) && _excl_vhs.find(*fv_it) == _excl_vhs.end())
-        n++;
-
-
-    return n;
-  }
-
-private:
   TetMesh &mesh_;
   EP<int> sg_edge_pairs_;
   EP<bool> keep_on_feature_face_;

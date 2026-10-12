@@ -16,6 +16,14 @@
 
 namespace AlgoHex
 {
+
+SeparableSingularArcFinder::SeparableSingularArcFinder(TetMesh &_mesh) : MeshProperties(_mesh),
+                                            mesh_(_mesh),
+                                            keep_on_feature_face_(mesh_.request_edge_property<bool>(
+                                                    "sge kept on feature face")),
+                                            fac_(mesh_),
+                                            es_(mesh_) {}
+
 std::set<HFH>
 SeparableSingularArcFinder::find_anti_parallel_singular_edge_with_disk_path(const VH _vh,
                                                                                     const std::set<CH> &_or_chs,

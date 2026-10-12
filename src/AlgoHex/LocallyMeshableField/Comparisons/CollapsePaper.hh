@@ -31,16 +31,7 @@ public:
   using MeshProperties::cell_quaternions_;
   using MeshProperties::feature_face_edge_;
 
-  CollapseApproach(TetMesh &_mesh) :
-          MeshProperties(_mesh),
-          mesh_(_mesh),
-          sge_(mesh_),
-          ec_(mesh_),
-          es_(mesh_),
-          vo_(mesh_)
-  {
-    this->initialize_singular_vertex_property();
-  }
+  CollapseApproach(TetMesh &_mesh);
 
   void collapse_approach();
 

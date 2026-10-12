@@ -34,18 +34,7 @@ public:
   using MeshProperties::feature_face_vertex_;
   using MeshProperties::feature_edge_vertex_;
 
-  SplitApproach(TetMesh &_mesh) :
-          MeshProperties(_mesh),
-          mesh_(_mesh),
-          sge_(mesh_),
-          pp_(mesh_),
-          flnmv_(mesh_),
-          eem_(mesh_),
-          fac_(mesh_),
-          es_(mesh_)
-  {
-    this->initialize_singular_vertex_property();
-  }
+  SplitApproach(TetMesh &_mesh);
 
   void split_approach();
 
@@ -59,8 +48,6 @@ public:
 
   bool is_removable_zigzag(const FH &_fh) const;
 
-  bool is_removable_zigzag2(const FH &_fh) const;
-
   int n_legal_singular_edges_in_face(const FH &_fh) const;
 
   int n_singular_edges_in_face(const FH &_fh) const;
@@ -68,7 +55,6 @@ public:
   bool check_zigzag();
 
   int n_complex_singular_edges();
-
 
 private:
   TetMesh &mesh_;

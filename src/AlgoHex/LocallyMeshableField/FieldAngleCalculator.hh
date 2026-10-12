@@ -36,16 +36,10 @@ public:
 
   using MeshProperties::sgl_vt_;
 
-
   using Point = TetMesh::PointT;
 
+  FieldAngleCalculator(TetMesh &_mesh);
 
-  FieldAngleCalculator(TetMesh &_mesh) : MeshProperties(_mesh),
-                                        mesh_(_mesh)
-  {
-  }
-
-public:
   struct HALFFACEINFO2
   {
   public:
@@ -63,7 +57,6 @@ public:
     int trans;
   };
 
-public:
 //  void feature_face_angles_at_feature_edge(const HEH _heh) const;
 
   void print_feature_sector_angles(const VH _vh) const;
@@ -139,7 +132,6 @@ public:
 
   std::vector<int> rotation_axes_expressed_in_common_tet(const VH _vh, const std::vector<HEH> &_sg_hehs);
 
-public:
   int axis_in_chs_expressed_in_cht(const CH _ch_s, const CH _ch_t, int _axis,
                                    const std::set<CH> _onering_chs) const;
 
@@ -156,7 +148,6 @@ public:
 private:
   HALFFACEINFO2 next_halfface_info(const HALFFACEINFO2 &hi_cur, const HEH _he_s, const int _u) const;
 
-private:
   TetMesh &mesh_;
 
   TransitionQuaternion tq_;

@@ -82,24 +82,7 @@ public:
   };
 
   // constructors
-  FrameFieldOptimizer3D(TetMesh &_m
-//          , OpenVolumeMesh::StatusAttrib &_mesh_status
-          /*OpenVolumeMesh::ColorAttrib<ACG::Vec4f>& _mesh_color*/)
-          : mesh_(_m),
-//            mesh_status_(_mesh_status),
-//    mesh_color_(_mesh_color),
-            frame_cprop_(mesh_.request_cell_property<Mat3d>("AlgoHex::FrameField")),
-            transition_hfprop_(mesh_.request_halfface_property<int>("HalffaceTransiton")),
-            valence_eprop_(mesh_.request_edge_property<int>("edge_valance")),
-            feature_vprop_(mesh_.request_vertex_property<int>("AlgoHex::FeatureVertices")),
-            feature_eprop_(mesh_.request_edge_property<int>("AlgoHex::FeatureEdges")),
-            feature_fprop_(mesh_.request_face_property<int>("AlgoHex::FeatureFaces")),
-            save_locally_non_meshable_(false),
-            save_locally_non_meshable_filename_base_("locally_non_meshable_")
-  {
-    mesh_.set_persistent(valence_eprop_);
-    mesh_.set_persistent(transition_hfprop_);
-  }
+  FrameFieldOptimizer3D(TetMesh &_m);
 
 //  optimize frame field to become more integrable
 //  input:
@@ -124,11 +107,7 @@ public:
 
   nlohmann::json &json_data() { return json_data_; }
 
-  void enable_save_locally_non_meshable(const std::string _filename_base = "locally_non_meshable_")
-  {
-    save_locally_non_meshable_ = true;
-    save_locally_non_meshable_filename_base_ = _filename_base;
-  }
+  void enable_save_locally_non_meshable(const std::string _filename_base = "locally_non_meshable_");
 
   void import_frames_from_vec3d_properties();
 
@@ -143,7 +122,6 @@ public:
   void check_frame_rotation_angles();
 
 private:
-
   void mesh_tet(const CH _ch, Mat3x4d &_P) const;
 
   double volume(const CH _ch) const;
@@ -151,8 +129,6 @@ private:
   double mesh_volume() const;
 
   double volume_frame(const CH _ch) const;
-
-//  double interior_angle(const EH _eh) const;
 
   bool is_on_feature_vertex(const VH _vh) const;
 
@@ -186,8 +162,6 @@ public:
 private:
   void export_local_configuration(TetMesh &tetmesh, const std::vector<CH> &_chv, const std::vector<EH> &_invalid_edges,
                                   const std::vector<double> &_x0, const std::vector<double> &_x) const;
-
-private:
 
   // mesh, status and color attribs
   TetMesh &mesh_;

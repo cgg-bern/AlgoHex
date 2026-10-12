@@ -24,63 +24,10 @@ public:
   static Quaternion
   ALGOHEX_EXPORT construct_quaternion(const Quaternion &_qt, const std::vector<VecAxis> &_directions);
 
-
-  static Quaternion project_quaternion(const Quaternion &_qt, const int _axis, const Vec3d &_direction)
-  {
-    // rotate _q to coordinate system, where _axis_vector is the x-axis
-    Quaternion R;
-    // get corresponding unit vector
-    int vnr = _axis / 2;
-    bool negative = _axis % 2;
-
-    Eigen::Vector3d a(0 == vnr, 1 == vnr, 2 == vnr);
-
-    if (negative)
-      a = -a;
-    R.setFromTwoVectors(a, _direction);
-    Quaternion Rip = R.inverse() * _qt;
-
-    // project rotated quaternion and normalize
-    Quaternion qp;
-    switch (_axis)
-    {
-      case 0 :
-      case 1:qp = Quaternion(Rip.w(), Rip.x(), 0, 0);
-        break;
-      case 2 :
-      case 3:qp = Quaternion(Rip.w(), 0, Rip.y(), 0);
-        break;
-      case 4 :
-      case 5:qp = Quaternion(Rip.w(), 0, 0, Rip.z());
-        break;
-      default:return _qt; // no projection
-    }
-
-    qp.normalize();
-
-    if (!std::isfinite(qp.squaredNorm()))
-    {
-      std::cout << "Warning: projection of quaternion onto direction failed!!!" << std::endl;
-      return _qt;
-    }
-
-    // express solution in original coordinate system
-    qp = R * qp;
-
-    // choose sign according to dot product between quaternions
-    if (qp.dot(_qt) < 0.0)
-      qp = Quaternion(-qp.w(), -qp.x(), -qp.y(), -qp.z());
-
-    return qp;
-  }
-
+  static Quaternion project_quaternion(const Quaternion &_qt, const int _axis, const Vec3d &_direction);
 
   static Quaternion
   ALGOHEX_EXPORT project_quaternion(const Quaternion &_qt, const Vec3d &_direction);
-
-
-
-
 
   //align to feature faces, feature edges (and singular edges if added)
   template<class CT>
@@ -90,8 +37,6 @@ public:
                           const CP<std::vector<Vec3d>> &_ch_alignments, const AlgoHex::TransitionQuaternion &tq,
                           CP<Quaternion> &cell_quaternions);
 
-
-  //project to specified axis
   //align to feature faces, feature edges (and singular edges if added)
   template<class CT>
   static void
@@ -99,10 +44,6 @@ public:
                           const HFP<bool> &_is_hf_bdy,
                           const CP<std::vector<VecAxis>> &_ch_alignments, const AlgoHex::TransitionQuaternion &tq,
                           CP<Quaternion> &cell_quaternions);
-
-
-
-
 
   template<class CT>
   static void
@@ -126,10 +67,6 @@ public:
                                             const EP<int> &feature_edge,
                                             const std::set<CH> &_cells, const bool _align_sg = false);
 
-
-
-
-
   static void
   ALGOHEX_EXPORT optimize_quaternions_wrt_prescribed_valence(const TetMesh &mesh, const HFP<int> &trans_prop,
                                                           const AlgoHex::TransitionQuaternion &tq,
@@ -137,8 +74,6 @@ public:
                                                           const EP<int> &valence, const EP<int> &feature_edge,
                                                           const FP<int> &feature_face, const std::set<CH> &_cells,
                                                           const bool _align_sg = false);
-
-
 
   static void
   ALGOHEX_EXPORT optimize_quaternions_wrt_prescribed_valence(const TetMesh &mesh, const HFP<int> &trans_prop,
@@ -148,19 +83,12 @@ public:
                                                           const FP<int> &feature_face, const VH _vh_new,
                                                           const bool _align_sg = false);
 
-
-
-
   //
   static void
   ALGOHEX_EXPORT optimize_quaternions_at_edge(const TetMesh &mesh, const HFP<int> &trans_prop,
                                            const AlgoHex::TransitionQuaternion &tq,
                                            CP<Quaternion> &cell_quaternions, const EP<int> &valence,
                                            const FP<int> &feature_face, const EP<int> &feature_edge, const EH eh);
-
-
-
-
 
   static void
   ALGOHEX_EXPORT optimize_quaternions_at_vertex(const TetMesh &mesh, const HFP<int> &trans_prop,
@@ -170,7 +98,6 @@ public:
                                              const EP<int> &feature_edge,
                                              const VH _vh_new, const bool _align_sg = false);
 
-
   static void
   ALGOHEX_EXPORT optimize_quaternions_at_edges(const TetMesh &mesh, const HFP<int> &trans_prop,
                                             const AlgoHex::TransitionQuaternion &tq,
@@ -178,9 +105,6 @@ public:
                                             const EP<int> &valence, const FP<int> &feature_face,
                                             const EP<int> &feature_edge, const std::set<EH> &_edges,
                                             const bool _align_sg = false);
-
-
-
 
   static void
   ALGOHEX_EXPORT optimize_quaternions_with_alignment_constraints(const TetMesh &mesh, const HFP<int> &trans_prop,
@@ -190,9 +114,6 @@ public:
                                                               std::map<CH, std::vector<VecAxis> > &_alignments,
                                                               const int _iter = 20);
 
-
-
-
   static void
   ALGOHEX_EXPORT optimize_quaternions_with_alignment_constraints(const TetMesh &mesh, const HFP<int> &trans_prop,
                                                               const AlgoHex::TransitionQuaternion &tq,
@@ -200,8 +121,6 @@ public:
                                                               const VH _vh_new,
                                                               std::map<CH, std::vector<VecAxis> > &_alignments,
                                                               const int _iter = 20);
-
-
 
 };
 

@@ -51,26 +51,9 @@ public:
   using Mesh = TetMesh;
   using Point = typename Mesh::PointT;
 
+  SmoothOctahedralFieldGenerator(TetMesh &_tmesh);
 
-  SmoothOctahedralFieldGenerator(TetMesh &_tmesh) :
-          tmesh_(_tmesh),
-//                interface_(tmesh_.request_halfface_property<bool>("is interface")),
-          shcs_(tmesh_.request_vertex_property<SHCoeffs>("vertex spherical harmonic coefficients")),
-          shcs_p_(tmesh_.request_vertex_property<SHCoeffs>("scaled vertex spherical harmonic coefficients")),
-          quaternions_(tmesh_.request_vertex_property<Quaternion>("vertex quaternion", {0., 0., 0., 0.}))
-  {
-    num_vertices_ = tmesh_.n_vertices();
-
-    tmesh_.set_persistent(shcs_p_, true);
-    tmesh_.set_persistent(quaternions_, true);
-
-    cache_constrained_9d_coefficients();
-  }
-
-  ~SmoothOctahedralFieldGenerator()
-  {
-//            tmesh_.set_persistent(interface_, false);
-  }
+  ~SmoothOctahedralFieldGenerator();
 
 public:
   //get the spherical harmonic coefficients by solving a least square problem
@@ -97,8 +80,6 @@ private:
 
   void cache_constrained_9d_coefficients();
 
-
-private:
   Mesh &tmesh_;
 
 //        //boolean halfface property for interior constraints
@@ -123,28 +104,8 @@ private:
 
 //=============================================================================
 
-//-----------------------------------------------------------------------------
-// Non-TetMesh-dependent definitions (kept in header):
-// get_euler_angle helper + NormalConstraintCoeff ctor (templated on Point)
-//-----------------------------------------------------------------------------
-
-
 //Convention: X(alpha)->Y(beta)->Z(gamma)
-inline Vec3d get_euler_angle(const double _x, const double _y, const double _z)
-{
-  Vec3d angles(0, 0, 0);
-  if (std::abs(_z) < .99)
-  {
-    Eigen::Vector3d dir(_x, _y, _z), nz(0, 0, 1);
-    Mat3d m;
-    m = Eigen::Quaterniond().setFromTwoVectors(nz, dir);
-    //(gamma, beta, alpha)
-    angles = m.eulerAngles(2, 1, 0);
-  }
-
-  return {angles(2), angles(1), angles(0)};
-}
-
+Vec3d get_euler_angle(const double _x, const double _y, const double _z);
 
 } // namespace AlgoHex
 //=============================================================================

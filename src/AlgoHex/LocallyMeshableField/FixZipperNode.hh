@@ -53,27 +53,7 @@ public:
 
   using UVW = std::array<int, 3>;
 
-
-  FixZipperNode(TetMesh &_mesh) : MeshProperties(_mesh), ArcZipping(_mesh),
-                                 mesh_(_mesh),
-                                 sg_edge_pairs_(mesh_.request_edge_property<int>("separate edge pairs")),
-                                 keep_on_feature_face_(
-                                         mesh_.request_edge_property<bool>("sge kept on feature face", false)),
-                                 sge_(mesh_),
-                                 es_(mesh_),
-                                 ec_(mesh_),
-                                 fs_(mesh_),
-                                 fac_(mesh_),
-                                 fis_(mesh_),
-                                 psv_(mesh_),
-                                 fctp_(mesh_),
-                                 lmcwf_(mesh_),
-                                 mo_(mesh_),
-                                 visited_fprop_(mesh_.request_face_property<bool>("visited faces"))
-  {
-    mesh_.set_persistent(sg_edge_pairs_, true);
-    mesh_.set_persistent(visited_fprop_, true);
-  }
+  FixZipperNode(TetMesh &_mesh);
 
   bool unzip_zipper_node(const VH _vh, const HEH _heh_s, const std::set<VH> &_fixable_vhs, VH &_other_tp);
 
@@ -190,22 +170,9 @@ private:
   int n_unvisited_halffaces_at_manifold(const std::set<HFH> &_all_hfhs, const std::set<HFH> &_cut_hfhs, const HEH _heh,
                                         HFH &_hfh) const;
 
-  bool is_valid_interior_singular_node_by_valence(const VH _vh) const
-  {
-    int nidx = this->node_index(_vh);
-    if (nidx > 0 && nidx != 20 && nidx != 10)
-      return true;
+  bool is_valid_interior_singular_node_by_valence(const VH _vh) const;
 
-    return false;
-  }
-
-  bool is_other_special_vertex(const VH _vh, const std::set<VH> &_excl_vhs) const
-  {
-    if ((sgl_vt_[_vh] != 0 || feature_edge_vertex_[_vh]) && _excl_vhs.find(_vh) == _excl_vhs.end())
-      return true;
-
-    return false;
-  }
+  bool is_other_special_vertex(const VH _vh, const std::set<VH> &_excl_vhs) const;
 
   int n_bad_vertices_in_cell(const CH _ch, const std::set<VH> &_excl_vhs) const;
 
@@ -222,7 +189,6 @@ private:
   bool check_field_alignment(VH _vh, const std::set<EH> &_sg_ehs, const std::set<HFH> &_bound_hfhs,
                              const bool _save = false) const;
 
-
   bool is_mergable(const VH _vh, std::vector<HEH> &_v_hehs) const;
 
   bool intersect_with_triangle(const ACG::Geometry::PlaneT<double> &_plane, const Point &_p0, const Point &_p1,
@@ -230,9 +196,7 @@ private:
 
   Point compute_bary_coord(const Point &_p0, const Point &_p1, const Point &_p2, const Point &_px) const;
 
-
   bool is_zipable(const VH _vh, std::set<EH> &_sg_ehs) const;
-
 
 private:
   TetMesh &mesh_;
@@ -251,7 +215,6 @@ private:
   FixConstrainedZipperNode fctp_;
   LocalMeshabilityCheckerWithFrames lmcwf_;
   MeshOptimization mo_;
-
 
   FP<bool> visited_fprop_;
 

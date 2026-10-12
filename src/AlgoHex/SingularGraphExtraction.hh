@@ -30,9 +30,6 @@ namespace AlgoHex
 
 //== CLASS DEFINITION =========================================================
 
-
-
-
 /** \class SingularGraphExtraction SingularGraphExtraction.hh
 
     Brief Description.
@@ -46,41 +43,9 @@ public:
   using Mesh = TetMesh;
   using Point = typename Mesh::PointT;
 
-  SingularGraphExtraction(TetMesh &_mesh) :
-          mesh_(_mesh),
-          shc_(mesh_.request_vertex_property<SHCoeffs>("scaled vertex spherical harmonic coefficients")),
-          quaternion_(mesh_.request_vertex_property<Quaternion>("vertex quaternion", {0., 0., 0., 0.})),
-          cell_quaternion_(mesh_.request_cell_property<Quaternion>("FrameFieldQuaternions", {0., 0., 0., 0.})),
-          trans_prop_(mesh_.request_halfface_property<int>("HalffaceTransiton")),
-          valence_(mesh_.request_edge_property<int>("edge_valance")),
-          feature_edge_prop_(mesh_.request_edge_property<int>("AlgoHex::FeatureEdges")),
-          feature_edge_vertex_(mesh_.request_vertex_property<bool>("AlgoHex::FeatureEdgeVertices")),
-          feature_fprop_(mesh_.request_face_property<int>("AlgoHex::FeatureFaces")),
-          feature_face_vertex_(mesh_.request_vertex_property<bool>("AlgoHex::FeatureFaceVertices")),
-          feature_face_edge_(mesh_.request_edge_property<bool>("AlgoHex::FeatureFaceEdges"))
-  {
+  SingularGraphExtraction(TetMesh &_mesh);
 
-    //calculate average edge length
-    av_edge_length_ = 0.;
-    for (auto ehi: mesh_.edges())
-    {
-      av_edge_length_ += mesh_.vector(ehi).norm();
-    }
-    av_edge_length_ /= mesh_.n_edges();
-
-    initial_num_vts_ = mesh_.n_vertices();
-
-    mesh_.set_persistent(cell_quaternion_, true);
-    mesh_.set_persistent(valence_, true);
-    mesh_.set_persistent(trans_prop_, true);
-    projector_.set_seed_selection(SHProjectorRay::BestSeed);
-  }
-
-  ~SingularGraphExtraction()
-  {
-    mesh_.set_persistent(shc_, false);
-    mesh_.set_persistent(quaternion_, false);
-  }
+  ~SingularGraphExtraction();
 
 public:
   void get_singular_edges_with_refinement(const double _largest_length_ratio);

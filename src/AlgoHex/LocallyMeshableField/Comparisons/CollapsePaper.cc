@@ -12,6 +12,18 @@
 
 namespace AlgoHex
 {
+
+CollapseApproach::CollapseApproach(TetMesh &_mesh) :
+        MeshProperties(_mesh),
+        mesh_(_mesh),
+        sge_(mesh_),
+        ec_(mesh_),
+        es_(mesh_),
+        vo_(mesh_)
+{
+  this->initialize_singular_vertex_property();
+}
+
 void
 CollapseApproach::collapse_approach()
 {

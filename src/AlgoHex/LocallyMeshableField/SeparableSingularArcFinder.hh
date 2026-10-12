@@ -22,8 +22,6 @@ public:
   using Parameter = std::map<CH, std::map<VH, Point>>;
   using CellAxis = std::pair<CH, int>;
 
-
-
   //properties
   using MeshProperties::valence_;
   using MeshProperties::trans_prop_;
@@ -36,13 +34,7 @@ public:
   using MeshProperties::feature_face_edge_;
   using MeshProperties::feature_face_vertex_;
 
-
-  SeparableSingularArcFinder(TetMesh &_mesh) : MeshProperties(_mesh),
-                                              mesh_(_mesh),
-                                              keep_on_feature_face_(mesh_.request_edge_property<bool>(
-                                                      "sge kept on feature face")),
-                                              fac_(mesh_),
-                                              es_(mesh_) {}
+  SeparableSingularArcFinder(TetMesh &_mesh);
 
   //with matchings
   std::set<HFH> find_anti_parallel_singular_edge_with_disk_path(const VH _vh, const std::set<CH> &_or_chs,

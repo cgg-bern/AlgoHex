@@ -53,51 +53,10 @@ public:
   using VecD = Eigen::VectorXd;
   using T = Eigen::Triplet<double>;
 
-public:
-
-  MeshOptimization(TetMesh &_mesh) : MeshProperties(_mesh),
-                                    mesh_(_mesh),
-                                    face_normal_(
-                                            sf_mesh_.request_face_property<Point>("original face normal")),
-                                    vertex_normal_(
-                                            sf_mesh_.request_vertex_property<Point>("original vertex normal")),
-                                    sharp_face_(sf_mesh_.request_face_property<bool>("original sharp face")),
-                                    sm_feature_edge_(
-                                            sf_mesh_.request_edge_property<int>("surface mesh: feature edge")),
-                                    imrm_cell_(
-                                            mesh_.request_cell_property<bool>("cell with different weight")),
-                                    sg_edge_pairs_(mesh_.request_edge_property<int>("separate edge pairs")),
-                                    keep_on_feature_face_(
-                                            mesh_.request_edge_property<bool>("sge kept on feature face",
-                                                                                       false)),
-                                    sge_(mesh_)
-  {
-    //reference mesh
-    sf_mesh_.set_persistent(face_normal_, true);
-    sf_mesh_.set_persistent(vertex_normal_, true);
-    sf_mesh_.set_persistent(sm_feature_edge_, true);
-
-    this->initialize_feature_vertex_property();
-    build_surface_mesh(mesh_, sf_mesh_);
-    bsp_ = build_bsp(sf_mesh_);
-
-    //get mesh volume
-    for (const auto &ch: mesh_.cells())
-      mesh_volume_ += get_cell_volume(mesh_, ch);
-
-    scale_ = 0.1 * std::pow(mesh_volume_, 1. / 3.);
-
-    //cache feature edges in sf mesh
-    for (auto ehi: sf_mesh_.edges())
-    {
-      if (sm_feature_edge_[ehi] > 0)
-        sm_fes_[sm_feature_edge_[ehi]].push_back(ehi);
-    }
-  }
+  MeshOptimization(TetMesh &_mesh);
 
   ~MeshOptimization() {}
 
-public:
   void remesh(const double _sge_w, const double _rgl_w, const double _cs_w, const double _tps_w, const double _rp_w,
               const int k);
 
@@ -136,16 +95,11 @@ public:
 
   int swap_edges(const std::vector<EH> &_sg_ehs, const int k);
 
-  //postprocess
-//        void optimize_singular_vertices();
-//        void optimize_key_vertices();
-
   void optimize_regular_vertices();
 
   void save_singular_graph_development(TetMesh &_sg_mesh, int _iter);
 
   void save_singular_graph(const std::string &_filename, int _id, const std::set<VH> &_fxb_tps);
-
 
 private:
   void add_alignment_energy(SingularVertexOptProblemQuaternion &_problem, std::map<VH, int> &_vh_to_idx,
@@ -248,7 +202,6 @@ private:
 
   void get_vertex_color(const VH _vh, OVM::Vec4f &_color) const;
 
-
 public:
   void set_min_target_length(const double _factor = 0.05);
 
@@ -261,7 +214,6 @@ public:
 private:
   double measure_field_smoothness_at_vertex(const VH _vh, const FP<double> &_smth_fprop, int _norm_order) const;
 
-private:
   TetMesh &mesh_;
   TetMesh sf_mesh_;
 

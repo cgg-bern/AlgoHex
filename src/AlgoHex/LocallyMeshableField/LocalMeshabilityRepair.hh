@@ -60,42 +60,13 @@ public:
 
   using VecAxis = std::pair<Vec3d, int>;
 
-
-  LocalMeshabilityRepair(TetMesh &_mesh) : MeshProperties(_mesh), ArcZipping(_mesh),
-                                          mesh_(_mesh),
-                                          sg_edge_pairs_(
-                                                  mesh_.request_edge_property<int>("separate edge pairs")),
-                                          keep_on_feature_face_(
-                                                  mesh_.request_edge_property<bool>("sge kept on feature face",
-                                                                                             false)),
-                                          sge_(mesh_),
-                                          es_(mesh_),
-                                          fs_(mesh_),
-                                          ec_(mesh_),
-                                          fac_(mesh_),
-                                          eem_(mesh_),
-                                          fis_(mesh_),
-                                          fctp_(mesh_),
-                                          ftp_(mesh_),
-                                          tu_(mesh_),
-                                          psv_(mesh_)
-  {
-    //get mesh volume
-    double vol = 0.;
-    for (const auto &ch: mesh_.cells())
-      vol += get_cell_volume(mesh_, ch);
-
-    scale_ = 0.1 * std::pow(vol, 1. / 3.);
-  }
+  LocalMeshabilityRepair(TetMesh &_mesh);
 
   void set_first_stage_iters(const int _first_iters) { first_iters_ = _first_iters; }
 
   void set_second_stage_inner_iters(const int _second_inner_iters) { second_inner_iters_ = _second_inner_iters; }
 
-  void set_dual_path_weight_wrt_field_direction(const double _dp_weight)
-  {
-    ftp_.set_dual_path_weight_wrt_field_direction(_dp_weight);
-  };
+  void set_dual_path_weight_wrt_field_direction(const double _dp_weight);
 
   void set_connect_other_zipper_node() { ftp_.set_connect_other_zipper_node(); }
 
@@ -109,10 +80,7 @@ public:
 
   void set_segment_length_coefficient(const double _seg_coeff) { ftp_.set_segment_length_coefficient(_seg_coeff); }
 
-  void set_absolute_segment_length_coefficient(const double _absl_seg_coeff)
-  {
-    ftp_.set_absolute_segment_length_coefficient(_absl_seg_coeff);
-  }
+  void set_absolute_segment_length_coefficient(const double _absl_seg_coeff);
 
   void set_merge_zipper_node() { merge_zipper_node_ = true; }
 
@@ -127,11 +95,7 @@ public:
 
   int fix_second_stage(bool _check_alignment = true);
 
-  void check_alignments()
-  {
-    fac_.check_field_alignments_at_feature_faces();
-    fac_.check_field_alignment_at_feature_edges();
-  };
+  void check_alignments();
 
   void split_for_local_meshability_test();
 
@@ -139,7 +103,6 @@ public:
   int unzip_zipper_nodes();
 
   std::set<VH> get_fixable_zipper_nodes(const bool _include_all) { return ftp_.get_fixable_zipper_nodes(_include_all); }
-
 
   int uniform_singular_arc_valence();
 
@@ -175,7 +138,6 @@ public:
   int flatten_non_singular_feature_edges();
 
   bool flatten_non_singular_feature_edge(const HEH _heh);
-
 
   void fix_misalignment_at_feature_edges();
 
@@ -217,14 +179,7 @@ private:
 
   int negate(const int _axis) const { return _axis % 2 == 0 ? _axis + 1 : _axis - 1; }
 
-  std::set<CH> get_onering_cells(const VH _vh) const
-  {
-    std::set<CH> or_chs;
-    for (auto vc_it = mesh_.vc_iter(_vh); vc_it.valid(); ++vc_it)
-      or_chs.insert(*vc_it);
-
-    return or_chs;
-  }
+  std::set<CH> get_onering_cells(const VH _vh) const;
 
 private:
   TetMesh &mesh_;

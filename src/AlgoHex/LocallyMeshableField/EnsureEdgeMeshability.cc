@@ -17,6 +17,13 @@
 
 namespace AlgoHex
 {
+
+EnsureEdgeMeshability::EnsureEdgeMeshability(TetMesh &_mesh) : MeshProperties(_mesh), ArcZipping(_mesh),
+                                      mesh_(_mesh),
+                                      sge_(mesh_),
+                                      es_(mesh_),
+                                      fs_(mesh_) {}
+
 bool
 EnsureEdgeMeshability::
 fix_interior_compound_singular_edge(const HEH _heh, const bool _split)

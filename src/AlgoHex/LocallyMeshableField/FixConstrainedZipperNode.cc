@@ -17,6 +17,61 @@
 
 namespace AlgoHex
 {
+
+FixConstrainedZipperNode::FixConstrainedZipperNode(TetMesh &_mesh) : MeshProperties(_mesh), ArcZipping(_mesh),
+                                          mesh_(_mesh),
+                                          sg_edge_pairs_(
+                                                  mesh_.request_edge_property<int>("separate edge pairs")),
+                                          keep_on_feature_face_(mesh_.request_edge_property<bool>(
+                                                  "sge kept on feature face", false)),
+                                          sge_(mesh_),
+                                          fac_(mesh_),
+                                          es_(mesh_),
+                                          fs_(mesh_),
+                                          fis_(mesh_),
+                                          tu_(mesh_)
+{
+  mesh_.set_persistent(keep_on_feature_face_, true);
+}
+
+bool FixConstrainedZipperNode::is_other_feature_edge_vertex(const VH _vh, const std::set<VH> &_excluded_vhs) const
+{
+  if (feature_edge_vertex_[_vh])
+  {
+    if (_excluded_vhs.find(_vh) != _excluded_vhs.end())
+      return false;
+  }
+  else
+    return false;
+
+  return true;
+}
+
+bool FixConstrainedZipperNode::is_other_singular_vertex(const VH _vh, const std::set<VH> &_excluded_vhs) const
+{
+  if (sgl_vt_[_vh] != 0)
+  {
+    if (_excluded_vhs.find(_vh) != _excluded_vhs.end())
+      return false;
+  }
+  else
+    return false;
+
+  return true;
+}
+
+int FixConstrainedZipperNode::n_bad_vertices_in_face(const FH _fh, const std::set<VH> &_excl_vhs) const
+{
+  int n = 0;
+  for (auto fv_it = mesh_.fv_iter(_fh); fv_it.valid(); ++fv_it)
+    if ((sgl_vt_[*fv_it] != 0 || feature_edge_vertex_[*fv_it]) && _excl_vhs.find(*fv_it) == _excl_vhs.end())
+      n++;
+
+
+  return n;
+}
+
+
 //First, detach whatever possible
 //Then, fix constrained zipper node with feature arc as guidance
 //(At interior feature face vertex, detach sg arc on feature edge before search a surface strip)

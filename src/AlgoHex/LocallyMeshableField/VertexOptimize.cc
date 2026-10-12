@@ -17,6 +17,15 @@
 
 namespace AlgoHex
 {
+
+VertexOptimize::VertexOptimize(TetMesh &_mesh) :
+        mesh_(_mesh),
+        trans_prop_(mesh_.request_halfface_property<int>("HalffaceTransiton")),
+        cell_quaternions_(mesh_.request_cell_property<Quaternion>("FrameFieldQuaternions")),
+        feature_edge_(mesh_.request_edge_property<int>("AlgoHex::FeatureEdges")),
+        feature_fprop_(mesh_.request_face_property<int>("AlgoHex::FeatureFaces")),
+        feature_face_vertex_(mesh_.request_vertex_property<bool>("AlgoHex::FeatureFaceVertices")) {}
+
 bool
 VertexOptimize::vertex_optimize(const VH _vh)
 {
@@ -689,9 +698,5 @@ VertexOptimize::collect_alignments(const VH _vh, std::map<CH, int> &_aligned_axi
     }
   }
 }
-
-
-// Explicit instantiation for the only mesh type used:
-//   TetMesh = OVM::TetrahedralGeometryKernel<Vec3d, OVM::TetrahedralMeshTopologyKernel>
 
 }

@@ -15,6 +15,58 @@
 
 namespace AlgoHex
 {
+LocalMeshabilityRepair::LocalMeshabilityRepair(TetMesh &_mesh) : MeshProperties(_mesh), ArcZipping(_mesh),
+                                        mesh_(_mesh),
+                                        sg_edge_pairs_(
+                                                mesh_.request_edge_property<int>("separate edge pairs")),
+                                        keep_on_feature_face_(
+                                                mesh_.request_edge_property<bool>("sge kept on feature face",
+                                                                                            false)),
+                                        sge_(mesh_),
+                                        es_(mesh_),
+                                        fs_(mesh_),
+                                        ec_(mesh_),
+                                        fac_(mesh_),
+                                        eem_(mesh_),
+                                        fis_(mesh_),
+                                        fctp_(mesh_),
+                                        ftp_(mesh_),
+                                        tu_(mesh_),
+                                        psv_(mesh_)
+{
+  //get mesh volume
+  double vol = 0.;
+  for (const auto &ch: mesh_.cells())
+    vol += get_cell_volume(mesh_, ch);
+
+  scale_ = 0.1 * std::pow(vol, 1. / 3.);
+}
+
+void LocalMeshabilityRepair::set_dual_path_weight_wrt_field_direction(const double _dp_weight)
+{
+  ftp_.set_dual_path_weight_wrt_field_direction(_dp_weight);
+};
+
+void LocalMeshabilityRepair::set_absolute_segment_length_coefficient(const double _absl_seg_coeff)
+{
+  ftp_.set_absolute_segment_length_coefficient(_absl_seg_coeff);
+}
+
+void LocalMeshabilityRepair::check_alignments()
+{
+  fac_.check_field_alignments_at_feature_faces();
+  fac_.check_field_alignment_at_feature_edges();
+};
+
+std::set<CH> LocalMeshabilityRepair::get_onering_cells(const VH _vh) const
+{
+  std::set<CH> or_chs;
+  for (auto vc_it = mesh_.vc_iter(_vh); vc_it.valid(); ++vc_it)
+    or_chs.insert(*vc_it);
+
+  return or_chs;
+}
+
 
 void
 LocalMeshabilityRepair::preprocess(bool _check_alignment)

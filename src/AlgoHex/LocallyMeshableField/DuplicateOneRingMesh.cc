@@ -13,6 +13,38 @@
 
 namespace AlgoHex
 {
+
+DuplicateOneRingMesh::DuplicateOneRingMesh(TetMesh &_fmesh, TetMesh &_tmesh) : fmesh_(_fmesh), tmesh_(_tmesh),
+                                                      cell_qts_1r_(
+                                                              tmesh_.request_cell_property<Eigen::Quaterniond>(
+                                                                      "FrameFieldQuaternions")),
+                                                      trans_prop_1r_(tmesh_.request_halfface_property<int>(
+                                                              "HalffaceTransiton")),
+                                                      valence_1r_(tmesh_.request_edge_property<int>(
+                                                              "edge_valance")),
+                                                      feature_fprop_1r_(tmesh_.request_face_property<int>(
+                                                              "AlgoHex::FeatureFaces", false)),
+                                                      feature_eprop_1r_(tmesh_.request_edge_property<int>(
+                                                              "AlgoHex::FeatureEdges", false)),
+                                                      tvh_fvh_(tmesh_.request_vertex_property<VH>(
+                                                              "vertex handle in original mesh")),
+                                                      theh_fheh_(tmesh_.request_halfedge_property<HEH>(
+                                                              "halfedge handle in original mesh")),
+                                                      thfh_fhfh_(tmesh_.request_halfface_property<HFH>(
+                                                              "halfface handle in original mesh")),
+                                                      tch_fch_(tmesh_.request_cell_property<CH>(
+                                                              "cell handle in original mesh"))
+{
+  tmesh_.set_persistent(tch_fch_, true);
+  tmesh_.set_persistent(theh_fheh_, true);
+}
+
+void DuplicateOneRingMesh::copy_one_ring(const std::vector<VH> &_vhs)
+{
+  copy_mesh(_vhs);
+  copy_properties();
+}
+
 void DuplicateOneRingMesh::copy_mesh(const std::vector<VH> &_vhs)
 {
   std::unordered_set<int> onering_vhs;
@@ -73,7 +105,6 @@ void DuplicateOneRingMesh::copy_mesh(const std::vector<VH> &_vhs)
     thfh_fhfh_[hfh] = fmesh_.find_halfface(hfvs);
   }
 }
-
 
 void DuplicateOneRingMesh::copy_properties()
 {
@@ -244,10 +275,5 @@ void DuplicateOneRingMesh::get_halfedge_axis_in_cell_in_onering_mesh()
     }
   }
 }
-
-
-
-// Explicit instantiation for the only mesh type used:
-//   TetMesh = OVM::TetrahedralGeometryKernel<Vec3d, OVM::TetrahedralMeshTopologyKernel>
 
 }

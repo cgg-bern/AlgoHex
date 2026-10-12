@@ -43,6 +43,31 @@ namespace AlgoHex
 
 //== IMPLEMENTATION ==========================================================
 
+Parametrization3D::Parametrization3D(TetMesh &_m, OpenVolumeMesh::StatusAttrib &_mesh_status)
+        : mesh_(_m),
+          mesh_status_(_mesh_status),
+          frame_cprop_(mesh_.request_cell_property<Mat3x3>("AlgoHex::FrameField")),
+          transition_hfprop_(mesh_.request_halfface_property<int>("HalffaceTransiton")),
+          valence_eprop_(mesh_.request_edge_property<int>("edge_valance")),
+          feature_vprop_(mesh_.request_vertex_property<int>("AlgoHex::FeatureVertices", 0)),
+          feature_eprop_(mesh_.request_edge_property<int>("AlgoHex::FeatureEdges", 0)),
+          feature_fprop_(mesh_.request_face_property<int>("AlgoHex::FeatureFaces", 0)),
+          igm_cprop_(mesh_.request_cell_property<std::map<OpenVolumeMesh::VertexHandle, Point> >(
+                  "Parametrization")),
+          is_on_cut_fprop_(mesh_.request_face_property<bool>("CutSurfaceBool")),
+          global_idx_(mesh_.request_cell_property<Vec4i>("GlobalIdx")),
+          max_global_idx_(0),
+          n_helper_variables_(0),
+          cell_weight_(mesh_.request_cell_property<double>("CellWeight")),
+          max_stiffening_iters_(100),
+          stiffening_weight_(4.0),
+          opt_type_(OPT_COMISO),
+          timelimit_(120)
+{
+  mesh_.set_persistent(igm_cprop_, true);
+  mesh_.set_persistent(frame_cprop_, true);
+  reset_cell_weights();
+}
 
 std::pair<int, int>
 Parametrization3D::
@@ -3938,8 +3963,25 @@ export_quantization_constraint_paths(TetMesh &_export_mesh)
   }
 }
 
-// Explicit instantiations of the TetMesh-dependent member templates for
-// TetMesh = TetMesh (the only export mesh type used):
+
+
+void Parametrization3D::copy_cell_property(OVM::CellPropertyT<std::map<VH, Point>> &_source, OVM::CellPropertyT<std::map<VH, Point>> &_target)
+{
+  for (auto ch: mesh_.cells())
+    _target[ch] = _source[ch];
+}
+
+double Parametrization3D::edge_angle(const EH &_eh)
+{
+  std::vector<double> ta;
+  return edge_angle(_eh, ta);
+}
+
+double Parametrization3D::mesh_edge_angle(const EH &_eh)
+{
+  std::vector<double> ta;
+  return mesh_edge_angle(_eh, ta);
+}
 
 } // namespace AlgoHex
 //=============================================================================

@@ -31,37 +31,29 @@ public:
 
   void reset() { elapsed_ = Clock::duration::zero(); }
 
-  void resume()
-  {
-    assert(!parent_ || parent_->running());
-    assert(!running_);
-    running_ = true;
-    start_ = Clock::now();
-    ++count_;
-  }
 
-  void stop()
-  {
-    assert(running_);
-    running_ = false;
-    Clock::time_point now = Clock::now();
-    Clock::duration d = (now - start_);
-    elapsed_ += d;
-  }
 
-  size_t count() const
-  {
-    return count_;
-  }
+  void resume();
+
+
+
+
+  void stop();
+
+
+
+
+  size_t count() const;
+
 
   bool running() const { return running_; }
 
   const Clock::duration &elapsed() const { return elapsed_; }
 
-  double elapsed_ms() const
-  {
-    return std::chrono::duration_cast<std::chrono::milliseconds>(elapsed_).count();
-  }
+
+
+  double elapsed_ms() const;
+
 
 private:
   Watch *parent_;
@@ -77,23 +69,16 @@ public:
   HierarchicalStopWatch(const std::string &name)
           : name_(name) {}
 
-  HierarchicalStopWatch(const std::string &name,
-                        HierarchicalStopWatch &parent)
-          : name_(name),
-            watch_(parent.watch_),
-            level_(parent.level_ + 1)
-  {
-    parent.add_child(this);
-  }
 
-  void reset()
-  {
-    watch_.reset();
-    for (auto ch: children_)
-    {
-      ch->reset();
-    }
-  }
+
+  HierarchicalStopWatch(const std::string &name,
+                        HierarchicalStopWatch &parent);
+
+
+
+
+  void reset();
+
 
   const std::string &name() const { return name_; }
 
@@ -103,15 +88,10 @@ public:
 
   int level() const { return level_; }
 
-  Watch::Clock::duration unaccounted() const
-  {
-    Watch::Clock::duration dur = watch_.elapsed();
-    for (auto child: children_)
-    {
-      dur -= child->watch().elapsed();
-    }
-    return dur;
-  }
+
+
+  Watch::Clock::duration unaccounted() const;
+
 
   std::vector<HierarchicalStopWatch *>::const_iterator children_begin() const { return children_.cbegin(); }
 
@@ -121,10 +101,11 @@ private:
   ALGOHEX_EXPORT friend std::ostream &operator<<(std::ostream &os, const HierarchicalStopWatch &sw);
 //    friend std::ostream& print(std::ostream& os, HierarchicalStopWatch &sw);
 
-  void add_child(HierarchicalStopWatch *sw)
-  {
-    children_.push_back(sw);
-  }
+
+//    friend std::ostream& print(std::ostream& os, HierarchicalStopWatch &sw);
+
+  void add_child(HierarchicalStopWatch *sw);
+
 
   std::string name_;
   Watch watch_;
@@ -142,39 +123,27 @@ ALGOHEX_EXPORT std::ostream &operator<<(std::ostream &os, const HierarchicalStop
 class ALGOHEX_EXPORT ScopedStopWatch
 {
 public:
-  ScopedStopWatch(Watch &watch)
-          : watch_(watch)
-  {
-    maybe_start();
-  }
 
-  ScopedStopWatch(HierarchicalStopWatch &hsw)
-          : watch_(hsw.watch())
-  {
-    maybe_start();
-  }
+public:
+  ScopedStopWatch(Watch &watch);
 
-  ~ScopedStopWatch()
-  {
-    if (should_stop_)
-    {
-      watch_.stop();
-    }
-  }
+
+
+
+  ScopedStopWatch(HierarchicalStopWatch &hsw);
+
+
+
+
+  ~ScopedStopWatch();
+
 
 private:
-  void maybe_start()
-  {
-    if (watch_.running())
-    {
-      should_stop_ = false;
-    }
-    else
-    {
-      watch_.resume();
-    }
 
-  }
+
+private:
+  void maybe_start();
+
 
   Watch &watch_;
   bool should_stop_ = true;

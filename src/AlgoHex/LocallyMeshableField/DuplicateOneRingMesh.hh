@@ -18,38 +18,11 @@ class ALGOHEX_EXPORT DuplicateOneRingMesh
 public:
   using VecAxis = std::pair<Vec3d, int>;
 
-  DuplicateOneRingMesh(TetMesh &_fmesh, TetMesh &_tmesh) : fmesh_(_fmesh), tmesh_(_tmesh),
-                                                        cell_qts_1r_(
-                                                                tmesh_.request_cell_property<Eigen::Quaterniond>(
-                                                                        "FrameFieldQuaternions")),
-                                                        trans_prop_1r_(tmesh_.request_halfface_property<int>(
-                                                                "HalffaceTransiton")),
-                                                        valence_1r_(tmesh_.request_edge_property<int>(
-                                                                "edge_valance")),
-                                                        feature_fprop_1r_(tmesh_.request_face_property<int>(
-                                                                "AlgoHex::FeatureFaces", false)),
-                                                        feature_eprop_1r_(tmesh_.request_edge_property<int>(
-                                                                "AlgoHex::FeatureEdges", false)),
-                                                        tvh_fvh_(tmesh_.request_vertex_property<VH>(
-                                                                "vertex handle in original mesh")),
-                                                        theh_fheh_(tmesh_.request_halfedge_property<HEH>(
-                                                                "halfedge handle in original mesh")),
-                                                        thfh_fhfh_(tmesh_.request_halfface_property<HFH>(
-                                                                "halfface handle in original mesh")),
-                                                        tch_fch_(tmesh_.request_cell_property<CH>(
-                                                                "cell handle in original mesh"))
-  {
-    tmesh_.set_persistent(tch_fch_, true);
-    tmesh_.set_persistent(theh_fheh_, true);
-  }
+  DuplicateOneRingMesh(TetMesh &_fmesh, TetMesh &_tmesh);
 
   ~DuplicateOneRingMesh() {}
 
-  void copy_one_ring(const std::vector<VH> &_vhs)
-  {
-    copy_mesh(_vhs);
-    copy_properties();
-  }
+  void copy_one_ring(const std::vector<VH> &_vhs);
 
   bool check_cell_singularity() const;
 
@@ -68,7 +41,6 @@ private:
 
   void copy_properties();
 
-private:
   TetMesh &fmesh_;
   TetMesh &tmesh_;
   CP<Eigen::Quaterniond> cell_qts_1r_;

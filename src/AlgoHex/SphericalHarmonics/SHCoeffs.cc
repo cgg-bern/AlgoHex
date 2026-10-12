@@ -107,4 +107,57 @@ std::ostream &operator<<(std::ostream &s, const SHCoeffs &shc)
   return s;
 }
 
+
+  SHCoeffs::SHCoeffs(const std::array<double, 9> &a)
+          : vec_((Vec9d() << a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8]).finished())
+  {
+  }
+
+  SHCoeffs &SHCoeffs::operator=(const std::array<double, 9> &a)
+  {
+    *this = SHCoeffs(a);
+    return *this;
+  }
+
+  double SHCoeffs::dot(const SHCoeffs &other) const
+  {
+    return vec_.dot(other.vec());
+  }
+
+  SHCoeffs &SHCoeffs::operator+=(const SHCoeffs &other)
+  {
+    vec_ += other.vec();
+    return *this;
+  }
+
+  SHCoeffs SHCoeffs::operator+(const SHCoeffs &other) const
+  {
+    return {vec() + other.vec()};
+  }
+
+  SHCoeffs SHCoeffs::operator-(const SHCoeffs &other) const
+  {
+    return {vec() - other.vec()};
+  }
+
+   SHCoeffs SHCoeffs::axis_aligned_cross()
+  {
+    return SHCoeffs({0, 0, 0, 0, std::sqrt(7. / 12.), 0, 0, 0, std::sqrt(5. / 12.)});
+  }
+
+  const SHCoeffs::Scalar *SHCoeffs::data() const
+  {
+    return vec_.data();
+  }
+
+  SHCoeffs::Scalar *SHCoeffs::data()
+  {
+    return vec_.data();
+  }
+
+ALGOHEX_EXPORT inline SHCoeffs operator*(double d, const SHCoeffs &shc)
+{
+  return {d * shc.vec()};
+}
+
 }

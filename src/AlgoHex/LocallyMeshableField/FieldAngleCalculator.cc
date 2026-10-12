@@ -16,6 +16,11 @@
 namespace AlgoHex
 {
 
+FieldAngleCalculator::FieldAngleCalculator(TetMesh &_mesh) : MeshProperties(_mesh),
+                                      mesh_(_mesh)
+{
+}
+
 void FieldAngleCalculator::print_feature_sector_angles(const VH _vh) const
 {
   //store

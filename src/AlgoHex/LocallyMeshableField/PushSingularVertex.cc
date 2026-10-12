@@ -12,6 +12,17 @@
 
 namespace AlgoHex
 {
+
+PushSingularVertex::PushSingularVertex(TetMesh &_mesh) : MeshProperties(_mesh),
+                                    mesh_(_mesh),
+                                    vo_(mesh_),
+                                    sge_(mesh_),
+                                    fis_(mesh_),
+                                    fac_(mesh_),
+                                    es_(mesh_)
+{
+}
+
 bool
 PushSingularVertex::push_singular_vertex(const VH _vh)
 {

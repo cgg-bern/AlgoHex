@@ -34,14 +34,8 @@ public:
 
   using MeshProperties::sgl_vt_;
 
-  EnsureEdgeMeshability(TetMesh &_mesh) : MeshProperties(_mesh), ArcZipping(_mesh),
-                                         mesh_(_mesh),
-                                         sge_(mesh_),
-                                         es_(mesh_),
-                                         fs_(mesh_) {}
+  EnsureEdgeMeshability(TetMesh &_mesh);
 
-
-public:
   bool fix_edge_with_non_meshable_footprint(const EH _eh);
 
   bool fix_interior_compound_singular_edge(const HEH _heh, const bool _split = false);
@@ -60,7 +54,6 @@ private:
 
   int negate(const int _axis) const { return _axis % 2 == 0 ? _axis + 1 : _axis - 1; }
 
-private:
   TetMesh &mesh_;
   TransitionQuaternion tq_;
 

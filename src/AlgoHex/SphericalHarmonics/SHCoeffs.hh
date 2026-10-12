@@ -32,16 +32,9 @@ public:
   SHCoeffs(const Eigen::MatrixBase<OtherDerived> &other)
           : vec_(other) {}
 
-  SHCoeffs(const std::array<double, 9> &a)
-          : vec_((Vec9d() << a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8]).finished())
-  {
-  }
+  SHCoeffs(const std::array<double, 9> &a);
 
-  SHCoeffs &operator=(const std::array<double, 9> &a)
-  {
-    *this = SHCoeffs(a);
-    return *this;
-  }
+  SHCoeffs &operator=(const std::array<double, 9> &a);
 
   template<typename OtherDerived>
   SHCoeffs &operator=(const Eigen::MatrixBase<OtherDerived> &other)
@@ -63,10 +56,7 @@ public:
     return vec_.dot(other);
   }
 
-  double dot(const SHCoeffs &other) const
-  {
-    return vec_.dot(other.vec());
-  }
+  double dot(const SHCoeffs &other) const;
 
   void setZero() { vec_.setZero(); }
 
@@ -74,21 +64,11 @@ public:
 
   SHCoeffs normalized() { return SHCoeffs(vec_.normalized()); }
 
-  SHCoeffs &operator+=(const SHCoeffs &other)
-  {
-    vec_ += other.vec();
-    return *this;
-  }
+  SHCoeffs &operator+=(const SHCoeffs &other);
 
-  SHCoeffs operator+(const SHCoeffs &other) const
-  {
-    return {vec() + other.vec()};
-  }
+  SHCoeffs operator+(const SHCoeffs &other) const;
 
-  SHCoeffs operator-(const SHCoeffs &other) const
-  {
-    return {vec() - other.vec()};
-  }
+  SHCoeffs operator-(const SHCoeffs &other) const;
 
   double norm() const { return vec_.norm(); }
 
@@ -102,20 +82,11 @@ public:
 
   double &operator[](size_t i) { return vec()[i]; }
 
-  static SHCoeffs axis_aligned_cross()
-  {
-    return SHCoeffs({0, 0, 0, 0, std::sqrt(7. / 12.), 0, 0, 0, std::sqrt(5. / 12.)});
-  }
+  static SHCoeffs axis_aligned_cross();
 
-  const Scalar *data() const
-  {
-    return vec_.data();
-  }
+  const Scalar *data() const;
 
-  Scalar *data()
-  {
-    return vec_.data();
-  }
+  Scalar *data();
 
   static SHCoeffs from_quaternion(const Quaternion &q);
 
@@ -135,10 +106,7 @@ private:
 
 ALGOHEX_EXPORT std::ostream &operator<<(std::ostream &s, const SHCoeffs &shc);
 
-ALGOHEX_EXPORT inline SHCoeffs operator*(double d, const SHCoeffs &shc)
-{
-  return {d * shc.vec()};
-}
+ALGOHEX_EXPORT inline SHCoeffs operator*(double d, const SHCoeffs &shc);
 
 // linearized axis rotations:
 

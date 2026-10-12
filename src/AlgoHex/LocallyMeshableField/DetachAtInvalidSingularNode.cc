@@ -17,6 +17,21 @@
 
 namespace AlgoHex
 {
+
+DetachAtInvalidSingularNode::DetachAtInvalidSingularNode(TetMesh &_mesh) : MeshProperties(_mesh), ArcZipping(_mesh),
+                                              mesh_(_mesh),
+                                              sge_(mesh_),
+                                              es_(mesh_),
+                                              ssaf_(mesh_),
+                                              opc_(mesh_)
+//        ,lmcwf_(mesh_)
+{}
+
+bool DetachAtInvalidSingularNode::is_valid_face_sector_after_fix(const VH _vh, const HEH _ff_sgheh, const HEH _nff_sgheh)
+{
+  return ssaf_.is_valid_sector_after_fix(_vh, _ff_sgheh, _nff_sgheh);
+}
+
 bool
 DetachAtInvalidSingularNode::fix_interior_invalid_singular_node(const VH _vh)
 {

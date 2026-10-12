@@ -135,4 +135,99 @@ ALGOHEX_EXPORT std::ostream &operator<<(std::ostream &os, const HierarchicalStop
   return print(os, wr, max_print_width(wr));
 }
 
+
+  void Watch::resume()
+  {
+    assert(!parent_ || parent_->running());
+    assert(!running_);
+    running_ = true;
+    start_ = Clock::now();
+    ++count_;
+  }
+
+  void Watch::stop()
+  {
+    assert(running_);
+    running_ = false;
+    Clock::time_point now = Clock::now();
+    Clock::duration d = (now - start_);
+    elapsed_ += d;
+  }
+
+  size_t Watch::count() const
+  {
+    return count_;
+  }
+
+  double Watch::elapsed_ms() const
+  {
+    return std::chrono::duration_cast<std::chrono::milliseconds>(elapsed_).count();
+  }
+
+  HierarchicalStopWatch::HierarchicalStopWatch(const std::string &name,
+                        HierarchicalStopWatch &parent)
+          : name_(name),
+            watch_(parent.watch_),
+            level_(parent.level_ + 1)
+  {
+    parent.add_child(this);
+  }
+
+  void HierarchicalStopWatch::reset()
+  {
+    watch_.reset();
+    for (auto ch: children_)
+    {
+      ch->reset();
+    }
+  }
+
+  Watch::Clock::duration HierarchicalStopWatch::unaccounted() const
+  {
+    Watch::Clock::duration dur = watch_.elapsed();
+    for (auto child: children_)
+    {
+      dur -= child->watch().elapsed();
+    }
+    return dur;
+  }
+
+  void HierarchicalStopWatch::add_child(HierarchicalStopWatch *sw)
+  {
+    children_.push_back(sw);
+  }
+
+  ScopedStopWatch::ScopedStopWatch(Watch &watch)
+          : watch_(watch)
+  {
+    maybe_start();
+  }
+
+  ScopedStopWatch::ScopedStopWatch(HierarchicalStopWatch &hsw)
+          : watch_(hsw.watch())
+  {
+    maybe_start();
+  }
+
+  ScopedStopWatch::~ScopedStopWatch()
+  {
+    if (should_stop_)
+    {
+      watch_.stop();
+    }
+  }
+
+  void ScopedStopWatch::maybe_start()
+  {
+    if (watch_.running())
+    {
+      should_stop_ = false;
+    }
+    else
+    {
+      watch_.resume();
+    }
+
+  }
+
 } // namespace AlgoHex

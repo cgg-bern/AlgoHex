@@ -15,6 +15,20 @@
 
 namespace AlgoHex
 {
+
+SplitApproach::SplitApproach(TetMesh &_mesh) :
+        MeshProperties(_mesh),
+        mesh_(_mesh),
+        sge_(mesh_),
+        pp_(mesh_),
+        flnmv_(mesh_),
+        eem_(mesh_),
+        fac_(mesh_),
+        es_(mesh_)
+{
+  this->initialize_singular_vertex_property();
+}
+
 void SplitApproach::split_approach()
 {
   remove_zigzag2();

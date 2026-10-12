@@ -55,20 +55,7 @@ public:
   using Mesh = TetMesh;
   using Point = typename Mesh::PointT;
 
-
-  SmoothOctahedralFieldGeneratorCellBased(TetMesh &_tmesh) :
-          tmesh_(_tmesh),
-          shcs_(tmesh_.request_cell_property<SHCoeffs>("cell spherical harmonic coefficients")),
-          shcs_p_(tmesh_.request_cell_property<SHCoeffs>("scaled cell spherical harmonic coefficients")),
-          quaternions_(tmesh_.request_cell_property<Quaternion>("FrameFieldQuaternions", {0., 0., 0., 0.}))
-  {
-    num_cells_ = tmesh_.n_cells();
-
-    tmesh_.set_persistent(shcs_p_, true);
-    tmesh_.set_persistent(quaternions_, true);
-
-    cache_constrained_9d_coefficients();
-  }
+  SmoothOctahedralFieldGeneratorCellBased(TetMesh &_tmesh);
 
   ~SmoothOctahedralFieldGeneratorCellBased()
   {
@@ -97,8 +84,6 @@ private:
 
   void cache_constrained_9d_coefficients();
 
-
-private:
   Mesh &tmesh_;
 
   //9D coefficients before projection

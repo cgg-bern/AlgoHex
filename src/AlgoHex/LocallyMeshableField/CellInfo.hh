@@ -18,7 +18,6 @@ struct CELLINFO
 public:
   CELLINFO(const CH _ch, const Vec3d &_param) : ch(_ch), param(_param) {}
 
-
   bool operator<(const CELLINFO &other) const
   {
     return ch < other.ch;
@@ -42,7 +41,6 @@ struct HALFFACEINFO
 {
 public:
   explicit HALFFACEINFO(const HFH _hfh, const Vec3d &_param) : hfh(_hfh), param(_param) {}
-
 
   bool operator<(const HALFFACEINFO &other) const
   {

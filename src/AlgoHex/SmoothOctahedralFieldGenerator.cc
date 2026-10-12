@@ -42,6 +42,27 @@ NormalConstraintCoeff::NormalConstraintCoeff(
   h8.rotate_xyz(angles);
 }
 
+SmoothOctahedralFieldGenerator::SmoothOctahedralFieldGenerator(TetMesh &_tmesh) :
+        tmesh_(_tmesh),
+//                interface_(tmesh_.request_halfface_property<bool>("is interface")),
+        shcs_(tmesh_.request_vertex_property<SHCoeffs>("vertex spherical harmonic coefficients")),
+        shcs_p_(tmesh_.request_vertex_property<SHCoeffs>("scaled vertex spherical harmonic coefficients")),
+        quaternions_(tmesh_.request_vertex_property<Quaternion>("vertex quaternion", {0., 0., 0., 0.}))
+{
+  num_vertices_ = tmesh_.n_vertices();
+
+  tmesh_.set_persistent(shcs_p_, true);
+  tmesh_.set_persistent(quaternions_, true);
+
+  cache_constrained_9d_coefficients();
+}
+
+SmoothOctahedralFieldGenerator::~SmoothOctahedralFieldGenerator()
+{
+//            tmesh_.set_persistent(interface_, false);
+}
+
+
 void SmoothOctahedralFieldGenerator::
 solve_spherical_harmonic_coefficients(const double _penalty)
 {
@@ -334,6 +355,21 @@ void SmoothOctahedralFieldGenerator::print_timings() const
   std::cout << "Time spent in Linear System solve: " << sw::linsys_solve_.elapsed_ms() << "ms" << std::endl;
 #endif
 
+}
+
+Vec3d get_euler_angle(const double _x, const double _y, const double _z)
+{
+  Vec3d angles(0, 0, 0);
+  if (std::abs(_z) < .99)
+  {
+    Eigen::Vector3d dir(_x, _y, _z), nz(0, 0, 1);
+    Mat3d m;
+    m = Eigen::Quaterniond().setFromTwoVectors(nz, dir);
+    //(gamma, beta, alpha)
+    angles = m.eulerAngles(2, 1, 0);
+  }
+
+  return {angles(2), angles(1), angles(0)};
 }
 
 } // namespace AlgoHex

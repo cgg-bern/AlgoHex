@@ -38,65 +38,42 @@ public:
 
   OneringParameterizationChecker(TetMesh &_mesh);
 
-
   ~OneringParameterizationChecker() = default;
-
 
 public:
   nlohmann::json &json_data();
 
   void optimize_onering_mesh(TetMesh &_or_mesh, const VH _vh, int _opt_iter = 10);
 
-
   int split_edges(TetMesh &_or_mesh, const VH _vh);
-
 
   bool is_locally_meshable(const VH _vh, const bool _align_sg = false);
 
-
   bool is_locally_meshable2(TetMesh &_onering, const VH _vh, const int _opt_iters, const bool _align_sg = false);
-
 
   bool check_parameterization(TetMesh &_mesh, const VH _vh);
 
-
-
   double check_local_meshability(const bool _align_to_sge = false);
-
 
   bool is_on_feature_vertex(const VH _vh) const;
 
-
-
   bool is_on_feature_edge(const VH _vh) const;
-
-
 
   bool is_on_feature_face(const VH _vh) const;
 
-
   bool is_on_singular_node(const VH _vh) const;
-
 
   bool is_zipper_node(const VH _vh) const;
 
-
-
   bool is_on_singular_arc(const VH _vh) const;
-
 
   bool is_singular_vertex(const VH _vh) const;
 
-
   double len_complex_singular_edges() const;
-
 
   double len_singular_edges() const;
 
-
   void enable_save_locally_non_meshable(const std::string _filename_base = "locally_non_meshable_");
-
-
 
 private:
   TetMesh &mesh_;

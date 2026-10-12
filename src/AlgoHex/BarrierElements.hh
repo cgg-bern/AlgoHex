@@ -59,23 +59,8 @@ public:
       return w * 1.0 / v;
   }
 
-  inline double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c)
-  {
-    if (_v[0] > 0.0)
-      return DBL_MAX;
-    else
-    {
-      double t = 0.9 * (_c[0] - _x[0]) / _v[0];
+   double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
 
-      if (!std::isfinite(t))
-      {
-        std::cerr << "Warning: max_feasbile_step of ReciprocalBarrierElement_F generated t = " << t
-                  << ", x=" << _x << ", v=" << _v << ", c= " << _c.transpose() << std::endl;
-        return DBL_MAX;
-      }
-      else return t;
-    }
-  }
 };
 
 // AD Element -- Hessian projection not required since convex!
@@ -84,4 +69,3 @@ using ReciprocalBarrierElement_TAD = COMISO::FiniteElementTinyAD<ReciprocalBarri
 //=============================================================================
 } // namespace AlgoHex
 //=============================================================================
-

@@ -45,6 +45,28 @@ namespace AlgoHex
 
 //== IMPLEMENTATION ==========================================================
 
+
+FrameFieldOptimizer3D::FrameFieldOptimizer3D(TetMesh &_m)
+        : mesh_(_m),
+          frame_cprop_(mesh_.request_cell_property<Mat3d>("AlgoHex::FrameField")),
+          transition_hfprop_(mesh_.request_halfface_property<int>("HalffaceTransiton")),
+          valence_eprop_(mesh_.request_edge_property<int>("edge_valance")),
+          feature_vprop_(mesh_.request_vertex_property<int>("AlgoHex::FeatureVertices")),
+          feature_eprop_(mesh_.request_edge_property<int>("AlgoHex::FeatureEdges")),
+          feature_fprop_(mesh_.request_face_property<int>("AlgoHex::FeatureFaces")),
+          save_locally_non_meshable_(false),
+          save_locally_non_meshable_filename_base_("locally_non_meshable_")
+{
+  mesh_.set_persistent(valence_eprop_);
+  mesh_.set_persistent(transition_hfprop_);
+}
+
+void FrameFieldOptimizer3D::enable_save_locally_non_meshable(const std::string _filename_base)
+{
+  save_locally_non_meshable_ = true;
+  save_locally_non_meshable_filename_base_ = _filename_base;
+}
+
 void
 FrameFieldOptimizer3D::
 optimize_integrable(const double _anisotropy_alpha)

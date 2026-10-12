@@ -24,7 +24,6 @@ public:
   using MeshProperties::cell_quaternions_;
   using MeshProperties::feature_edge_;
 
-
   ArcZipping(TetMesh &_mesh) : MeshProperties(_mesh),
                               mesh_(_mesh) {}
 

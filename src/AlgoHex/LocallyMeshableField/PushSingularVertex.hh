@@ -35,21 +35,10 @@ public:
   using MeshProperties::sgl_vt_;
   using MeshProperties::target_length_;
 
-
   using Point = TetMesh::PointT;
 
+  PushSingularVertex(TetMesh &_mesh);
 
-  PushSingularVertex(TetMesh &_mesh) : MeshProperties(_mesh),
-                                      mesh_(_mesh),
-                                      vo_(mesh_),
-                                      sge_(mesh_),
-                                      fis_(mesh_),
-                                      fac_(mesh_),
-                                      es_(mesh_)
-  {
-  }
-
-public:
   bool push_singular_vertex(const VH _vh);
 
   bool is_move_inside_candidate(const VH _vh, bool _push_feature_vertex = true, bool _preprocess = false);
@@ -71,7 +60,6 @@ private:
 
   int negate(const int _axis) const { return _axis % 2 == 0 ? _axis + 1 : _axis - 1; }
 
-private:
   TetMesh &mesh_;
 
   VertexOptimize vo_;

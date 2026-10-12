@@ -34,14 +34,8 @@ public:
 
   using MeshProperties::sgl_vt_;
 
-  TransversalUnzipping(TetMesh &_mesh) : MeshProperties(_mesh), ArcZipping(_mesh),
-                                        mesh_(_mesh),
-                                        sge_(mesh_),
-                                        es_(mesh_),
-                                        fs_(mesh_) {}
+  TransversalUnzipping(TetMesh &_mesh);
 
-
-public:
   std::vector<HEH> repair_fully_constrained_parabolic_sector(const VH _vh, const std::vector<HEH> &_sector_hehs,
                                                              const std::set<FH> &_sec_fhs, bool _shrink_sector = false);
 

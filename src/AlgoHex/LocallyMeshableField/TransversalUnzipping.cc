@@ -14,6 +14,13 @@
 
 namespace AlgoHex
 {
+
+TransversalUnzipping::TransversalUnzipping(TetMesh &_mesh) : MeshProperties(_mesh), ArcZipping(_mesh),
+                                      mesh_(_mesh),
+                                      sge_(mesh_),
+                                      es_(mesh_),
+                                      fs_(mesh_) {}
+
 std::vector<HEH>
 TransversalUnzipping::repair_fully_constrained_parabolic_sector(const VH _vh,
                                                                         const std::vector<HEH> &_sector_hehs,

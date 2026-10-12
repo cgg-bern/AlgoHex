@@ -27,45 +27,36 @@ public:
   static int halfedge_transition_index(const TetMesh &_mesh, const TransitionQuaternion &_tq, const HFP<int> &_trans_prop,
                                        const HEH _heh, const HFH _hfh_start);
 
-
   static int halfedge_transition_index(const TetMesh &_mesh, const TransitionQuaternion &_tq, const HFP<int> &_trans_prop,
                                        const HEH _heh, const HFH _hfh_start, const HFH _hfh_end);
-
 
   static int halfedge_rotational_axis_idx(const TetMesh &_mesh, const TransitionQuaternion &_tq,
                                           const CP <Quaternion> &_cell_quaternions,
                                           const HFP<int> &_trans_prop, const EP<int> &_valence, const HEH _heh,
                                           const HFH _hfh_start);
 
-
   static int halfedge_transition_index_in_cell(const TetMesh &_mesh, const TransitionQuaternion &_tq,
                                                const CP <Quaternion> &_cell_quaternions,
                                                const HFP<int> &_trans_prop, const EP<int> &_valence, const HEH _heh,
                                                const HFH _hfh_start);
 
-
-
   static int get_dominant_axis_in_cell(const TetMesh &_mesh, const TransitionQuaternion &_tq,
                                        const CP <Quaternion> &_cell_quaternions,
                                        const HFP<int> &_trans_prop, const HEH _heh);
 
-
   static int
   halfedge_axis_idx(const TetMesh &_mesh, const CP <Quaternion> &_cell_quaternions, const HEH _heh, const CH _ch,
                     const int _axis);
-
 
   static int get_halfedge_aligned_axis_in_cell(const TetMesh &_mesh, const TransitionQuaternion &_tq,
                                                const CP <Quaternion> &_cell_quaternions,
                                                const HFP<int> &_trans_prop, const EP<int> &_valence,
                                                const EP<int> &_feature_edge, const HEH _heh, const HFH _hfh);
 
-
   static std::map<CH, int> get_halfedge_aligned_axis_in_cells(const TetMesh &_mesh, const TransitionQuaternion &_tq,
                                                               const CP <Quaternion> &_cell_quaternions,
                                                               const HFP<int> &_trans_prop, const EP<int> &_valence,
                                                               const EP<int> &_feature_edge, const HEH &_heh);
-
 
   //TODO: support high valence by checking angle defect
   static std::map<CH, int>

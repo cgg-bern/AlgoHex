@@ -26,13 +26,7 @@ class ALGOHEX_EXPORT VertexOptimize
 public:
   using Point = TetMesh::PointT;
 
-  VertexOptimize(TetMesh &_mesh) :
-          mesh_(_mesh),
-          trans_prop_(mesh_.request_halfface_property<int>("HalffaceTransiton")),
-          cell_quaternions_(mesh_.request_cell_property<Quaternion>("FrameFieldQuaternions")),
-          feature_edge_(mesh_.request_edge_property<int>("AlgoHex::FeatureEdges")),
-          feature_fprop_(mesh_.request_face_property<int>("AlgoHex::FeatureFaces")),
-          feature_face_vertex_(mesh_.request_vertex_property<bool>("AlgoHex::FeatureFaceVertices")) {}
+  VertexOptimize(TetMesh &_mesh);
 
   ~VertexOptimize() {}
 
@@ -41,7 +35,6 @@ public:
     WORST_QUALITY, AVRG_QUALITY
   };
 
-public:
   bool vertex_optimize(const VH _vh);
 
   bool is_vertex_optimize_ok(const VH _vh) const;
@@ -82,8 +75,6 @@ public:
 
   std::vector<Point> get_cell_points(const CH _ch, const VH _vh) const;
 
-private:
-
   bool update_newton(const std::vector<std::vector<Point> > &_cells_points,
                      double &_f, Eigen::Vector3d &_g, Eigen::Matrix3d &_H) const;
 
@@ -108,7 +99,6 @@ private:
                                                 const std::vector<std::vector<Point>> &_cells_pts) const;
 
   double determin_suitable_weight(const std::vector<std::vector<Point>> &_cells_pts) const;
-
 
 private:
   TetMesh &mesh_;

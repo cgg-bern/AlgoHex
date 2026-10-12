@@ -33,17 +33,8 @@ public:
   using MeshProperties::feature_edge_vertex_;
   using MeshProperties::sgl_vt_;
 
+  DetachAtInvalidSingularNode(TetMesh &_mesh);
 
-  DetachAtInvalidSingularNode(TetMesh &_mesh) : MeshProperties(_mesh), ArcZipping(_mesh),
-                                               mesh_(_mesh),
-                                               sge_(mesh_),
-                                               es_(mesh_),
-                                               ssaf_(mesh_),
-                                               opc_(mesh_)
-//        ,lmcwf_(mesh_)
-  {}
-
-public:
   bool fix_interior_invalid_singular_node(const VH _vh);
 
   bool fix_invalid_singular_node_on_feature_surface(const VH _vh);
@@ -56,8 +47,6 @@ public:
   bool detach_singular_arc_from_singular_node(const VH _vh, const HEH _heh, const std::vector<HEH> &_excl_hehs,
                                               const bool _find_featureface_sges, const bool _same_sector_sges,
                                               const bool _split = true);
-//        bool detach_singular_arc_from_singular_node(const VH _vh, TetMesh& _mesh, std::vector<OVM::Vec4f>& _mesh_color,
-//                                                    const bool _find_featureface_sge, const bool _same_sector_sges);
 
   bool detach_singular_arc_from_singular_node_wrt_boundary(const VH _vh, const bool _is_anti_prl,
                                                            const bool _start_from_bdy);
@@ -68,8 +57,6 @@ public:
   bool detach_singular_arcs_of_zipper_node(const VH _vh, const HEH _heh_s, const std::vector<HEH> &_excl_hehs,
                                            const bool _find_featureface_sges, const bool _same_sector_sges,
                                            const bool _split = true);
-//        bool detach_singular_arcs_of_zipper_node(const VH _vh, TetMesh& _mesh, std::vector<OVM::Vec4f>& _mesh_color,
-//                                                  const bool _find_featureface_sge, const bool _same_sector_sges);
 
   //similar as boundary, but create a zipper node on the other side
   bool detach_singualr_arc_from_singular_node_wrt_feature_face(const VH _vh, const bool _is_anti_prl);
@@ -80,7 +67,6 @@ public:
 
   int negate(const int _axis) const { return _axis % 2 == 0 ? _axis + 1 : _axis - 1; }
 
-public:
   bool is_locally_meshable_simplified(const VH _vh, int _n_sges);
 
   bool is_locally_meshable(const VH _vh);
@@ -102,10 +88,7 @@ public:
 
   bool is_detaching_kept_singular_edge_enabled() { return ssaf_.enable_detach_kept_sge_; }
 
-  bool is_valid_face_sector_after_fix(const VH _vh, const HEH _ff_sgheh, const HEH _nff_sgheh)
-  {
-    return ssaf_.is_valid_sector_after_fix(_vh, _ff_sgheh, _nff_sgheh);
-  }
+  bool is_valid_face_sector_after_fix(const VH _vh, const HEH _ff_sgheh, const HEH _nff_sgheh);
 
 private:
   bool is_singular_circle_noise(const HEH _heh) const;
@@ -129,7 +112,6 @@ private:
   is_detachable_zipper_node_to_ffe(const VH _vh, int _n_int_val_1, int _n_int_val1, int _n_ffe_val_1, int _n_ffe_val1,
                                    int _n_ffe_val_u) const;
 
-private:
   TetMesh &mesh_;
 
   AlgoHex::SingularGraphExtraction sge_;
@@ -138,7 +120,6 @@ private:
   SeparableSingularArcFinder ssaf_;
 
   AlgoHex::OneringParameterizationChecker opc_;
-//        AlgoHex::LocalMeshabilityCheckerWithFrames lmcwf_;
 
   AlgoHex::TransitionQuaternion tq_;
 };

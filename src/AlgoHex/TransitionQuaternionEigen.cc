@@ -460,6 +460,40 @@ int TransitionQuaternion::axis_after_transition(const int _axis_start, const int
 
 
 //=============================================================================
+
+  Quaternion TransitionQuaternion::transition(const int _i) const
+  {
+    if (_i >= 0) return transitions_[_i];
+    else
+      return inverse_transition(-_i);
+  }
+
+  Quaternion TransitionQuaternion::inverse_transition(const int _i) const
+  {
+    if (_i >= 0)
+      return transition(inverse_transition_idx(_i));
+    else return transition(-_i);
+  }
+
+  Quaternion TransitionQuaternion::closest_transition_generating_2d(const Quaternion &_q, const int _i) const
+  {
+    return transition(closest_transition_idx_generating_2d(_q, _i));
+  }
+
+  int TransitionQuaternion::rotation_axis_2d(const int _i) const
+  {
+    if (_i >= 0) return rotation_axis_2d_[_i];
+    else
+      return rotation_axis_2d(-_i);
+  }
+
+  int TransitionQuaternion::rotation_angle_2d(const int _i) const
+  {
+    if (_i >= 0)
+      return rotation_angle_deg_2d_[_i];
+    else return rotation_angle_2d(-_i);
+  }
+
 } // namespace AlgoHex
 //=============================================================================
 
