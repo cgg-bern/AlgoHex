@@ -25,3 +25,10 @@ target_link_libraries(HexMeshing
         AlgoHex
         CLI11::CLI11)
 
+# Precompiled header for the heavy third-party header stack.
+# Clang only: GCC's PCH reuse measured slower than no-PCH
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+target_precompile_headers(HexMeshing
+        PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../src/AlgoHex/AlgoHexPCH.hpp)
+endif ()

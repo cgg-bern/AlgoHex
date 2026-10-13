@@ -235,6 +235,25 @@ set_source_files_properties(
 )
 
 target_compile_features(AlgoHex PUBLIC cxx_std_17)
+
+# Precompiled header for the heavy third-party header stack.
+# Clang only: GCC's PCH reuse measured slower than no-PCH
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+target_precompile_headers(AlgoHex PRIVATE src/AlgoHex/AlgoHexPCH.hpp)
+    # The SphericalHarmonics sources above get a per-file -O3, which is
+    # incompatible with a PCH compiled at the target's (e.g. Debug/-O0)
+    # optimization level
+    set_source_files_properties(
+        src/AlgoHex/SphericalHarmonics/SHCoeffRotation.cc
+        src/AlgoHex/SphericalHarmonics/SHCoeffs.cc
+        src/AlgoHex/SphericalHarmonics/SHProjectorRay.cc
+        PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
+endif ()
+
+# The single C source must not participate in the C++ PCH (it would make
+# CMake generate a failing C-language PCH as well).
+set_source_files_properties(src/AlgoHex/OpenNL/OpenNL_psm.c
+    PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
 add_library(AlgoHex::AlgoHex ALIAS AlgoHex)
 
 target_compile_options(AlgoHex PUBLIC
