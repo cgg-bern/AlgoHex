@@ -16,7 +16,7 @@ namespace AlgoHex
 
    double ExpDeformationElement::max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c)
   {
-    // ToDo
+    // TODO
     return DBL_MAX;
   }
 
@@ -111,5 +111,66 @@ namespace AlgoHex
       return (J.transpose() * J).trace() / pow(d, 2.0 / 3.0) - 3.0;
   }
 
+template<class ScalarT>
+ScalarT ExpDeformationElement::eval_f(const Eigen::Matrix<ScalarT, ExpDeformationElement::NV, 1> &_x, const Eigen::Matrix<double, ExpDeformationElement::NC, 1> &_c) const
+{
+
+    using Vec3T = Eigen::Matrix<ScalarT, 3, 1, Eigen::ColMajor>;
+    using Vec3dT = Eigen::Matrix<double, 3, 1, Eigen::ColMajor>;
+    using Mat3x3T = Eigen::Matrix<ScalarT, 3, 3, Eigen::ColMajor>;
+    using Mat3x3dT = Eigen::Matrix<double, 3, 3, Eigen::ColMajor>;
+
+    // get constants
+    const double &w_conformal = _c[0];
+
+//            Eigen::Map<Mat3x3dT> invG( (double*) &(_c[10]));
+
+    // get four input points
+    Eigen::Map<Vec3T> pa((ScalarT *) &(_x[0]));
+    Eigen::Map<Vec3dT> pb((double *) &(_c[1]));
+    Eigen::Map<Vec3dT> pc((double *) &(_c[4]));
+    Eigen::Map<Vec3dT> pd((double *) &(_c[7]));
+
+
+    // edge vectors
+    Mat3x3T E;
+    E.col(0) = pb - pa;
+    E.col(1) = pc - pa;
+    E.col(2) = pd - pa;
+
+    // calc Jacobi Matrix of map
+//            Mat3x3T J = E * invG;
+
+    Eigen::Map<Mat3x3dT> G((double *) &(_c[10]));
+    Mat3x3T J = E * G.transpose();
+
+    // calculate determinant
+    ScalarT d = J.determinant();
+//            std::cerr<<" d "<<d<<" invG "<<G.determinant()<<" E "<<E.determinant()<<" trace "<<(J.transpose() * J).trace()<<std::endl;
+
+    if (d <= 0.0)
+    {
+//                double xx = pa[0];
+//                Vec3dT paa((double)pa[0], (double)pa[1], (double)pa[2]);
+//                Mat3x3dT E2;
+//                E2.col(0) = pb - paa;
+//                E2.col(1) = pc - paa;
+//                E2.col(2) = pd - paa;
+
+      return static_cast<ScalarT>(std::numeric_limits<double>::infinity());
+    }
+    else
+      return exp(w_conformal * ((J.transpose() * J).trace() / pow(d, 2.0 / 3.0) - 3.0));
 
 }
+
+template double ExpDeformationElement::eval_f<double>(const Eigen::Matrix<double, ExpDeformationElement::NV, 1> &_x, const Eigen::Matrix<double, ExpDeformationElement::NC, 1> &_c) const;
+template TinyAD::Scalar<ExpDeformationElement::NV, double, false> ExpDeformationElement::eval_f<TinyAD::Scalar<ExpDeformationElement::NV, double, false>>(const Eigen::Matrix<TinyAD::Scalar<ExpDeformationElement::NV, double, false>, ExpDeformationElement::NV, 1> &_x, const Eigen::Matrix<double, ExpDeformationElement::NC, 1> &_c) const;
+template TinyAD::Scalar<ExpDeformationElement::NV, double, true> ExpDeformationElement::eval_f<TinyAD::Scalar<ExpDeformationElement::NV, double, true>>(const Eigen::Matrix<TinyAD::Scalar<ExpDeformationElement::NV, double, true>, ExpDeformationElement::NV, 1> &_x, const Eigen::Matrix<double, ExpDeformationElement::NC, 1> &_c) const;
+
+} // namespace AlgoHex
+
+namespace COMISO
+{
+template class FiniteElementHessianProjection<FiniteElementTinyAD<AlgoHex::ExpDeformationElement>>;
+} // namespace COMISO

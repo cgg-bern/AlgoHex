@@ -12,6 +12,7 @@
 //== INCLUDES =================================================================
 
 #include <Eigen/Core>
+#include <Eigen/SparseCore>
 
 //== FORWARDDECLARATIONS ======================================================
 
@@ -38,86 +39,23 @@ public:
   typedef Eigen::Matrix<double, NC, 1> VecC;
   typedef Eigen::Triplet<double> Triplet;
 
-  inline double eval_f(const VecV &_x, const VecC &_c) const
-  {
-    double d = _x.dot(_c.head(NV)) + _c[NV];
+  double eval_f(const VecV &_x, const VecC &_c) const;
 
-    return _c[NV + 1] * d * d;
-  }
+  void eval_gradient(const VecV &_x, const VecC &_c, VecV &_g) const;
 
-  inline void eval_gradient(const VecV &_x, const VecC &_c, VecV &_g) const
-  {
-    double d = _x.dot(_c.head(NV)) + _c[NV];
+  void eval_hessian(const VecV &_x, const VecC &_c, std::vector<Triplet> &_triplets) const;
 
-    for (unsigned int i = 0; i < NV; ++i)
-      _g[i] = _c[NV + 1] * 2.0 * d * _c[i];
-  }
-
-  inline void eval_hessian(const VecV &_x, const VecC &_c, std::vector<Triplet> &_triplets) const
-  {
-    _triplets.clear();
-
-    for (int i = 0; i < NV; ++i)
-      for (int j = 0; j < NV; ++j)
-        _triplets.push_back(Triplet(i, j, _c[NV + 1] * 2.0 * _c[i] * _c[j]));
-  }
-
-  inline double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c) const
-  {
-    return DBL_MAX;
-  }
+  double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c) const;
 
   // _alpha is the penalty factor for deviation which is not along the axis
   // requirs NV=3
   static void
-  get_constants_and_indices_frame_fitting(const Mat3d &_F, const int _cell_idx, const double _w, const double _alpha,
-                                          std::vector<VecI> &_idxs, std::vector<VecC> &_constants)
-  {
-    // assume _F has positive determinant (non-degenerate + right-handed)
-
-    _idxs.clear();
-    _idxs.reserve(9);
-    _constants.clear();
-    _constants.reserve(9);
-
-    int bi = 9 * _cell_idx;
-
-    for (int i = 0; i < 3; ++i)
-    {
-      int bi2 = bi + 3 * i;
-      _idxs.push_back(VecI(bi2, bi2 + 1, bi2 + 2));
-      _idxs.push_back(VecI(bi2, bi2 + 1, bi2 + 2));
-      _idxs.push_back(VecI(bi2, bi2 + 1, bi2 + 2));
-
-      // create local basis for anisotropic norm
-      Mat3d B;
-      B.col(0) = _F.col(i);
-      B.col(1) = _F.col((i + 1) % 3);
-      B.col(2) = _F.col((i + 2) % 3);
-
-      // first axis is axis of frame
-      B.col(0) /= (B.col(0)).norm();
-      // second axis via cross-product
-      B.col(2) = B.col(0).cross(B.col(1));
-      B.col(2) /= (B.col(2)).norm();
-      // third axis via cross-product
-      B.col(1) = B.col(2).cross(B.col(0));
-      B.col(1) /= (B.col(1)).norm();
-
-      // get current axis in local coordinates
-      Vec3d fb = B.transpose() * _F.col(i);
-
-      for (int j = 0; j < 3; ++j)
-      {
-        double w = _w;
-        if (i != j) w *= _alpha;
-        VecC c;
-        c << B(0, j), B(1, j), B(2, j), -fb[j], w;
-        _constants.push_back(c);
-      }
-    }
-  }
+  get_constants_and_indices_frame_fitting(const Eigen::Matrix3d &_F, const int _cell_idx, const double _w, const double _alpha,
+                                          std::vector<VecI> &_idxs, std::vector<VecC> &_constants);
 };
+
+template<> void LinearLeastSquaresElementND<3>::get_constants_and_indices_frame_fitting(const Eigen::Matrix3d &_F, const int _cell_idx, const double _w, const double _alpha,
+                                            std::vector<VecI> &_idxs, std::vector<VecC> &_constants);
 
 using LinearLeastSquaresElement1D = LinearLeastSquaresElementND<1>;
 using LinearLeastSquaresElement2D = LinearLeastSquaresElementND<2>;
@@ -126,6 +64,14 @@ using LinearLeastSquaresElement4D = LinearLeastSquaresElementND<4>;
 using LinearLeastSquaresElement5D = LinearLeastSquaresElementND<5>;
 using LinearLeastSquaresElement6D = LinearLeastSquaresElementND<6>;
 using LinearLeastSquaresElement9D = LinearLeastSquaresElementND<9>;
+
+extern template class LinearLeastSquaresElementND<1>;
+extern template class LinearLeastSquaresElementND<2>;
+extern template class LinearLeastSquaresElementND<3>;
+extern template class LinearLeastSquaresElementND<4>;
+extern template class LinearLeastSquaresElementND<5>;
+extern template class LinearLeastSquaresElementND<6>;
+extern template class LinearLeastSquaresElementND<9>;
 
 //=============================================================================
 } // namespace AlgoHex

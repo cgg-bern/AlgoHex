@@ -44,48 +44,17 @@ public:
   using VecC = Eigen::Matrix<double, NC, 1>;
 
   template<class ScalarT>
-  inline ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const
-  {
-    using MatT = Eigen::Matrix<ScalarT, 3, 3, Eigen::ColMajor>;
-    using MatD = Eigen::Matrix<double, 3, 3, Eigen::ColMajor>;
-    using VecT = Eigen::Matrix<ScalarT, 3, 1>;
+  ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const;
 
-    // get matrix representation of J and E
-    Eigen::Map<MatT> J((ScalarT *) _x.data());
-    Eigen::Map<MatD> E((double *) _c.data());
-
-    // get references to constants
-    const double &w = _c[9];
-    const double &s = _c[10];
-    const double &cos_alpha = _c[11];
-
-    // deform tetrahedron (edge vectors)
-    MatT V = J * E;
-
-    // calculate normal vectors
-    VecT n0 = V.col(1).cross(V.col(0));
-    n0 /= n0.norm();
-    VecT n1 = V.col(2).cross(V.col(0));
-    n1 /= n1.norm();
-    // dot product
-    ScalarT dp = n0.dot(n1);
-
-    if (!isfinite(dp))
-      return static_cast<ScalarT>(std::numeric_limits<double>::infinity());
-    else
-      return w * (exp(s * pow(dp - cos_alpha, 2)) - 1.0);
-  }
-
-  inline double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c)
-  {
-    return DBL_MAX;
-  }
+  double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
 };
 
-// create types for optimization with derivatives and projected hessian
+extern template double DihedralAngleFramesElement_F::eval_f<double>(const Eigen::Matrix<double, DihedralAngleFramesElement_F::NV, 1> &_x, const Eigen::Matrix<double, DihedralAngleFramesElement_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<DihedralAngleFramesElement_F::NV, double, false> DihedralAngleFramesElement_F::eval_f<TinyAD::Scalar<DihedralAngleFramesElement_F::NV, double, false>>(const Eigen::Matrix<TinyAD::Scalar<DihedralAngleFramesElement_F::NV, double, false>, DihedralAngleFramesElement_F::NV, 1> &_x, const Eigen::Matrix<double, DihedralAngleFramesElement_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<DihedralAngleFramesElement_F::NV, double, true> DihedralAngleFramesElement_F::eval_f<TinyAD::Scalar<DihedralAngleFramesElement_F::NV, double, true>>(const Eigen::Matrix<TinyAD::Scalar<DihedralAngleFramesElement_F::NV, double, true>, DihedralAngleFramesElement_F::NV, 1> &_x, const Eigen::Matrix<double, DihedralAngleFramesElement_F::NC, 1> &_c) const;
+
 using DihedralAngleFramesElement_TAD = COMISO::FiniteElementTinyAD<DihedralAngleFramesElement_F>;
 using DihedralAngleFramesElement_TAD_PH = COMISO::FiniteElementHessianProjection<DihedralAngleFramesElement_TAD>;
-
 
 class DihedralAngleElement_F
 {
@@ -100,58 +69,24 @@ public:
   using VecC = Eigen::Matrix<double, NC, 1>;
 
   template<class ScalarT>
-  inline ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const
-  {
-    using MatT = Eigen::Matrix<ScalarT, 3, 4, Eigen::ColMajor>;
-    using MatD = Eigen::Matrix<double, 3, 3, Eigen::ColMajor>;
-    using VecT = Eigen::Matrix<ScalarT, 3, 1>;
+  ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const;
 
-    // get matrix representation of J and E
-    Eigen::Map<MatT> P((ScalarT *) _x.data());
-
-    // get references to constants
-    const double &w = _c[0];
-    const double &s = _c[1];
-    const double &cos_alpha = _c[2];
-    const double &sin_alpha = _c[3];
-
-    VecT e0 = P.col(1) - P.col(0);
-    VecT e1 = P.col(2) - P.col(0);
-    VecT e2 = P.col(3) - P.col(0);
-
-    // calculate normal vectors
-    VecT n0 = e0.cross(e1);
-    n0 /= n0.norm();
-    VecT n1 = e0.cross(e2);
-    n1 /= n1.norm();
-    // dot product
-    ScalarT dp = n0.dot(n1);
-
-    // cross product
-    ScalarT cp = (n0.cross(n1)).dot(e0) / e0.norm();
-
-//    std::cerr << "dp-cos_alpha = " << dp-cos_alpha << std::endl;
-//    std::cerr << "cp-sin_alpha = " << cp-sin_alpha << std::endl;
-
-//    if(!isfinite(dp))
-//      return static_cast<ScalarT>(std::numeric_limits<double>::infinity());
-    if (!isfinite(dp) || !isfinite(cp))
-      return w * (exp(2.0 * s) - 1.0);
-    else
-      return w * (exp(s * (pow(dp - cos_alpha, 2) + pow(cp - sin_alpha, 2))) - 1.0);
-  }
-
-  inline double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c)
-  {
-    return DBL_MAX;
-  }
+  double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
 };
 
-// create types for optimization with derivatives and projected hessian
+extern template double DihedralAngleElement_F::eval_f<double>(const Eigen::Matrix<double, DihedralAngleElement_F::NV, 1> &_x, const Eigen::Matrix<double, DihedralAngleElement_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<DihedralAngleElement_F::NV, double, false> DihedralAngleElement_F::eval_f<TinyAD::Scalar<DihedralAngleElement_F::NV, double, false>>(const Eigen::Matrix<TinyAD::Scalar<DihedralAngleElement_F::NV, double, false>, DihedralAngleElement_F::NV, 1> &_x, const Eigen::Matrix<double, DihedralAngleElement_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<DihedralAngleElement_F::NV, double, true> DihedralAngleElement_F::eval_f<TinyAD::Scalar<DihedralAngleElement_F::NV, double, true>>(const Eigen::Matrix<TinyAD::Scalar<DihedralAngleElement_F::NV, double, true>, DihedralAngleElement_F::NV, 1> &_x, const Eigen::Matrix<double, DihedralAngleElement_F::NC, 1> &_c) const;
+
 using DihedralAngleElement_TAD = COMISO::FiniteElementTinyAD<DihedralAngleElement_F>;
 using DihedralAngleElement_TAD_PH = COMISO::FiniteElementHessianProjection<DihedralAngleElement_TAD>;
-
 
 //=============================================================================
 } // namespace AlgoHex
 //=============================================================================
+
+namespace COMISO
+{
+extern template class FiniteElementHessianProjection<FiniteElementTinyAD<AlgoHex::DihedralAngleFramesElement_F>>;
+extern template class FiniteElementHessianProjection<FiniteElementTinyAD<AlgoHex::DihedralAngleElement_F>>;
+} // namespace COMISO

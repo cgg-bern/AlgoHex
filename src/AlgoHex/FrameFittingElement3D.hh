@@ -47,13 +47,13 @@ public:
   typedef Eigen::Matrix<double, NC, 1> VecC;
   typedef Eigen::Triplet<double> Triplet;
 
-   double eval_f(const VecV &_x, const VecC &_c) const;
+  double eval_f(const VecV &_x, const VecC &_c) const;
 
-   void eval_gradient(const VecV &_x, const VecC &_c, VecV &_g) const;
+  void eval_gradient(const VecV &_x, const VecC &_c, VecV &_g) const;
 
-   void eval_hessian(const VecV &_x, const VecC &_c, std::vector<Triplet> &_triplets) const;
+  void eval_hessian(const VecV &_x, const VecC &_c, std::vector<Triplet> &_triplets) const;
 
-   double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
+  double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
 
   // generate required constants for a given input triangle
   static void constants_from_tetrahedron_and_frame(const Eigen::Matrix<double, 3, 4> &_P,
@@ -80,61 +80,9 @@ public:
   using Mat3x4dT = Eigen::Matrix<double, 3, 4, Eigen::ColMajor>;
 
   template<class ScalarT>
-  inline ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const
-  {
-    using Vec3T = Eigen::Matrix<ScalarT, 3, 1, Eigen::ColMajor>;
-    using Mat3x3T = Eigen::Matrix<ScalarT, 3, 3, Eigen::ColMajor>;
-    using Mat3x4T = Eigen::Matrix<ScalarT, 3, 4, Eigen::ColMajor>;
+  ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const;
 
-    // get constants
-    const double &w = _c[0];
-    const double &w_exp = _c[1];
-    const double &w_aniso = _c[2];
-
-    // get gradient computation matrix
-    Eigen::Map<Mat3x3dT> G((double *) &(_c[3]));
-
-    // get frame matrix
-    Eigen::Map<Mat3x3dT> F((double *) &(_c[12]));
-
-    // get points of tetrahedron
-    Eigen::Map<Mat3x4T> P((ScalarT *) &(_x[0]));
-
-    // get target size
-    Eigen::Map<Vec3T> S((ScalarT *) &(_x[12]));
-
-    // get edge vectors
-    Mat3x3T E;
-    E.col(0) = P.col(1) - P.col(0);
-    E.col(1) = P.col(2) - P.col(0);
-    E.col(2) = P.col(3) - P.col(0);
-
-    // calc Jacobi Matrix of map
-//    Mat3x3T JF = E*G.transpose()*F;
-    Mat3x3T JF = 2.0 * E * G.transpose() * F;
-
-    // subtract target size
-    JF(0, 0) -= S[0];
-    JF(1, 1) -= S[1];
-    JF(2, 2) -= S[2];
-
-    ScalarT f = exp(w_exp * pow(JF(0, 0), 2)) + exp(w_exp * pow(JF(1, 1), 2)) + exp(w_exp * pow(JF(2, 2), 2)) +
-                2.0 * w_aniso *
-                (exp(w_exp * pow(JF(1, 0), 2)) + exp(w_exp * pow(JF(2, 0), 2)) + exp(w_exp * pow(JF(1, 2), 2)));
-
-//    const double eps = 1e-4;
-//
-//    ScalarT f = exp(w_exp*sqrt(eps+pow(JF(0,0),2)));
-//    f        += exp(w_exp*sqrt(eps+pow(JF(1,1),2)));
-//    f        += exp(w_exp*sqrt(eps+pow(JF(2,2),2)));
-//    f        += exp(w_exp*sqrt(eps+pow(JF(1,0),2)))*2.0;
-//    f        += exp(w_exp*sqrt(eps+pow(JF(2,0),2)))*2.0;
-//    f        += exp(w_exp*sqrt(eps+pow(JF(1,2),2)))*2.0;
-
-    return w * (f - 9.0);
-  }
-
-   double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
+  double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
 
   // NC = 21; // [weight, weight_exp, weight_aniso, g1x, g1y, g1z, g2x, g2y, g2z, g3x, g3y, g3z, f1x, f1y, f1z, f2x, f2y, f2z, f3x, f3y, f3z,]
   // calculate constants from reference tetrahedron
@@ -147,9 +95,18 @@ public:
   static double max_exp_arg(const VecV &_x, const VecC &_c);
 };
 
+extern template double FrameFittingExpElement3D_F::eval_f<double>(const Eigen::Matrix<double, FrameFittingExpElement3D_F::NV, 1> &_x, const Eigen::Matrix<double, FrameFittingExpElement3D_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<FrameFittingExpElement3D_F::NV, double, false> FrameFittingExpElement3D_F::eval_f<TinyAD::Scalar<FrameFittingExpElement3D_F::NV, double, false>>(const Eigen::Matrix<TinyAD::Scalar<FrameFittingExpElement3D_F::NV, double, false>, FrameFittingExpElement3D_F::NV, 1> &_x, const Eigen::Matrix<double, FrameFittingExpElement3D_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<FrameFittingExpElement3D_F::NV, double, true> FrameFittingExpElement3D_F::eval_f<TinyAD::Scalar<FrameFittingExpElement3D_F::NV, double, true>>(const Eigen::Matrix<TinyAD::Scalar<FrameFittingExpElement3D_F::NV, double, true>, FrameFittingExpElement3D_F::NV, 1> &_x, const Eigen::Matrix<double, FrameFittingExpElement3D_F::NC, 1> &_c) const;
+
 // add derivatives -- no hessian projection required since convex!
 using FrameFittingExpElement3D_TAD = COMISO::FiniteElementTinyAD<FrameFittingExpElement3D_F>;
 
 //=============================================================================
 } // namespace AlgoHex
 //=============================================================================
+
+namespace COMISO
+{
+extern template class FiniteElementTinyAD<AlgoHex::FrameFittingExpElement3D_F>;
+} // namespace COMISO

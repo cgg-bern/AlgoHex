@@ -47,19 +47,19 @@ public:
   typedef Eigen::Matrix<double, NC, 1> VecC;
   typedef Eigen::Triplet<double> Triplet;
 
-   double eval_f(const VecV &_x, const VecC &_c) const;
+  double eval_f(const VecV &_x, const VecC &_c) const;
 
-   void eval_gradient(const VecV &_x, const VecC &_c, VecV &_g) const;
+  void eval_gradient(const VecV &_x, const VecC &_c, VecV &_g) const;
 
-   void eval_hessian(const VecV &_x, const VecC &_c, std::vector<Triplet> &_triplets) const;
+  void eval_hessian(const VecV &_x, const VecC &_c, std::vector<Triplet> &_triplets) const;
 
-   double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
+  double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
 
-   double determinant(const VecV &_x) const;
+  double determinant(const VecV &_x) const;
 
-   double grad_det(const VecV &_x, const int _i, const int _j) const;
+  double grad_det(const VecV &_x, const int _i, const int _j) const;
 
-   double hess_det(const VecV &_x, const int _i, const int _j, const int _k, const int _l) const;
+  double hess_det(const VecV &_x, const int _i, const int _j, const int _k, const int _l) const;
 };
 
 // as the one before but with projected Hessian (positive semidefinite)
@@ -76,23 +76,23 @@ public:
   typedef Eigen::Matrix<double, NC, 1> VecC;
   typedef Eigen::Triplet<double> Triplet;
 
-   double eval_f(const VecV &_x, const VecC &_c) const;
+  double eval_f(const VecV &_x, const VecC &_c) const;
 
-   void eval_gradient(const VecV &_x, const VecC &_c, VecV &_g) const;
+  void eval_gradient(const VecV &_x, const VecC &_c, VecV &_g) const;
 
-   void eval_hessian(const VecV &_x, const VecC &_c, std::vector<Triplet> &_triplets) const;
+  void eval_hessian(const VecV &_x, const VecC &_c, std::vector<Triplet> &_triplets) const;
 
-   double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
+  double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
 
-   double determinant(const VecV &_x) const;
+  double determinant(const VecV &_x) const;
 
-   double grad_det(const VecV &_x, const int _i, const int _j) const;
+  double grad_det(const VecV &_x, const int _i, const int _j) const;
 
-   double hess_det(const VecV &_x, const int _i, const int _j, const int _k, const int _l) const;
+  double hess_det(const VecV &_x, const int _i, const int _j, const int _k, const int _l) const;
 
-   bool diagonally_dominant(const Eigen::Matrix<double, 9, 9> &_A) const;
+  bool diagonally_dominant(const Eigen::Matrix<double, 9, 9> &_A) const;
 
-   void project_to_positive_semidefinite(Eigen::Matrix<double, 9, 9> &_A) const;
+  void project_to_positive_semidefinite(Eigen::Matrix<double, 9, 9> &_A) const;
 };
 
 

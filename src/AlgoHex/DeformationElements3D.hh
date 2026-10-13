@@ -39,77 +39,9 @@ public:
   using VecC = Eigen::Matrix<double, NC, 1>;
 
   template<class ScalarT>
-  inline ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const
-  {
-    using Vec3T = Eigen::Matrix<ScalarT, 3, 1, Eigen::ColMajor>;
-    using Vec3dT = Eigen::Matrix<double, 3, 1, Eigen::ColMajor>;
-    using Mat3x3T = Eigen::Matrix<ScalarT, 3, 3, Eigen::ColMajor>;
-    using Mat3x4T = Eigen::Matrix<ScalarT, 3, 4, Eigen::ColMajor>;
-    using Mat3x3dT = Eigen::Matrix<double, 3, 3, Eigen::ColMajor>;
+  ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const;
 
-    // get constants
-    const double &w = _c[0];
-    const double &size_scale = _c[1];
-    const double &epsilon = _c[2];
-
-    // get gradient computation matrix
-    Eigen::Map<Mat3x3dT> G((double *) &(_c[3]));
-
-    // get points of tetrahedron
-    Eigen::Map<Mat3x4T> P((ScalarT *) &(_x[0]));
-
-    // get edge vectors
-    Mat3x3T E;
-    E.col(0) = P.col(1) - P.col(0);
-    E.col(1) = P.col(2) - P.col(0);
-    E.col(2) = P.col(3) - P.col(0);
-
-//    ScalarT V = 1.0 / 6.0 * E.determinant();
-
-    // calc (scaled) Jacobi Matrix of map
-    Mat3x3T J = size_scale * E * G.transpose();
-
-    // calculate determinant
-    ScalarT d = J.determinant();
-
-    if (epsilon == 0.0)
-    {
-      if (d <= 0.0)
-        return static_cast<ScalarT>(std::numeric_limits<double>::infinity());
-      else
-        return w*(J.squaredNorm() + J.inverse().squaredNorm() - 6.0);
-//        return w*(1.0+d)*(J.squaredNorm() + J.inverse().squaredNorm() - 6.0); // symmetrized symmetric Dirichlet
-    }
-    else
-    {
-      // regularized determinant
-      ScalarT d_reg = d + epsilon;
-
-      if (d_reg <= 0.0)
-        return static_cast<ScalarT>(std::numeric_limits<double>::infinity());
-      else
-      {
-        ScalarT di = 1.0 / d_reg;
-
-        // compute regularized inverse
-        Mat3x3T Ji;
-        for (int i = 0; i < 3; ++i)
-          for (int j = 0; j < 3; ++j)
-          {
-            int i1 = (i + 1) % 3;
-            int j1 = (j + 1) % 3;
-            int i2 = (i + 2) % 3;
-            int j2 = (j + 2) % 3;
-
-            Ji(j, i) = di * (J(i1, j1) * J(i2, j2) - J(i1, j2) * J(i2, j1));
-          }
-
-        return w * (J.squaredNorm() + Ji.squaredNorm() - 6.0);
-      }
-    }
-  }
-
-   double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
+  double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
 
   // NC = 12; // [weight, size_scale, epsilon, g1x, g1y, g1z, g2x, g2y, g2z, g3x, g3y, g3z]
   // calculate constants from reference tetrahedron
@@ -123,6 +55,10 @@ public:
                              const double _target_penalty);
 
 };
+
+extern template double SymmetricDirichletElement3D_F::eval_f<double>(const Eigen::Matrix<double, SymmetricDirichletElement3D_F::NV, 1> &_x, const Eigen::Matrix<double, SymmetricDirichletElement3D_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<SymmetricDirichletElement3D_F::NV, double, false> SymmetricDirichletElement3D_F::eval_f<TinyAD::Scalar<SymmetricDirichletElement3D_F::NV, double, false>>(const Eigen::Matrix<TinyAD::Scalar<SymmetricDirichletElement3D_F::NV, double, false>, SymmetricDirichletElement3D_F::NV, 1> &_x, const Eigen::Matrix<double, SymmetricDirichletElement3D_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<SymmetricDirichletElement3D_F::NV, double, true> SymmetricDirichletElement3D_F::eval_f<TinyAD::Scalar<SymmetricDirichletElement3D_F::NV, double, true>>(const Eigen::Matrix<TinyAD::Scalar<SymmetricDirichletElement3D_F::NV, double, true>, SymmetricDirichletElement3D_F::NV, 1> &_x, const Eigen::Matrix<double, SymmetricDirichletElement3D_F::NC, 1> &_c) const;
 
 using SDE3D_AD = COMISO::FiniteElementTinyAD<SymmetricDirichletElement3D_F>;
 using SDE3D_PH_AD = COMISO::FiniteElementHessianProjection<SDE3D_AD>;
@@ -140,77 +76,9 @@ public:
   using VecC = Eigen::Matrix<double, NC, 1>;
 
   template<class ScalarT>
-  inline ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const
-  {
-    using Vec3T = Eigen::Matrix<ScalarT, 3, 1, Eigen::ColMajor>;
-    using Vec3dT = Eigen::Matrix<double, 3, 1, Eigen::ColMajor>;
-    using Mat3x3T = Eigen::Matrix<ScalarT, 3, 3, Eigen::ColMajor>;
-    using Mat3x3dT = Eigen::Matrix<double, 3, 3, Eigen::ColMajor>;
+  ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const;
 
-    // get constants
-    const double &w_conformal = _c[0];
-    const double &w_det = _c[1];
-    const double &target_det = _c[2];
-    const double &epsilon = _c[3];
-
-//    Eigen::Map<Vec3dT> g1( (double*) &(_c[4]));
-//    Eigen::Map<Vec3dT> g2( (double*) &(_c[7]));
-//    Eigen::Map<Vec3dT> g3( (double*) &(_c[10]));
-
-    Eigen::Map<Mat3x3dT> G((double *) &(_c[4]));
-
-    // get four input points
-    Eigen::Map<Vec3T> p0((ScalarT *) &(_x[0]));
-    Eigen::Map<Vec3T> p1((ScalarT *) &(_x[3]));
-    Eigen::Map<Vec3T> p2((ScalarT *) &(_x[6]));
-    Eigen::Map<Vec3T> p3((ScalarT *) &(_x[9]));
-
-    // get edge vectors
-    Mat3x3T E;
-    E.col(0) = p1 - p0;
-    E.col(1) = p2 - p0;
-    E.col(2) = p3 - p0;
-
-    // calc Jacobi Matrix of map
-    Mat3x3T J = E * G.transpose();
-
-    // calculate determinant
-    ScalarT d = J.determinant();
-
-    if (epsilon > 0.0)
-    {
-      ScalarT d_s = d / target_det;
-      ScalarT d_reg = 0.5 * (d_s + sqrt(pow(d_s, 2) + epsilon * epsilon));
-
-//      std::cerr << std::endl
-//                << "d=" << d << std::endl
-//                << "d_s=" << d_s << std::endl
-//                << "d_reg=" << d_reg << std::endl
-//                << "epsilon=" << epsilon << std::endl
-//                << "target_det=" << target_det << std::endl;
-
-//      return w_conformal*((J.transpose()*J).trace()/pow(d_reg*target_det,2.0/3.0)) + w_det*((pow(d_reg,2)+1.0)/d_reg);
-      return w_conformal * ((J.transpose() * J).trace() / pow(d_reg * target_det, 2.0 / 3.0)) +
-             w_det * ((pow(d_s, 2) + 1.0) / d_reg);
-    }
-    else
-    {
-//      std::cerr << std::endl
-//                << "d=" << d << std::endl
-//                << "epsilon=" << epsilon << std::endl
-//                << "target_det=" << target_det << std::endl;
-
-
-      if (d <= 0.0)
-        return static_cast<ScalarT>(std::numeric_limits<double>::infinity());
-      else
-        return w_conformal * ((J.transpose() * J).trace() / pow(d, 2.0 / 3.0) - 3.0) +
-               w_det * (d / target_det + target_det / d - 2.0);
-      //      return w_conformal*((J.transpose()*J).trace()/pow(d,2.0/3.0)) + w_det*(d/target_det + target_det/d);
-    }
-  }
-
-   double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
+  double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
 
   //  const static int NC = 13; // [weight_conformal, weight_det, target_det, epsilon, g1x, g1y, g1z, g2x, g2y, g2z, g3x, g3y, g3z]
   // calculate constants from reference tetrahedron
@@ -224,6 +92,10 @@ public:
   determine_suitable_epsilon(const Eigen::Matrix<double, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c);
 
 };
+
+extern template double FoldoverFree3DV_F::eval_f<double>(const Eigen::Matrix<double, FoldoverFree3DV_F::NV, 1> &_x, const Eigen::Matrix<double, FoldoverFree3DV_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<FoldoverFree3DV_F::NV, double, false> FoldoverFree3DV_F::eval_f<TinyAD::Scalar<FoldoverFree3DV_F::NV, double, false>>(const Eigen::Matrix<TinyAD::Scalar<FoldoverFree3DV_F::NV, double, false>, FoldoverFree3DV_F::NV, 1> &_x, const Eigen::Matrix<double, FoldoverFree3DV_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<FoldoverFree3DV_F::NV, double, true> FoldoverFree3DV_F::eval_f<TinyAD::Scalar<FoldoverFree3DV_F::NV, double, true>>(const Eigen::Matrix<TinyAD::Scalar<FoldoverFree3DV_F::NV, double, true>, FoldoverFree3DV_F::NV, 1> &_x, const Eigen::Matrix<double, FoldoverFree3DV_F::NC, 1> &_c) const;
 
 using FF3DV_AD = COMISO::FiniteElementTinyAD<FoldoverFree3DV_F>;
 using FF3DV_PH_AD = COMISO::FiniteElementHessianProjection<FF3DV_AD>;
@@ -241,113 +113,18 @@ public:
   using VecC = Eigen::Matrix<double, NC, 1>;
 
   template<class ScalarT>
-  inline ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const
-  {
-    using Vec3T = Eigen::Matrix<ScalarT, 3, 1, Eigen::ColMajor>;
-    using Vec3dT = Eigen::Matrix<double, 3, 1, Eigen::ColMajor>;
-    using Mat3x3T = Eigen::Matrix<ScalarT, 3, 3, Eigen::ColMajor>;
-    using Mat3x3dT = Eigen::Matrix<double, 3, 3, Eigen::ColMajor>;
+  ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const;
 
-    // get constants
-    const double &w_conformal = _c[0];
-    const double &w_det = _c[1];
-    const double &target_det = _c[2];
-    const double &epsilon = _c[3];
-
-
-    // get four image input points
-    Eigen::Map<Vec3T> p0((ScalarT *) &(_x[0]));
-    Eigen::Map<Vec3T> p1((ScalarT *) &(_x[3]));
-    Eigen::Map<Vec3T> p2((ScalarT *) &(_x[6]));
-    Eigen::Map<Vec3T> p3((ScalarT *) &(_x[9]));
-
-    // get four domain input points
-    Eigen::Map<Vec3T> q0((ScalarT *) &(_x[12]));
-    Eigen::Map<Vec3T> q1((ScalarT *) &(_x[15]));
-    Eigen::Map<Vec3T> q2((ScalarT *) &(_x[18]));
-    Eigen::Map<Vec3T> q3((ScalarT *) &(_x[21]));
-
-    // compute gradients of pwl basis functions g1, g2, g3
-
-    // get mesh edge vectors
-    Mat3x3T E;
-    E.col(0) = q1 - q0;
-    E.col(1) = q2 - q0;
-    E.col(2) = q3 - q0;
-
-    ScalarT dE = E.determinant();
-    ScalarT dEi = 1.0 / dE;
-    if (!isfinite(dEi) || dE < 0.0)
-    {
-//      std::cerr << "ERROR: determinant of edge vectors numerically not valid ---> " << dE << std::endl;
-//      dEi = 0.0;
-      return static_cast<ScalarT>(std::numeric_limits<double>::infinity());
-    }
-    // volume of tet
-    ScalarT vol = dE / 6.0;
-
-//    Vec3T g1 = dEi*(E.col(1)).cross(E.col(2));
-//    Vec3T g2 = dEi*(E.col(2)).cross(E.col(0));
-//    Vec3T g3 = dEi*(E.col(0)).cross(E.col(1));
-//
-//    // calc Jacobi Matrix of map
-//    Mat3x3T J = g1*(p1-p0).transpose() + g2*(p2-p0).transpose() + g3*(p3-p0).transpose();
-
-    Mat3x3T G;
-    G.col(0) = dEi * (E.col(1)).cross(E.col(2));
-    G.col(1) = dEi * (E.col(2)).cross(E.col(0));
-    G.col(2) = dEi * (E.col(0)).cross(E.col(1));
-
-    // get parametric edge vectors
-    Mat3x3T E2;
-    E2.col(0) = p1 - p0;
-    E2.col(1) = p2 - p0;
-    E2.col(2) = p3 - p0;
-
-    // calc Jacobi Matrix of map
-    Mat3x3T J = E2 * G.transpose();
-
-    // calculate determinant
-    ScalarT d = J.determinant();
-
-    if (epsilon > 0.0)
-    {
-      ScalarT d_s = d / target_det;
-      ScalarT d_reg = 0.5 * (d_s + sqrt(pow(d_s, 2) + epsilon * epsilon));
-
-//      std::cerr << std::endl
-//                << "d=" << d << std::endl
-//                << "d_s=" << d_s << std::endl
-//                << "d_reg=" << d_reg << std::endl
-//                << "epsilon=" << epsilon << std::endl
-//                << "target_det=" << target_det << std::endl;
-
-      return vol * (w_conformal * ((J.transpose() * J).trace() / pow(d_reg * target_det, 2.0 / 3.0)) +
-                    w_det * ((pow(d_s, 2) + 1.0) / d_reg));
-    }
-    else
-    {
-//      std::cerr << std::endl
-//                << "d=" << d << std::endl
-//                << "epsilon=" << epsilon << std::endl
-//                << "target_det=" << target_det << std::endl;
-
-
-      if (d <= 0.0)
-        return static_cast<ScalarT>(std::numeric_limits<double>::infinity());
-      else
-        return vol * (w_conformal * ((J.transpose() * J).trace() / pow(d, 2.0 / 3.0) - 3.0) +
-                      w_det * (d / target_det + target_det / d - 2.0));
-    }
-  }
-
-   double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
+  double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
 
 };
 
+extern template double FoldoverFreeDual3DV_F::eval_f<double>(const Eigen::Matrix<double, FoldoverFreeDual3DV_F::NV, 1> &_x, const Eigen::Matrix<double, FoldoverFreeDual3DV_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<FoldoverFreeDual3DV_F::NV, double, false> FoldoverFreeDual3DV_F::eval_f<TinyAD::Scalar<FoldoverFreeDual3DV_F::NV, double, false>>(const Eigen::Matrix<TinyAD::Scalar<FoldoverFreeDual3DV_F::NV, double, false>, FoldoverFreeDual3DV_F::NV, 1> &_x, const Eigen::Matrix<double, FoldoverFreeDual3DV_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<FoldoverFreeDual3DV_F::NV, double, true> FoldoverFreeDual3DV_F::eval_f<TinyAD::Scalar<FoldoverFreeDual3DV_F::NV, double, true>>(const Eigen::Matrix<TinyAD::Scalar<FoldoverFreeDual3DV_F::NV, double, true>, FoldoverFreeDual3DV_F::NV, 1> &_x, const Eigen::Matrix<double, FoldoverFreeDual3DV_F::NC, 1> &_c) const;
+
 using FFD3DV_AD = COMISO::FiniteElementTinyAD<FoldoverFreeDual3DV_F>;
 using FFD3DV_PH_AD = COMISO::FiniteElementHessianProjection<FFD3DV_AD>;
-
 
 class AlignmentElement_F
 {
@@ -361,17 +138,17 @@ public:
   using VecC = Eigen::Matrix<double, NC, 1>;
 
   template<class ScalarT>
-  inline ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const
-  {
-    return _c[0] * pow(_x[0] - _x[1], 2);
-  }
+  ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const;
 
-   double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
+  double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
 
 };
 
-using AE_AD = COMISO::FiniteElementTinyAD<AlignmentElement_F>;
+extern template double AlignmentElement_F::eval_f<double>(const Eigen::Matrix<double, AlignmentElement_F::NV, 1> &_x, const Eigen::Matrix<double, AlignmentElement_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<AlignmentElement_F::NV, double, false> AlignmentElement_F::eval_f<TinyAD::Scalar<AlignmentElement_F::NV, double, false>>(const Eigen::Matrix<TinyAD::Scalar<AlignmentElement_F::NV, double, false>, AlignmentElement_F::NV, 1> &_x, const Eigen::Matrix<double, AlignmentElement_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<AlignmentElement_F::NV, double, true> AlignmentElement_F::eval_f<TinyAD::Scalar<AlignmentElement_F::NV, double, true>>(const Eigen::Matrix<TinyAD::Scalar<AlignmentElement_F::NV, double, true>, AlignmentElement_F::NV, 1> &_x, const Eigen::Matrix<double, AlignmentElement_F::NC, 1> &_c) const;
 
+using AE_AD = COMISO::FiniteElementTinyAD<AlignmentElement_F>;
 
 class FittingElement_F
 {
@@ -385,17 +162,17 @@ public:
   using VecC = Eigen::Matrix<double, NC, 1>;
 
   template<class ScalarT>
-  inline ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const
-  {
-    return _c[0] * pow(_x[0] - _c[1], 2);
-  }
+  ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const;
 
-   double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
+  double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
 
 };
 
-using FE_AD = COMISO::FiniteElementTinyAD<FittingElement_F>;
+extern template double FittingElement_F::eval_f<double>(const Eigen::Matrix<double, FittingElement_F::NV, 1> &_x, const Eigen::Matrix<double, FittingElement_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<FittingElement_F::NV, double, false> FittingElement_F::eval_f<TinyAD::Scalar<FittingElement_F::NV, double, false>>(const Eigen::Matrix<TinyAD::Scalar<FittingElement_F::NV, double, false>, FittingElement_F::NV, 1> &_x, const Eigen::Matrix<double, FittingElement_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<FittingElement_F::NV, double, true> FittingElement_F::eval_f<TinyAD::Scalar<FittingElement_F::NV, double, true>>(const Eigen::Matrix<TinyAD::Scalar<FittingElement_F::NV, double, true>, FittingElement_F::NV, 1> &_x, const Eigen::Matrix<double, FittingElement_F::NC, 1> &_c) const;
 
+using FE_AD = COMISO::FiniteElementTinyAD<FittingElement_F>;
 
 class DihedralAngle_F
 {
@@ -409,40 +186,18 @@ public:
   using VecC = Eigen::Matrix<double, NC, 1>;
 
   template<class ScalarT>
-  inline ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const
-  {
-    using Vec3T = Eigen::Matrix<ScalarT, 3, 1, Eigen::ColMajor>;
-    using Vec3dT = Eigen::Matrix<double, 3, 1, Eigen::ColMajor>;
-    using Mat3x3T = Eigen::Matrix<ScalarT, 3, 3, Eigen::ColMajor>;
-    using Mat3x3dT = Eigen::Matrix<double, 3, 3, Eigen::ColMajor>;
+  ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const;
 
-    // get constants
-    const double &w = _c[0];
-    const double &ca = _c[1];
-    const double &sa = _c[2];
-
-    // get four input points
-    Eigen::Map<Vec3T> p0((ScalarT *) &(_x[0]));
-    Eigen::Map<Vec3T> p1((ScalarT *) &(_x[3]));
-    Eigen::Map<Vec3T> p2((ScalarT *) &(_x[6]));
-    Eigen::Map<Vec3T> p3((ScalarT *) &(_x[9]));
-
-    Vec3T n0 = (p1 - p0).cross(p2 - p0);
-    n0 /= n0.norm();
-
-    Vec3T n1 = (p3 - p0).cross(p1 - p0);
-    n1 /= n1.norm();
-
-    return w * (pow(n0.dot(n1) - ca, 2) + pow((n0.cross(n1)).norm() - sa, 2));
-  }
-
-   double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
+  double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
 
 };
 
+extern template double DihedralAngle_F::eval_f<double>(const Eigen::Matrix<double, DihedralAngle_F::NV, 1> &_x, const Eigen::Matrix<double, DihedralAngle_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<DihedralAngle_F::NV, double, false> DihedralAngle_F::eval_f<TinyAD::Scalar<DihedralAngle_F::NV, double, false>>(const Eigen::Matrix<TinyAD::Scalar<DihedralAngle_F::NV, double, false>, DihedralAngle_F::NV, 1> &_x, const Eigen::Matrix<double, DihedralAngle_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<DihedralAngle_F::NV, double, true> DihedralAngle_F::eval_f<TinyAD::Scalar<DihedralAngle_F::NV, double, true>>(const Eigen::Matrix<TinyAD::Scalar<DihedralAngle_F::NV, double, true>, DihedralAngle_F::NV, 1> &_x, const Eigen::Matrix<double, DihedralAngle_F::NC, 1> &_c) const;
+
 using DAE_AD = COMISO::FiniteElementTinyAD<DihedralAngle_F>;
 using DAE_PH_AD = COMISO::FiniteElementHessianProjection<DAE_AD>;
-
 
 class BallBarrier3D_F
 {
@@ -456,35 +211,18 @@ public:
   using VecC = Eigen::Matrix<double, NC, 1>;
 
   template<class ScalarT>
-  inline ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const
-  {
-    using Vec3T = Eigen::Matrix<ScalarT, 3, 1, Eigen::ColMajor>;
-    using Vec3dT = Eigen::Matrix<double, 3, 1, Eigen::ColMajor>;
+  ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const;
 
-    // get constants
-    const double &w = _c[0];
-    const double &r = _c[1];
-
-    Eigen::Map<Vec3dT> c((double *) &(_c[2]));
-
-    // get four input points
-    Eigen::Map<Vec3T> p((ScalarT *) &(_x[0]));
-
-    ScalarT f = 1.0 - (p - c).squaredNorm() / (r * r);
-
-    if (f <= 0.0)
-      return static_cast<ScalarT>(std::numeric_limits<double>::infinity());
-    else
-      return -w * log(f);
-  }
-
-   double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
+  double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
 
 };
 
+extern template double BallBarrier3D_F::eval_f<double>(const Eigen::Matrix<double, BallBarrier3D_F::NV, 1> &_x, const Eigen::Matrix<double, BallBarrier3D_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<BallBarrier3D_F::NV, double, false> BallBarrier3D_F::eval_f<TinyAD::Scalar<BallBarrier3D_F::NV, double, false>>(const Eigen::Matrix<TinyAD::Scalar<BallBarrier3D_F::NV, double, false>, BallBarrier3D_F::NV, 1> &_x, const Eigen::Matrix<double, BallBarrier3D_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<BallBarrier3D_F::NV, double, true> BallBarrier3D_F::eval_f<TinyAD::Scalar<BallBarrier3D_F::NV, double, true>>(const Eigen::Matrix<TinyAD::Scalar<BallBarrier3D_F::NV, double, true>, BallBarrier3D_F::NV, 1> &_x, const Eigen::Matrix<double, BallBarrier3D_F::NC, 1> &_c) const;
+
 using BB3D_AD = COMISO::FiniteElementTinyAD<BallBarrier3D_F>;
 using BB3D_AD_PH = COMISO::FiniteElementHessianProjection<BB3D_AD>;
-
 
 class JacobianSmoothnessElement3D_F
 {
@@ -498,60 +236,9 @@ public:
   using VecC = Eigen::Matrix<double,NC,1>;
 
   template<class ScalarT>
-  inline ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const
-  {
-    using Vec3T    = Eigen::Matrix<ScalarT,3,1,Eigen::ColMajor>;
-    using Vec3dT   = Eigen::Matrix<double ,3,1,Eigen::ColMajor>;
-    using Mat3x3T  = Eigen::Matrix<ScalarT,3,3,Eigen::ColMajor>;
-    using Mat3x4T  = Eigen::Matrix<ScalarT,3,4,Eigen::ColMajor>;
-    using Mat3x3dT = Eigen::Matrix<double ,3,3,Eigen::ColMajor>;
+  ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const;
 
-    // get constants
-    const double& w          = _c[0];
-    const double& size_scale = _c[28];
-
-
-    // get gradient computation matrix
-    Eigen::Map<Mat3x3dT> G0( (double*) &(_c[1]));
-    Eigen::Map<Mat3x3dT> G1( (double*) &(_c[10]));
-    // get transition function
-    Eigen::Map<Mat3x3dT> T01( (double*) &(_c[19]));
-
-    // get points of tetrahedron
-    Eigen::Map<Mat3x4T> P0((ScalarT*) &(_x[0]));
-    Eigen::Map<Mat3x4T> P1((ScalarT*) &(_x[12]));
-
-    // get edge vectors
-    Mat3x3T E0, E1;
-    E0.col(0) = P0.col(1)-P0.col(0);
-    E0.col(1) = P0.col(2)-P0.col(0);
-    E0.col(2) = P0.col(3)-P0.col(0);
-
-    E1.col(0) = P1.col(1)-P1.col(0);
-    E1.col(1) = P1.col(2)-P1.col(0);
-    E1.col(2) = P1.col(3)-P1.col(0);
-
-//    ScalarT V0 = 1.0/6.0*E0.determinant();
-//    ScalarT V1 = 1.0/6.0*E1.determinant();
-
-    // calc (scaled) Jacobi Matrix of map
-    Mat3x3T J0 = size_scale*E0*G0.transpose();
-    Mat3x3T J1 = size_scale*E1*G1.transpose();
-
-//    if(typeid(ScalarT) == typeid(double))
-//    {
-//      std::cerr << "w = " << w << std::endl;
-//      std::cerr << "J0=" << std::endl << J0 << std::endl;
-//      std::cerr << "T01=" << std::endl << T01 << std::endl;
-//      std::cerr << "T01J0=" << std::endl << T01*J0 << std::endl;
-//      std::cerr << "J1=" << std::endl << J1 << std::endl;
-//      std::cerr << "T01*J0-J1=" << std::endl << T01*J0-J1 << std::endl;
-//    }
-
-    return w*(T01*J0-J1).squaredNorm();
-  }
-
-   double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
+  double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
 
   //  const static int NC = 29; // [weight, g1x, g1y, g1z, g2x, g2y, g2z, g3x, g3y, g3z, h1x,... h3z, t1x, ..., t3z, sizing_scale]
   // calculate constants from reference tetrahedron
@@ -564,9 +251,22 @@ public:
 
 };
 
-using JSE3D_AD = COMISO::FiniteElementTinyAD<JacobianSmoothnessElement3D_F>;
+extern template double JacobianSmoothnessElement3D_F::eval_f<double>(const Eigen::Matrix<double, JacobianSmoothnessElement3D_F::NV, 1> &_x, const Eigen::Matrix<double, JacobianSmoothnessElement3D_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<JacobianSmoothnessElement3D_F::NV, double, false> JacobianSmoothnessElement3D_F::eval_f<TinyAD::Scalar<JacobianSmoothnessElement3D_F::NV, double, false>>(const Eigen::Matrix<TinyAD::Scalar<JacobianSmoothnessElement3D_F::NV, double, false>, JacobianSmoothnessElement3D_F::NV, 1> &_x, const Eigen::Matrix<double, JacobianSmoothnessElement3D_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<JacobianSmoothnessElement3D_F::NV, double, true> JacobianSmoothnessElement3D_F::eval_f<TinyAD::Scalar<JacobianSmoothnessElement3D_F::NV, double, true>>(const Eigen::Matrix<TinyAD::Scalar<JacobianSmoothnessElement3D_F::NV, double, true>, JacobianSmoothnessElement3D_F::NV, 1> &_x, const Eigen::Matrix<double, JacobianSmoothnessElement3D_F::NC, 1> &_c) const;
 
+using JSE3D_AD = COMISO::FiniteElementTinyAD<JacobianSmoothnessElement3D_F>;
 
 //=============================================================================
 } // namespace AlgoHex
-//=============================================================================
+
+namespace COMISO
+{
+extern template class FiniteElementTinyAD<AlgoHex::SymmetricDirichletElement3D_F>;
+extern template class FiniteElementHessianProjection<FiniteElementTinyAD<AlgoHex::SymmetricDirichletElement3D_F>>;
+extern template class FiniteElementHessianProjection<FiniteElementTinyAD<AlgoHex::FoldoverFree3DV_F>>;
+extern template class FiniteElementHessianProjection<FiniteElementTinyAD<AlgoHex::FoldoverFreeDual3DV_F>>;
+extern template class FiniteElementTinyAD<AlgoHex::BallBarrier3D_F>;
+extern template class FiniteElementHessianProjection<FiniteElementTinyAD<AlgoHex::BallBarrier3D_F>>;
+extern template class FiniteElementTinyAD<AlgoHex::JacobianSmoothnessElement3D_F>;
+} // namespace COMISO

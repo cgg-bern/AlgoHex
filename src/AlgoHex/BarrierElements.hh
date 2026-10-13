@@ -40,23 +40,15 @@ public:
   using VecC = Eigen::Matrix<double, NC, 1>;
 
   template<class ScalarT>
-  inline ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const
-  {
-    // get constants
-    const double &b = _c[0];
-    const double &w = _c[1];
+  ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const;
 
-    ScalarT v = _x[0] - b;
-
-    if (v <= 0.0)
-      return static_cast<ScalarT>(std::numeric_limits<double>::infinity());
-    else
-      return w * 1.0 / v;
-  }
-
-   double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
+  double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
 
 };
+
+extern template double ReciprocalBarrierElement_F::eval_f<double>(const Eigen::Matrix<double, ReciprocalBarrierElement_F::NV, 1> &_x, const Eigen::Matrix<double, ReciprocalBarrierElement_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<ReciprocalBarrierElement_F::NV, double, false> ReciprocalBarrierElement_F::eval_f<TinyAD::Scalar<ReciprocalBarrierElement_F::NV, double, false>>(const Eigen::Matrix<TinyAD::Scalar<ReciprocalBarrierElement_F::NV, double, false>, ReciprocalBarrierElement_F::NV, 1> &_x, const Eigen::Matrix<double, ReciprocalBarrierElement_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<ReciprocalBarrierElement_F::NV, double, true> ReciprocalBarrierElement_F::eval_f<TinyAD::Scalar<ReciprocalBarrierElement_F::NV, double, true>>(const Eigen::Matrix<TinyAD::Scalar<ReciprocalBarrierElement_F::NV, double, true>, ReciprocalBarrierElement_F::NV, 1> &_x, const Eigen::Matrix<double, ReciprocalBarrierElement_F::NC, 1> &_c) const;
 
 // AD Element -- Hessian projection not required since convex!
 using ReciprocalBarrierElement_TAD = COMISO::FiniteElementTinyAD<ReciprocalBarrierElement_F>;
@@ -64,3 +56,8 @@ using ReciprocalBarrierElement_TAD = COMISO::FiniteElementTinyAD<ReciprocalBarri
 //=============================================================================
 } // namespace AlgoHex
 //=============================================================================
+
+namespace COMISO
+{
+extern template class FiniteElementTinyAD<AlgoHex::ReciprocalBarrierElement_F>;
+} // namespace COMISO

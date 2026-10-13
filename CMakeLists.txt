@@ -131,10 +131,13 @@ add_library(AlgoHex
         src/AlgoHex/DeformationElements3D.hh
         src/AlgoHex/DeformationElements3D.cc
         src/AlgoHex/DihedralAngleElementTinyAD.hh
+        src/AlgoHex/DihedralAngleElementTinyAD.cc
         src/AlgoHex/FrameFittingElement3D.hh
         src/AlgoHex/FrameFittingElement3D.cc
         src/AlgoHex/IntegrabilityElements3D.hh
+        src/AlgoHex/AlignmentElements3D.hh
         src/AlgoHex/LinearLeastSquaresElements.hh
+        src/AlgoHex/LinearLeastSquaresElements.cc
         src/AlgoHex/LogDetElement3D.hh
         src/AlgoHex/LogDetElement3D.cc
 

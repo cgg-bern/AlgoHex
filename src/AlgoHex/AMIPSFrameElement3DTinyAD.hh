@@ -16,8 +16,6 @@
 #include <CoMISo/NSolver/FiniteElementTinyAD.hh>
 #include <CoMISo/NSolver/FiniteElementHessianProjection.hh>
 
-//== FORWARDDECLARATIONS ======================================================
-
 //== NAMESPACES ===============================================================
 
 namespace AlgoHex
@@ -43,53 +41,22 @@ public:
   const static int NV = 9; // J=[[x0,x1,x2]^T | [x3,x4,x5]^T | [x6,x7,x8]^T]] = 3x3 matrix
   const static int NC = 14; // [A(3x3),w,s,alpha,beta] = shape matrix A = _c[0..8], det(A) = _c[9], weight w=_c[10], distortion parameters s=_c[11], alpha=_c[12] and beta=_c[13]
 
-
   using VecV = Eigen::Matrix<double, NV, 1>;
   using VecC = Eigen::Matrix<double, NC, 1>;
 
   template<class ScalarT>
-  inline ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const
-  {
-    using MatT = Eigen::Matrix<ScalarT, 3, 3, Eigen::ColMajor>;
-    using MatD = Eigen::Matrix<double, 3, 3, Eigen::ColMajor>;
+  ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const;
 
-    // get matrix representation of J and A
-    Eigen::Map<MatT> J((ScalarT *) _x.data());
-    Eigen::Map<MatD> A((double *) _c.data());
-
-    // get references to constants
-    const double &dA = _c[9];
-    const double &w = _c[10];
-    const double &s = _c[11];
-    const double &alpha = _c[12];
-    const double &beta = _c[13];
-
-    // calculate determinant of AJ
-    MatT AJ = A * J;
-    ScalarT d = (AJ).determinant();
-
-    if (d <= 0.0)
-      return static_cast<ScalarT>(std::numeric_limits<double>::infinity());
-    else
-    {
-      // f(J) = w*(exp(s*( alpha*(tr(J^TA^TAJ)*(det(AJ)^(-2/3)-3) + beta*(det(AJ)+det(AJ)^(-1) -2) ))-1.0)
-//      ScalarT tr    = AJ.col(0).squaredNorm() + AJ.col(1).squaredNorm() + AJ.col(2).squaredNorm();
-//      ScalarT Emips = tr*pow(d,-2.0/3.0) - 3.0;
-      ScalarT Emips = (AJ.transpose() * AJ).trace() * pow(d, -2.0 / 3.0) - 3.0;
-      ScalarT Edet = d + 1.0 / d - 2.0;
-
-      return w * (exp(s * (alpha * Emips + beta * Edet)) - 1.0);
-    }
-  }
-
-   double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
-
+  double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
 };
+
+extern template double AMIPSFrameElement3D_F::eval_f<double>(const Eigen::Matrix<double, AMIPSFrameElement3D_F::NV, 1> &_x, const Eigen::Matrix<double, AMIPSFrameElement3D_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<AMIPSFrameElement3D_F::NV, double, false> AMIPSFrameElement3D_F::eval_f<TinyAD::Scalar<AMIPSFrameElement3D_F::NV, double, false>>(const Eigen::Matrix<TinyAD::Scalar<AMIPSFrameElement3D_F::NV, double, false>, AMIPSFrameElement3D_F::NV, 1> &_x, const Eigen::Matrix<double, AMIPSFrameElement3D_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<AMIPSFrameElement3D_F::NV, double, true> AMIPSFrameElement3D_F::eval_f<TinyAD::Scalar<AMIPSFrameElement3D_F::NV, double, true>>(const Eigen::Matrix<TinyAD::Scalar<AMIPSFrameElement3D_F::NV, double, true>, AMIPSFrameElement3D_F::NV, 1> &_x, const Eigen::Matrix<double, AMIPSFrameElement3D_F::NC, 1> &_c) const;
 
 // create types for optimization with derivatives and projected hessian
 using AMIPSFrameElement3D_TAD = COMISO::FiniteElementTinyAD<AMIPSFrameElement3D_F>;
 using AMIPSFrameElement3D_TAD_PH = COMISO::FiniteElementHessianProjection<AMIPSFrameElement3D_TAD>;
-
 
 class SymmetricDirichletFrameElement3D_F
 {
@@ -104,38 +71,17 @@ public:
   using VecC = Eigen::Matrix<double, NC, 1>;
 
   template<class ScalarT>
-  inline ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const
-  {
-    using MatT = Eigen::Matrix<ScalarT, 3, 3, Eigen::ColMajor>;
-    using MatD = Eigen::Matrix<double, 3, 3, Eigen::ColMajor>;
+  ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const;
 
-    // get matrix representation of J and A
-    Eigen::Map<MatT> J((ScalarT *) _x.data());
-    Eigen::Map<MatD> A((double *) _c.data());
-
-    // get references to constants
-    const double &w = _c[9];
-
-    // calculate determinant of AJ
-    MatT AJ = A * J;
-    ScalarT d = (AJ).determinant();
-
-    if (d <= 0.0)
-      return static_cast<ScalarT>(std::numeric_limits<double>::infinity());
-    else
-      return w * (AJ.squaredNorm() + AJ.inverse().squaredNorm() - 6.0);
-  }
-
-   double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
-
+  double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
 };
 
-// create types for optimization with derivatives and projected hessian
+extern template double SymmetricDirichletFrameElement3D_F::eval_f<double>(const Eigen::Matrix<double, SymmetricDirichletFrameElement3D_F::NV, 1> &_x, const Eigen::Matrix<double, SymmetricDirichletFrameElement3D_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<SymmetricDirichletFrameElement3D_F::NV, double, false> SymmetricDirichletFrameElement3D_F::eval_f<TinyAD::Scalar<SymmetricDirichletFrameElement3D_F::NV, double, false>>(const Eigen::Matrix<TinyAD::Scalar<SymmetricDirichletFrameElement3D_F::NV, double, false>, SymmetricDirichletFrameElement3D_F::NV, 1> &_x, const Eigen::Matrix<double, SymmetricDirichletFrameElement3D_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<SymmetricDirichletFrameElement3D_F::NV, double, true> SymmetricDirichletFrameElement3D_F::eval_f<TinyAD::Scalar<SymmetricDirichletFrameElement3D_F::NV, double, true>>(const Eigen::Matrix<TinyAD::Scalar<SymmetricDirichletFrameElement3D_F::NV, double, true>, SymmetricDirichletFrameElement3D_F::NV, 1> &_x, const Eigen::Matrix<double, SymmetricDirichletFrameElement3D_F::NC, 1> &_c) const;
+
 using SymmetricDirichletFrameElement3D_TAD = COMISO::FiniteElementTinyAD<SymmetricDirichletFrameElement3D_F>;
 using SymmetricDirichletFrameElement3D_TAD_PH = COMISO::FiniteElementHessianProjection<SymmetricDirichletFrameElement3D_TAD>;
-//using  SymmetricDirichletFrameElement3D_TAD_PH = COMISO::FiniteElementHessianProjectionIdentity< SymmetricDirichletFrameElement3D_TAD >;
-//using  SymmetricDirichletFrameElement3D_TAD_PH = SymmetricDirichletFrameElement3D_TAD;
-
 
 class SymmetricDirichletDualFrameElement3D_F
 {
@@ -145,120 +91,30 @@ public:
   const static int NV = 21; // J=[[x0,x1,x2]^T | [x3,x4,x5]^T | [x6,x7,x8]^T]] = 3x3 matrix, P=[p0,p1,p2,p3] = 3x4 matrix of tet vertex positions
   const static int NC = 10; // [A(3x3),w,s,alpha,beta] = shape matrix A = _c[0..8], weight w=_c[9]
 
-
   using VecV = Eigen::Matrix<double, NV, 1>;
   using VecC = Eigen::Matrix<double, NC, 1>;
 
   template<class ScalarT>
-  inline ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const
-  {
-    using Mat3x3T = Eigen::Matrix<ScalarT, 3, 3, Eigen::ColMajor>;
-    using Mat3x4T = Eigen::Matrix<ScalarT, 3, 4, Eigen::ColMajor>;
-    using Mat3x3D = Eigen::Matrix<double, 3, 3, Eigen::ColMajor>;
+  ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const;
 
-    // get matrix representation of J and A
-    Eigen::Map<Mat3x3T> J((ScalarT *) _x.data());
-    Eigen::Map<Mat3x3D> A((double *) _c.data());
-
-    // get points of tetrahedron
-    Eigen::Map<Mat3x4T> P((ScalarT *) &(_x[9]));
-
-    // get edge vectors
-    Mat3x3T E;
-    E.col(0) = P.col(1) - P.col(0);
-    E.col(1) = P.col(2) - P.col(0);
-    E.col(2) = P.col(3) - P.col(0);
-
-    ScalarT V = 1.0 / 6.0 * E.determinant();
-
-    // get references to constants
-    const double &w = _c[9];
-
-    // calculate determinant of AJ
-    Mat3x3T AJ = A * J;
-    ScalarT d = (AJ).determinant();
-
-    if (d <= 0.0)
-      return static_cast<ScalarT>(std::numeric_limits<double>::infinity());
-    else
-      return w * V * (AJ.squaredNorm() + AJ.inverse().squaredNorm() - 6.0);
-  }
-
-   double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
+  double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c);
 
 };
 
-// create types for optimization with derivatives and projected hessian
+extern template double SymmetricDirichletDualFrameElement3D_F::eval_f<double>(const Eigen::Matrix<double, SymmetricDirichletDualFrameElement3D_F::NV, 1> &_x, const Eigen::Matrix<double, SymmetricDirichletDualFrameElement3D_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<SymmetricDirichletDualFrameElement3D_F::NV, double, false> SymmetricDirichletDualFrameElement3D_F::eval_f<TinyAD::Scalar<SymmetricDirichletDualFrameElement3D_F::NV, double, false>>(const Eigen::Matrix<TinyAD::Scalar<SymmetricDirichletDualFrameElement3D_F::NV, double, false>, SymmetricDirichletDualFrameElement3D_F::NV, 1> &_x, const Eigen::Matrix<double, SymmetricDirichletDualFrameElement3D_F::NC, 1> &_c) const;
+extern template TinyAD::Scalar<SymmetricDirichletDualFrameElement3D_F::NV, double, true> SymmetricDirichletDualFrameElement3D_F::eval_f<TinyAD::Scalar<SymmetricDirichletDualFrameElement3D_F::NV, double, true>>(const Eigen::Matrix<TinyAD::Scalar<SymmetricDirichletDualFrameElement3D_F::NV, double, true>, SymmetricDirichletDualFrameElement3D_F::NV, 1> &_x, const Eigen::Matrix<double, SymmetricDirichletDualFrameElement3D_F::NC, 1> &_c) const;
+
 using SymmetricDirichletDualFrameElement3D_TAD = COMISO::FiniteElementTinyAD<SymmetricDirichletDualFrameElement3D_F>;
 using SymmetricDirichletDualFrameElement3D_TAD_PH = COMISO::FiniteElementHessianProjection<SymmetricDirichletDualFrameElement3D_TAD>;
-
-
-/*
-class OptimalRotationFrameElement3D_F
-{
-public:
-
-  // define dimensions
-  const static int NV = 9; // J=[[x0,x1,x2]^T | [x3,x4,x5]^T | [x6,x7,x8]^T]] = 3x3 matrix
-  const static int NC = 5; // ToDo
-
-
-  using VecV = Eigen::Matrix<double,NV,1>;
-  using VecC = Eigen::Matrix<double,NC,1>;
-
-  template<class ScalarT>
-  inline ScalarT eval_f(const Eigen::Matrix<ScalarT, NV, 1> &_x, const Eigen::Matrix<double, NC, 1> &_c) const
-  {
-    using MatT = Eigen::Matrix<ScalarT,3,3,Eigen::ColMajor>;
-    using MatD = Eigen::Matrix<double, 3,3,Eigen::ColMajor>;
-
-    // get matrix representation of J and A
-    Eigen::Map<MatT> J( (ScalarT*) _x.data() );
-
-    ScalarT d = J.determinant();
-
-    // get references to constants
-    const double& w      = _c[0];
-    const double& l_u    = _c[1];
-    const double& l_v    = _c[2];
-    const double& l_w    = _c[3];
-    const double& aniso  = _c[4];
-
-    if (d < 0.0)
-    {
-      std::cerr << "ERROR: optrot element at infinity!!!" << std::endl;
-      return static_cast<ScalarT>(std::numeric_limits<double>::infinity());
-    }
-    else
-    {
-//      MatT JJt = J*J.transpose();
-//      Eigen::SelfAdjointEigenSolver<MatT> es(JJt);
-
-      Eigen::SelfAdjointEigenSolver<MatT> es(J*J.transpose());
-      auto S = es.operatorSqrt();
-
-//      {
-//        MatT JJt = J * J.transpose();
-//
-//        std::cerr << "JJt for l = " << l_u << std::endl << JJt << std::endl;
-//        std::cerr << "S   for l = " << l_u << std::endl << S << std::endl;
-//      }
-
-      return w*(pow(S(0,0)-l_u,2) + pow(S(1,1)-l_v,2) + pow(S(2,2)-l_w,2) + 2.0*pow(S(0,1),2) + 2.0*pow(S(0,2),2) + 2.0*pow(S(1,2),2));
-    }
-  }
-
-  inline double max_feasible_step(const VecV &_x, const VecV &_v, const VecC &_c)
-  {
-    return DBL_MAX;
-  }
-};
-
-// create types for optimization with derivatives and projected hessian
-using  OptimalRotationFrameElement3D_TAD = COMISO::FiniteElementTinyAD<OptimalRotationFrameElement3D_F>;
-using  OptimalRotationFrameElement3D_TAD_PH = COMISO::FiniteElementHessianProjection< OptimalRotationFrameElement3D_TAD >;
-*/
 
 //=============================================================================
 } // namespace AlgoHex
 //=============================================================================
+
+namespace COMISO
+{
+extern template class FiniteElementHessianProjection<FiniteElementTinyAD<AlgoHex::AMIPSFrameElement3D_F>>;
+extern template class FiniteElementHessianProjection<FiniteElementTinyAD<AlgoHex::SymmetricDirichletFrameElement3D_F>>;
+extern template class FiniteElementHessianProjection<FiniteElementTinyAD<AlgoHex::SymmetricDirichletDualFrameElement3D_F>>;
+} // namespace COMISO
