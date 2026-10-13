@@ -12,7 +12,6 @@
 #include <vector>
 #include <AlgoHex/TypeDef.hh>
 #include <AlgoHex/TransitionQuaternionEigen.hh>
-#include "CommonFuncs.hh"
 #include "MeshProperties.hh"
 
 namespace AlgoHex

@@ -6,8 +6,9 @@
  *  All contributors are stated in CREDITS.txt.                              *
 \*===========================================================================*/
 
-#include <functional>
 #include <iomanip>
+#include <queue>
+#include <stack>
 #include "CommonFuncs.hh"
 #include <AlgoHex/MeshGeometry.hh>
 

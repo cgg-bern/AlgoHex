@@ -10,15 +10,9 @@
 
 #include <AlgoHex/Util/json.hh>
 #include <AlgoHex/TypeDef.hh>
-#include <OpenVolumeMesh/FileManager/FileManager.hh>
-#include "DuplicateOneRingMesh.hh"
-#include "../Parametrization3D.hh"
-#include <AlgoHex/MeshGeometry.hh>
-#include <Base/Debug/DebConfig.hh>
-#include "TetRemeshing.hh"
-#include "../SingularGraphExtraction.hh"
-#include "QuaternionsSmoothing.hh"
+#include <AlgoHex/TransitionQuaternionEigen.hh>
 
+#include "MeshProperties.hh"
 
 namespace AlgoHex
 {

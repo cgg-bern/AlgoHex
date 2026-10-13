@@ -19,6 +19,8 @@
 #include "TypeDef.hh"
 #include <AlgoHex/MeshGeometry.hh>
 
+#include <AlgoHex/Stopwatches.hh>
+
 #include <Base/Debug/DebConfig.hh>
 #include <CoMISo/NSolver/NPDerivativeChecker.hh>
 #include <CoMISo/NSolver/NPTiming.hh>
@@ -26,17 +28,15 @@
 #include <CoMISo/NSolver/IPOPTSolver.hh>
 #include <CoMISo/NSolver/TruncatedNewtonPCG.hh>
 #include <CoMISo/NSolver/TrustregionNewtonPCG.hh>
-#include <CoMISo/NSolver/AugmentedLagrangianMethod.hh>
 #include <CoMISo/NSolver/ConstraintTools.hh>
-#include <CoMISo/Utils/Tools.hh>
-#include <AlgoHex/Util/StopWatch.hh>
 
 #include <Eigen/Geometry>
 
 #include "Geometry.hh"
-#include "LinearLeastSquaresElements.hh"
-#include "AMIPSFrameElement3D.hh"
 #include "DihedralAngleElementTinyAD.hh"
+#include "AxisAlignment.hh"
+#include "LogDetElement3D.hh"
+#include "AMIPSFrameElement3D.hh"
 
 //== NAMESPACES ===============================================================
 

@@ -11,8 +11,6 @@
 
 #include "MeshProperties.hh"
 #include "TetRemeshing.hh"
-#include "CommonFuncs.hh"
-#include <AlgoHex/MeshGeometry.hh>
 
 
 namespace AlgoHex

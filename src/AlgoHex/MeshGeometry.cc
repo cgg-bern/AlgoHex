@@ -7,6 +7,7 @@
 \*===========================================================================*/
 
 #include "MeshGeometry.hh"
+#include <iomanip>
 
 namespace AlgoHex
 {

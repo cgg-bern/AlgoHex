@@ -11,10 +11,7 @@
 
 //== INCLUDES =================================================================
 
-#include<Eigen/Dense>
-#include<Eigen/Sparse>
-#include<Eigen/StdVector>
-#include<cmath>
+#include <Eigen/Core>
 
 //== FORWARDDECLARATIONS ======================================================
 

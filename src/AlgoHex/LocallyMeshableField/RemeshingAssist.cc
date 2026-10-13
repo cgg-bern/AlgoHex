@@ -8,7 +8,6 @@
 
 
 #include "RemeshingAssist.hh"
-#include <AlgoHex/TypeDef.hh>
 
 namespace AlgoHex
 {

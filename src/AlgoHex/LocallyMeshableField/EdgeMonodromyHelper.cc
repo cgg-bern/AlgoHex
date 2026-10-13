@@ -6,6 +6,8 @@
  *  All contributors are stated in CREDITS.txt.                              *
 \*===========================================================================*/
 #include "EdgeMonodromyHelper.hh"
+#include "../AxisAlignment.hh"
+#include "../Geometry.hh"
 
 namespace AlgoHex
 {

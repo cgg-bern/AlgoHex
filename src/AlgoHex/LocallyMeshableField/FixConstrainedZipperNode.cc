@@ -13,7 +13,11 @@
 #include <AlgoHex/TypeDef.hh>
 #include <tuple>
 #include "CommonFuncs.hh"
-
+#include "EdgeMonodromyHelper.hh"
+#include <AlgoHex/AxisAlignment.hh>
+#include <AlgoHex/Geometry.hh>
+#include <AlgoHex/MeshGeometry.hh>
+#include "QuaternionsSmoothing.hh"
 
 namespace AlgoHex
 {

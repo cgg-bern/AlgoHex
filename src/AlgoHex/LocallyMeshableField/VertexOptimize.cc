@@ -8,11 +8,13 @@
 
 
 #include "VertexOptimize.hh"
+#include "QuaternionsSmoothing.hh"
+#include "RemeshingAssist.hh"
 #include <AlgoHex/TypeDef.hh>
-#include <CoMISo/NSolver/NPTiming.hh>
-#include <CoMISo/NSolver/IPOPTSolver.hh>
+#include <AlgoHex/Geometry.hh>
+#include <AlgoHex/AxisAlignment.hh>
 #include <CoMISo/NSolver/NewtonSolver.hh>
-#include <Base/Debug/DebConfig.hh>
+#include <CoMISo/Base/Debug/DebConfig.hh>
 
 
 namespace AlgoHex

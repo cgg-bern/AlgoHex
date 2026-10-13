@@ -6,7 +6,10 @@
  *  All contributors are stated in CREDITS.txt.                              *
 \*===========================================================================*/
 #include "ExpDeformationElements3D.hh"
+
+#include <cmath>
 #include <cfloat>
+#include "../Geometry.hh"
 
 namespace AlgoHex
 {

@@ -9,8 +9,6 @@
 
 #include <CoMISo/NSolver/NProblemInterface.hh>
 #include <AlgoHex/TypeDef.hh>
-#include "EnergyFunctions.hh"
-#include <iomanip>
 
 namespace AlgoHex
 {

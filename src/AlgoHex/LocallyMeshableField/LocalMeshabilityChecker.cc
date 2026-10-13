@@ -7,6 +7,10 @@
 \*===========================================================================*/
 #include "LocalMeshabilityChecker.hh"
 
+#include <iomanip>
+
+#include <CoMISo/Base/Debug/DebConfig.hh>
+
 namespace AlgoHex
 {
 

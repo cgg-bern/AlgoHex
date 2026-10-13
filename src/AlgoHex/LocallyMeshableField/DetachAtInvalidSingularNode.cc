@@ -9,11 +9,15 @@
 
 #include "DetachAtInvalidSingularNode.hh"
 #include <queue>
-#include <AlgoHex/Geometry.hh>
 #include "SplitHelper.hh"
 #include <AlgoHex/TypeDef.hh>
 #include "QuaternionsSmoothing.hh"
 #include "CommonFuncs.hh"
+
+
+#include "LocalMeshabilityRepair.hh"
+#include "../AxisAlignment.hh"
+#include "EdgeMonodromyHelper.hh"
 
 namespace AlgoHex
 {

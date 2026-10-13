@@ -11,34 +11,23 @@
 
 #include <map>
 #include <vector>
-#include <iostream>
 
 #include <AlgoHex/Util/json.hh>
 
-#include <Eigen/Sparse>
-
-#include <CoMISo/Config/config.hh>
-#include <CoMISo/NSolver/COMISOSolver.hh>
 #include <CoMISo/NSolver/LinearConstraint.hh>
 #include <CoMISo/NSolver/FiniteElementProblem.hh>
+#include <CoMISo/NSolver/VariableType.hh>
 
 #include "TypeDef.hh"
-#include "Geometry.hh"
 #include "TransitionQuaternionEigen.hh"
-#include "AxisAlignment.hh"
 #include "FrameFittingElement3D.hh"
 #include "DeformationElements3D.hh"
 #include "DihedralAngleElementTinyAD.hh"
 #include "BarrierElements.hh"
 #include "LinearLeastSquaresElements.hh"
 
-#include <QGP3D/Quantizer.hpp>
-
-#ifdef ALGOHEX_VERBOSE
-#define ALGOHEX_DEBUG_ONLY(x) x
-#else
-#define ALGOHEX_DEBUG_ONLY(x)
-#endif
+#include <MC3D/Types.hpp>
+#include <QGP3D/PathConstraint.hpp>
 
 //== FORWARDDECLARATIONS ======================================================
 

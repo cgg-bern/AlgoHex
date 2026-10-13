@@ -8,16 +8,10 @@
 #pragma once
 
 #include <AlgoHex/TransitionQuaternionEigen.hh>
-#include <AlgoHex/SingularGraphExtraction.hh>
 #include <map>
-#include "QuaternionsSmoothing.hh"
-#include "MeshProperties.hh"
-#include "RemeshingAssist.hh"
-#include "CommonFuncs.hh"
 #include <AlgoHex/TypeDef.hh>
 #include <CoMISo/NSolver/FiniteElementProblem.hh>
 #include "ExpDeformationElements3D.hh"
-#include <AlgoHex/Geometry.hh>
 
 namespace AlgoHex
 {

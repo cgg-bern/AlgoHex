@@ -11,7 +11,6 @@
 #include "FaceNormalCache.hh"
 #include "FieldConstraints.hh"
 
-#include <Eigen/SVD>
 #include <optional>
 
 namespace AlgoHex

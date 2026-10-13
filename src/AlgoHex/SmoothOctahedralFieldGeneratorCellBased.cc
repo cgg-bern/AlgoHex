@@ -10,13 +10,12 @@
 //== INCLUDES =================================================================
 #include "OpenNL/OpenNL_psm.h"
 #include "SmoothOctahedralFieldGeneratorCellBased.hh"
+#include "SmoothOctahedralFieldGenerator.hh"
 #include "TypeDef.hh"
-#include "MeshGeometry.hh"
 #include "FieldConstraints.hh"
-#include <AlgoHex/Util/StopWatch.hh>
 #include <AlgoHex/Stopwatches.hh>
 
-#include <iostream>
+#include <fstream>
 
 //== NAMESPACES ===============================================================
 

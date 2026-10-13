@@ -11,20 +11,12 @@
 
 #include <set>
 #include "CellInfo.hh"
-#include <vector>
 
 #include "EnsureEdgeMeshability.hh"
 #include "DetachAtInvalidSingularNode.hh"
 #include "FixConstrainedZipperNode.hh"
 #include "FixZipperNode.hh"
 #include "TransversalUnzipping.hh"
-
-
-#ifdef ALGOHEX_VERBOSE
-#define ALGOHEX_DEBUG_ONLY(x) x
-#else
-#define ALGOHEX_DEBUG_ONLY(x)
-#endif
 
 
 namespace AlgoHex

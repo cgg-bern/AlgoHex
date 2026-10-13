@@ -21,16 +21,19 @@
 #include "MeshGeometry.hh"
 #include "LinearLeastSquaresElements.hh"
 
-#include <CoMISo/NSolver/NewtonSolver.hh>
+#include <CoMISo/Config/config.hh>
+#include <CoMISo/NSolver/COMISOSolver.hh>
 #include <CoMISo/NSolver/IPOPTSolver.hh>
 #include <CoMISo/NSolver/TruncatedNewtonPCG.hh>
-#include <CoMISo/NSolver/NPDerivativeChecker.hh>
 #include <CoMISo/NSolver/NPTiming.hh>
 #include <CoMISo/NSolver/ConstraintTools.hh>
 #include <CoMISo/NSolver/LinearConstraintConverter.hh>
 #include <CoMISo/Utils/Tools.hh>
 #include <AlgoHex/Util/StopWatch.hh>
+#include <AlgoHex/AxisAlignment.hh>
 #include "Stopwatches.hh"
+
+#include <QGP3D/Quantizer.hpp>
 
 #if COMISO_GUROBI_AVAILABLE
 #include <CoMISo/NSolver/GUROBISolver.hh>

@@ -11,10 +11,7 @@
 
 //== INCLUDES =================================================================
 
-#include<Eigen/Dense>
-#include<Eigen/Sparse>
-#include<Eigen/StdVector>
-#include<cmath>
+#include <Eigen/Core>
 
 #include <CoMISo/NSolver/FiniteElementTinyAD.hh>
 #include <CoMISo/NSolver/FiniteElementHessianProjection.hh>
@@ -158,4 +155,3 @@ using DihedralAngleElement_TAD_PH = COMISO::FiniteElementHessianProjection<Dihed
 //=============================================================================
 } // namespace AlgoHex
 //=============================================================================
-

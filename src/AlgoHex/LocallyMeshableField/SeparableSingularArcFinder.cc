@@ -9,10 +9,13 @@
 
 #include "SeparableSingularArcFinder.hh"
 #include <AlgoHex/MeshGeometry.hh>
+#include <AlgoHex/AxisAlignment.hh>
 #include "SplitHelper.hh"
+#include "CommonFuncs.hh"
+#include "QuaternionsSmoothing.hh"
 #include <queue>
 #include <AlgoHex/TypeDef.hh>
-#include "CellInfo.hh"
+#include "EdgeMonodromyHelper.hh"
 
 namespace AlgoHex
 {

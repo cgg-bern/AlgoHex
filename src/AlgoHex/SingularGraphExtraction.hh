@@ -9,17 +9,10 @@
 
 //== INCLUDES =================================================================
 
-#include <queue>
 #include <vector>
 #include "TransitionQuaternionEigen.hh"
 #include "TypeDef.hh"
-#include "SphericalHarmonics/SHCoeffs.hh"
 #include "SphericalHarmonics/SHProjectorRay.hh"
-
-
-#include <AlgoHex/Stopwatches.hh>
-
-
 //== FORWARDDECLARATIONS ======================================================
 
 //== NAMESPACES ===============================================================

@@ -16,6 +16,7 @@
 #include "AxisAlignment.hh"
 #include "Geometry.hh"
 #include "./LocallyMeshableField/QuaternionsSmoothing.hh"
+#include <AlgoHex/Stopwatches.hh>
 
 //== NAMESPACES ===============================================================
 

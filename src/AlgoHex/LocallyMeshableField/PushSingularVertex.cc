@@ -8,7 +8,12 @@
 
 #include "PushSingularVertex.hh"
 #include "SplitHelper.hh"
+#include "RemeshingAssist.hh"
+#include "EdgeMonodromyHelper.hh"
+#include "QuaternionsSmoothing.hh"
 #include <AlgoHex/TypeDef.hh>
+#include <AlgoHex/AxisAlignment.hh>
+#include "CommonFuncs.hh"
 
 namespace AlgoHex
 {

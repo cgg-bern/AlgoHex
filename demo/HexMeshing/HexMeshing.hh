@@ -13,23 +13,11 @@
 #include <string>
 #include <AlgoHex/TypeDef.hh>
 #include <AlgoHex/Args.hh>
-#include <AlgoHex/SmoothOctahedralFieldGenerator.hh>
-#include <AlgoHex/SmoothOctahedralFieldGeneratorCellBased.hh>
-#include <AlgoHex/FieldConstraintGenerator.hh>
-#include <AlgoHex/SingularGraphExtraction.hh>
-#include <AlgoHex/Parametrization3D.hh>
-#include <AlgoHex/FrameFieldOptimizer3D.hh>
-#include <AlgoHex/Config/Export.hh>
+#include <AlgoHex/Util/json.hh>
 
-#include <HexEx/HexExtractor.hh>
+#include <Typedefs.hh>
 
 #include <AlgoHex/LocallyMeshableField/LocallyMeshableFieldGeneration.hh>
-#include <AlgoHex/LocallyMeshableField/OneringParameterizationChecker.hh>
-#include <AlgoHex/LocallyMeshableField/LocalMeshabilityCheckerWithFrames.hh>
-#include <AlgoHex/LocallyMeshableField/LocalMeshabilityChecker.hh>
-
-#include <AlgoHex/LocallyMeshableField/Comparisons/SplitPaper.hh>
-#include <AlgoHex/LocallyMeshableField/Comparisons/CollapsePaper.hh>
 
 //== FORWARDDECLARATIONS ======================================================
 

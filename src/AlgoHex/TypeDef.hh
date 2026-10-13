@@ -26,6 +26,12 @@
 #include <Eigen/Core>
 #include <Eigen/SparseCore>
 
+#ifdef ALGOHEX_VERBOSE
+#define ALGOHEX_DEBUG_ONLY(x) x
+#else
+#define ALGOHEX_DEBUG_ONLY(x)
+#endif
+
 //== FORWARDDECLARATIONS ======================================================
 
 //== NAMESPACES ===============================================================

@@ -8,8 +8,13 @@
 
 
 #include "TetRemeshing.hh"
+#include "CommonFuncs.hh"
+#include "QuaternionsSmoothing.hh"
+#include "RemeshingAssist.hh"
 #include <AlgoHex/MeshGeometry.hh>
 #include <AlgoHex/TypeDef.hh>
+#include <AlgoHex/AxisAlignment.hh>
+
 
 namespace AlgoHex
 {

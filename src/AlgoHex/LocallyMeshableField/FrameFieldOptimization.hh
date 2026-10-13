@@ -8,11 +8,9 @@
 #pragma once
 #include <AlgoHex/TypeDef.hh>
 
+#include <AlgoHex/TransitionQuaternionEigen.hh>
 
-#include "QuaternionsSmoothing.hh"
 #include "MeshProperties.hh"
-#include "../Stopwatches.hh"
-#include "../AxisAlignment.hh"
 
 
 namespace OVM = OpenVolumeMesh;

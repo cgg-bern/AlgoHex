@@ -11,7 +11,10 @@
 // instantiations for the only mesh type used (TetMesh).
 
 #include <AlgoHex/TypeDef.hh>
+#include <AlgoHex/AxisAlignment.hh>
+#include <AlgoHex/Geometry.hh>
 #include "QuaternionsSmoothing.hh"
+#include "EdgeMonodromyHelper.hh"
 #include <type_traits>
 
 namespace AlgoHex
@@ -63,8 +66,8 @@ QuaternionSmoothing::project_quaternion(const Quaternion &_qt, const Vec3d &_dir
     auto di = AxisAlignmentHelpers::closest_axis(_qt, _direction);
 
     return project_quaternion(_qt, di.second, _direction);
-
 }
+
 
 Quaternion QuaternionSmoothing::project_quaternion(const Quaternion &_qt, const int _axis, const Vec3d &_direction)
 {

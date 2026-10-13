@@ -12,6 +12,7 @@
 #include <iomanip>
 #include <memory>
 #include <algorithm>
+#include <cassert>
 
 namespace AlgoHex
 {

@@ -6,6 +6,17 @@
  *  All contributors are stated in CREDITS.txt.                              *
 \*===========================================================================*/
 #include "LocalMeshabilityCheckerWithFrames.hh"
+#include <iomanip>
+
+#include <AlgoHex/AxisAlignment.hh>
+#include <AlgoHex/MeshGeometry.hh>
+#include <AlgoHex/FrameFieldOptimizer3D.hh>
+#include <OpenVolumeMesh/FileManager/FileManager.hh>
+
+#include "TetRemeshing.hh"
+#include "QuaternionsSmoothing.hh"
+#include "FieldAngleCalculator.hh"
+#include "DuplicateOneRingMesh.hh"
 
 namespace AlgoHex
 {

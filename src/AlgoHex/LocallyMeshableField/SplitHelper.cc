@@ -6,6 +6,11 @@
  *  All contributors are stated in CREDITS.txt.                              *
 \*===========================================================================*/
 #include "SplitHelper.hh"
+#include <queue>
+#include <stack>
+
+#include "CommonFuncs.hh"
+#include <AlgoHex/MeshGeometry.hh>
 
 namespace AlgoHex
 {

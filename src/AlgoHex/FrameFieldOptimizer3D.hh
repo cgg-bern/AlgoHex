@@ -11,32 +11,19 @@
 
 #include <map>
 #include <vector>
-#include <iostream>
 
 #include <AlgoHex/Util/json.hh>
-#include <AlgoHex/Stopwatches.hh>
-
-#include <Eigen/Dense>
-#include <Eigen/Sparse>
-
-#include <CoMISo/Config/config.hh>
-#include <CoMISo/NSolver/COMISOSolver.hh>
 #include <CoMISo/NSolver/LinearConstraint.hh>
 #include <CoMISo/NSolver/FiniteElementProblem.hh>
 
 #include "TypeDef.hh"
-#include "TransitionQuaternionEigen.hh"
-#include "AxisAlignment.hh"
-#include "LogDetElement3D.hh"
-#include "AMIPSFrameElement3DTinyAD.hh"
 #include "AlignmentElements3D.hh"
+#include "LinearLeastSquaresElements.hh"
+#include "AMIPSFrameElement3DTinyAD.hh"
 #include "DeformationElements3D.hh"
 #include "IntegrabilityElements3D.hh"
-#include "LinearLeastSquaresElements.hh"
+#include "TransitionQuaternionEigen.hh"
 
-//== FORWARDDECLARATIONS ======================================================
-
-//== NAMESPACES ===============================================================
 
 namespace AlgoHex
 {

@@ -18,11 +18,25 @@
 #include <OpenVolumeMesh/IO/ReadOptions.hh>
 #include <OpenVolumeMesh/IO/ovmb_read.hh>
 
-#include <AlgoHex/Util/json.hh>
+#include <AlgoHex/MeshGeometry.hh>
 
 #include <AlgoHex/Stopwatches.hh>
+
+#include <AlgoHex/SmoothOctahedralFieldGenerator.hh>
+#include <AlgoHex/SmoothOctahedralFieldGeneratorCellBased.hh>
+#include <AlgoHex/FieldConstraintGenerator.hh>
+#include <AlgoHex/SingularGraphExtraction.hh>
+#include <AlgoHex/Parametrization3D.hh>
+#include <AlgoHex/FrameFieldOptimizer3D.hh>
+#include <AlgoHex/LocallyMeshableField/OneringParameterizationChecker.hh>
+#include <AlgoHex/LocallyMeshableField/LocalMeshabilityCheckerWithFrames.hh>
+#include <AlgoHex/LocallyMeshableField/LocalMeshabilityChecker.hh>
 #include <AlgoHex/LocallyMeshableField/FrameFieldOptimization.hh>
 
+#include <AlgoHex/LocallyMeshableField/Comparisons/SplitPaper.hh>
+#include <AlgoHex/LocallyMeshableField/Comparisons/CollapsePaper.hh>
+
+#include <HexEx/HexExtractor.hh>
 #include <HexHex/HexHex.hh>
 #include <HexHex/Utils/FileAccessor.hh>
 

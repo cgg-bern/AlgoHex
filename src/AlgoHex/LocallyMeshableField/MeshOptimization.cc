@@ -10,12 +10,21 @@
 #include <AlgoHex/MeshGeometry.hh>
 #include <OpenVolumeMesh/FileManager/FileManager.hh>
 #include <CoMISo/NSolver/TruncatedNewtonPCG.hh>
+#include <CoMISo/NSolver/ConstraintTools.hh>
+#include <CoMISo/NSolver/NewtonSolver.hh>
+#include <CoMISo/NSolver/NPTiming.hh>
 #include "MeshOptimization.hh"
+#include "EdgeMonodromyHelper.hh"
 #include <AlgoHex/TypeDef.hh>
+#include <AlgoHex/AxisAlignment.hh>
 #include <AlgoHex/BinarySpacePartitionTrees/Algorithms.hh>
 #include "CommonFuncs.hh"
 #include "SingularVertexOptProblem.hh"
+#include "TetRemeshing.hh"
+#include "EnergyFunctions.hh"
 
+#include "QuaternionsSmoothing.hh"
+#include <AlgoHex/Stopwatches.hh>
 
 namespace AlgoHex
 {

@@ -9,10 +9,8 @@
 #pragma once
 #include <AlgoHex/TypeDef.hh>
 
+#include <AlgoHex/TransitionQuaternionEigen.hh>
 
-#include <AlgoHex/Geometry.hh>
-#include "EdgeMonodromyHelper.hh"
-#include <AlgoHex/AxisAlignment.hh>
 
 namespace AlgoHex
 {

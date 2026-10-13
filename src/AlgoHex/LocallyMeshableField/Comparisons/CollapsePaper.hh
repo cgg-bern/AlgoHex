@@ -9,12 +9,11 @@
 #include <AlgoHex/TypeDef.hh>
 
 
-#include <set>
 #include <vector>
-#include <queue>
 #include <AlgoHex/SingularGraphExtraction.hh>
-#include "../QuaternionsSmoothing.hh"
-#include "../SplitHelper.hh"
+#include <AlgoHex/LocallyMeshableField/MeshProperties.hh>
+#include <AlgoHex/LocallyMeshableField/TetRemeshing.hh>
+
 
 
 namespace AlgoHex

@@ -13,6 +13,9 @@
 #include <AlgoHex/TypeDef.hh>
 #include "EdgeMonodromyHelper.hh"
 #include "FieldAngleCalculator.hh"
+#include "QuaternionsSmoothing.hh"
+#include "CommonFuncs.hh"
+#include "../Geometry.hh"
 #include "../AxisAlignment.hh"
 
 namespace AlgoHex

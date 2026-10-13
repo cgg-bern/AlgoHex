@@ -6,15 +6,11 @@
  *  All contributors are stated in CREDITS.txt.                              *
 \*===========================================================================*/
 #pragma once
-#include <AlgoHex/TypeDef.hh>
-
-
 
 #include <AlgoHex/Config/Export.hh>
 #include <string>
 #include <vector>
 #include <chrono>
-#include <cassert>
 #include <ostream>
 
 namespace AlgoHex
@@ -150,5 +146,3 @@ private:
 };
 
 } //namespace AlgoHex
-
-

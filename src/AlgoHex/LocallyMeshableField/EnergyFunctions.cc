@@ -6,7 +6,8 @@
  *  All contributors are stated in CREDITS.txt.                              *
 \*===========================================================================*/
 #include "EnergyFunctions.hh"
-#include <Eigen/Dense>
+
+#include <Eigen/Eigenvalues>
 
 namespace AlgoHex
 {

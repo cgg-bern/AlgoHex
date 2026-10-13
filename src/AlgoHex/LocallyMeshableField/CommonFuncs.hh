@@ -8,10 +8,7 @@
 #pragma once
 
 
-#include <assert.h>
-#include <queue>
 #include <AlgoHex/TypeDef.hh>
-#include <stack>
 #include "AlgoHex/BinarySpacePartitionTrees/TriangleBSPT.hh"
 
 

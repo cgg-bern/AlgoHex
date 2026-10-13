@@ -9,8 +9,11 @@
 
 #include "TransversalUnzipping.hh"
 #include "FieldAngleCalculator.hh"
+#include "CommonFuncs.hh"
 #include "SplitHelper.hh"
+#include "QuaternionsSmoothing.hh"
 #include <AlgoHex/TypeDef.hh>
+#include <AlgoHex/AxisAlignment.hh>
 
 namespace AlgoHex
 {

@@ -11,6 +11,9 @@
 #include <AlgoHex/TypeDef.hh>
 #include "EdgeMonodromyHelper.hh"
 
+#include <unordered_set>
+#include <AlgoHex/TransitionQuaternionEigen.hh>
+
 namespace AlgoHex
 {
 

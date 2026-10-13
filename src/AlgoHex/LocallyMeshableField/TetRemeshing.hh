@@ -10,11 +10,7 @@
 
 
 #include <AlgoHex/TransitionQuaternionEigen.hh>
-#include <AlgoHex/SingularGraphExtraction.hh>
-#include "QuaternionsSmoothing.hh"
 #include "MeshProperties.hh"
-#include "RemeshingAssist.hh"
-#include "CommonFuncs.hh"
 #include "VertexOptimize.hh"
 
 namespace AlgoHex

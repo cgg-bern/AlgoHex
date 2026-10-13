@@ -9,22 +9,11 @@
 #pragma once
 #include <AlgoHex/TypeDef.hh>
 
-
 #include <AlgoHex/Util/json.hh>
-#include <OpenVolumeMesh/FileManager/FileManager.hh>
-#include "DuplicateOneRingMesh.hh"
-#include "../FrameFieldOptimizer3D.hh"
-#include <AlgoHex/MeshGeometry.hh>
-#include "TetRemeshing.hh"
-#include <AlgoHex/SingularGraphExtraction.hh>
-#include "QuaternionsSmoothing.hh"
-#include "FieldAngleCalculator.hh"
 
-#ifdef ALGOHEX_VERBOSE
-#define ALGOHEX_DEBUG_ONLY(x) x
-#else
-#define ALGOHEX_DEBUG_ONLY(x)
-#endif
+#include <AlgoHex/TransitionQuaternionEigen.hh>
+
+#include "MeshProperties.hh"
 
 namespace AlgoHex
 {

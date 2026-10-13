@@ -7,8 +7,11 @@
 \*===========================================================================*/
 
 #include "CollapsePaper.hh"
-#include <AlgoHex/Geometry.hh>
 #include <AlgoHex/TypeDef.hh>
+#include <queue>
+
+#include <AlgoHex/LocallyMeshableField/QuaternionsSmoothing.hh>
+#include <AlgoHex/LocallyMeshableField/EdgeMonodromyHelper.hh>
 
 namespace AlgoHex
 {

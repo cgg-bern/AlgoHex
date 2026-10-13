@@ -6,7 +6,11 @@
  *  All contributors are stated in CREDITS.txt.                              *
 \*===========================================================================*/
 #include "AMIPSFrameElement3D.hh"
+
+#include <Eigen/Core>
+#include <Eigen/Eigenvalues>
 #include <cfloat>
+#include <cassert>
 
 namespace AlgoHex
 {
@@ -210,7 +214,7 @@ namespace AlgoHex
     Eigen::Map<Eigen::Matrix<double, 3, 3, Eigen::ColMajor> > J((double *) &(_x[0]));
     Eigen::Map<Eigen::Matrix<double, 3, 3, Eigen::ColMajor> > A((double *) &(_c[0]));
 
-    Mat3d AJ;
+    Eigen::Matrix3d AJ;
     AJ = A * J;
 
     return (AJ.transpose() * AJ).trace();

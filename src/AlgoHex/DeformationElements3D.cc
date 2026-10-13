@@ -7,6 +7,7 @@
 \*===========================================================================*/
 #include "DeformationElements3D.hh"
 #include <cfloat>
+#include <CoMISo/Utils/Polynomials.hh>
 
 namespace AlgoHex
 {

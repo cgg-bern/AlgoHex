@@ -11,11 +11,7 @@
 
 //== INCLUDES =================================================================
 
-#include<iostream>
-#include<Eigen/Dense>
-#include<Eigen/Sparse>
-#include<Eigen/StdVector>
-#include<cmath>
+#include <Eigen/Core>
 
 #include <CoMISo/NSolver/FiniteElementTinyAD.hh>
 

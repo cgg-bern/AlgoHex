@@ -9,6 +9,8 @@
 #include <cassert>
 #include <cfloat>
 
+#include <Eigen/Eigenvalues>
+
 namespace AlgoHex
 {
 

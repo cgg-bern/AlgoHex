@@ -8,6 +8,8 @@
 
 #include <AlgoHex/TypeDef.hh>
 #include "SingularVertexOptProblem.hh"
+#include "EnergyFunctions.hh"
+#include <iomanip>
 
 namespace AlgoHex
 {

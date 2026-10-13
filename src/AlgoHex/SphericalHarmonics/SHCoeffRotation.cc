@@ -95,4 +95,3 @@ Vec9d rot_z(double radians, const Vec9d &x)
 
 }
 }  // namespace
-

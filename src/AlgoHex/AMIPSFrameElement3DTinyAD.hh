@@ -11,13 +11,8 @@
 
 //== INCLUDES =================================================================
 
-#include<Eigen/Dense>
-#include<Eigen/Sparse>
-#include<Eigen/StdVector>
-#include <Eigen/Eigenvalues>
-#include<cmath>
+#include <Eigen/Core>
 
-#include <CoMISo/Utils/Polynomials.hh>
 #include <CoMISo/NSolver/FiniteElementTinyAD.hh>
 #include <CoMISo/NSolver/FiniteElementHessianProjection.hh>
 

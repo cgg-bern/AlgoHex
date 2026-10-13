@@ -1,9 +1,8 @@
 #include <CLI/CLI.hpp>
-#include <AlgoHex/TypeDef.hh>
-#include <AlgoHex/MeshGeometry.hh>
 #include <AlgoHex/FrameFieldOptimizer3D.hh>
 
 #include <AlgoHex/LocallyMeshableField/LocalMeshabilityChecker.hh>
+#include <OpenVolumeMesh/FileManager/FileManager.hh>
 
 #ifdef _WIN32
 #  include <windows.h>

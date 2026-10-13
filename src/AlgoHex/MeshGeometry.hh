@@ -9,9 +9,6 @@
 #pragma once
 
 #include "TypeDef.hh"
-#include <iostream>
-#include <iomanip>
-#include "assert.h"
 
 namespace AlgoHex
 {

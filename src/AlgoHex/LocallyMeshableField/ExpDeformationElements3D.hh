@@ -8,15 +8,10 @@
 
 #pragma once
 
-#include<Eigen/Dense>
-#include<Eigen/Sparse>
-#include<Eigen/StdVector>
-#include<cmath>
+#include <Eigen/Core>
 
 #include <CoMISo/NSolver/FiniteElementTinyAD.hh>
 #include <CoMISo/NSolver/FiniteElementHessianProjection.hh>
-#include <CoMISo/Utils/Polynomials.hh>
-#include <AlgoHex/Geometry.hh>
 
 
 //== FORWARDDECLARATIONS ======================================================

@@ -9,19 +9,16 @@
 #include <AlgoHex/TypeDef.hh>
 
 
-#include <functional>
-#include <AlgoHex/MeshGeometry.hh>
-#include <CoMISo/NSolver/NewtonSolver.hh>
 #include <CoMISo/NSolver/LinearConstraint.hh>
-#include <CoMISo/NSolver/ConstraintTools.hh>
-#include "SingularVertexOptProblem.hh"
-#include <CoMISo/NSolver/NPTiming.hh>
 #include <AlgoHex/SingularGraphExtraction.hh>
-#include "AlgoHex/BinarySpacePartitionTrees/TriangleBSPT.hh"
+#include <AlgoHex/BinarySpacePartitionTrees/TriangleBSPT.hh>
 
-#include "TetRemeshing.hh"
-#include "../Stopwatches.hh"
-#include "QuaternionsSmoothing.hh"
+#include <AlgoHex/LocallyMeshableField/MeshProperties.hh>
+
+namespace AlgoHex
+{
+class SingularVertexOptProblemQuaternion;
+}
 
 namespace OVM = OpenVolumeMesh;
 

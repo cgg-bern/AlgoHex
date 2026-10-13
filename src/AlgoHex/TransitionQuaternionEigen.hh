@@ -12,12 +12,9 @@
 //== INCLUDES =================================================================
 
 #include <vector>
-#include <algorithm>
-#include <gmm/gmm.h>
-#include <Eigen/Dense>
 
 #include "AlgoHex/Config/Export.hh"
-
+#include <gmm/gmm_matrix.h>
 
 //== FORWARDDECLARATIONS ======================================================
 

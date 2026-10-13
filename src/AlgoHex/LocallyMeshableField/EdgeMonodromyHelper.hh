@@ -8,15 +8,8 @@
 
 #pragma once
 
-#ifdef ALGOHEX_VERBOSE
-#define ALGOHEX_DEBUG_ONLY(x) x
-#else
-#define ALGOHEX_DEBUG_ONLY(x)
-#endif
-
-#include <AlgoHex/Geometry.hh>
 #include <AlgoHex/TypeDef.hh>
-#include <AlgoHex/AxisAlignment.hh>
+
 #include <AlgoHex/TransitionQuaternionEigen.hh>
 
 namespace AlgoHex

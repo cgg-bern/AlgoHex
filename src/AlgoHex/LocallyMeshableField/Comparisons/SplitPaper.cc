@@ -12,6 +12,8 @@
 #include "../DetachAtInvalidSingularNode.hh"
 #include "../LocalMeshabilityRepair.hh"
 #include "../FrameFieldOptimization.hh"
+#include <AlgoHex/LocallyMeshableField/QuaternionsSmoothing.hh>
+#include <queue>
 
 namespace AlgoHex
 {

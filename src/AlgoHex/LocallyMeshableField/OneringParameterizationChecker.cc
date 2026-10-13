@@ -6,6 +6,17 @@
  *  All contributors are stated in CREDITS.txt.                              *
 \*===========================================================================*/
 #include "OneringParameterizationChecker.hh"
+#include <iomanip>
+
+#include <OpenVolumeMesh/FileManager/FileManager.hh>
+#include <AlgoHex/Parametrization3D.hh>
+#include <AlgoHex/AxisAlignment.hh>
+
+#include "DuplicateOneRingMesh.hh"
+#include "QuaternionsSmoothing.hh"
+#include "TetRemeshing.hh"
+
+#include <CoMISo/Base/Debug/DebConfig.hh>
 
 namespace AlgoHex
 {

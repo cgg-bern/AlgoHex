@@ -10,8 +10,13 @@
 #include "SplitHelper.hh"
 #include <OpenVolumeMesh/FileManager/FileManager.hh>
 #include "LocalMeshabilityRepair.hh"
+#include "CommonFuncs.hh"
+#include "EdgeMonodromyHelper.hh"
+#include "QuaternionsSmoothing.hh"
 #include <queue>
 #include <AlgoHex/TypeDef.hh>
+#include <AlgoHex/AxisAlignment.hh>
+#include <AlgoHex/MeshGeometry.hh>
 
 namespace AlgoHex
 {

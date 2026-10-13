@@ -8,15 +8,17 @@
 
 
 #include "FixZipperNode.hh"
-#include <OpenVolumeMesh/FileManager/FileManager.hh>
 #include "SplitHelper.hh"
 #include <queue>
 #include <AlgoHex/TypeDef.hh>
 #include "CellInfo.hh"
+#include "EdgeMonodromyHelper.hh"
 //#include "TetmeshOperationsT.hh"
 #include "AlgoHex/BinarySpacePartitionTrees/PlaneT.hh"
 #include "CommonFuncs.hh"
 #include "QuaternionsSmoothing.hh"
+#include <AlgoHex/AxisAlignment.hh>
+#include <AlgoHex/Geometry.hh>
 
 
 namespace AlgoHex

@@ -8,7 +8,6 @@
 #pragma once
 
 
-#include <unordered_set>
 #include <AlgoHex/TypeDef.hh>
 
 namespace AlgoHex

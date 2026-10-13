@@ -15,6 +15,7 @@
 #include <AlgoHex/LocallyMeshableField/SplitHelper.hh>
 #include <AlgoHex/LocallyMeshableField/LocalMeshabilityRepair.hh>
 #include <AlgoHex/LocallyMeshableField/LocalMeshabilityChecker.hh>
+#include <AlgoHex/MeshGeometry.hh>
 #include "../Stopwatches.hh"
 
 namespace AlgoHex

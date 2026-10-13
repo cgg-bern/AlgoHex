@@ -6,6 +6,8 @@
  *  All contributors are stated in CREDITS.txt.                              *
 \*===========================================================================*/
 #include "AMIPSFrameElement3DTinyAD.hh"
+
+#include <CoMISo/Utils/Polynomials.hh>
 #include <cfloat>
 
 namespace AlgoHex

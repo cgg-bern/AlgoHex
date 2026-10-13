@@ -7,9 +7,7 @@
 \*===========================================================================*/
 #pragma once
 
-#include "SHCoeffs.hh"
-
-#include <Eigen/Core>
+#include <AlgoHex/TypeDef.hh>
 
 namespace AlgoHex
 {

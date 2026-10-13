@@ -9,9 +9,12 @@
 
 #include "FieldAngleCalculator.hh"
 #include <AlgoHex/MeshGeometry.hh>
+#include <AlgoHex/Geometry.hh>
 #include <queue>
 #include <AlgoHex/TypeDef.hh>
 #include "EdgeMonodromyHelper.hh"
+#include <AlgoHex/AxisAlignment.hh>
+#include "CommonFuncs.hh"
 
 namespace AlgoHex
 {
