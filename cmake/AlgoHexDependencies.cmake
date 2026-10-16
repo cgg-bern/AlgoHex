@@ -23,7 +23,7 @@ endif()
 if(NOT TARGET OpenVolumeMesh::OpenVolumeMesh)
     FetchContent_Declare(openvolumemesh
         GIT_REPOSITORY  https://www.graphics.rwth-aachen.de:9000/OpenVolumeMesh/OpenVolumeMesh.git
-        GIT_TAG 550251899dd9dd16d3df7eccdb38715c838aa8ff # master 2025-11-24
+        GIT_TAG 44612d167168f43f63a362ad3f432c94cffd4a00 # master on 2026-10-16
         SOURCE_DIR "${EXTERNAL_DIR}/OpenVolumeMesh"
         )
     FetchContent_MakeAvailable(openvolumemesh)
@@ -32,7 +32,7 @@ endif()
 if(NOT TARGET HexEx)
     FetchContent_Declare(hexex
         GIT_REPOSITORY https://www.graphics.rwth-aachen.de:9000/HexEx/libHexEx.git
-        GIT_TAG        algohex
+        GIT_TAG f394a5d638f3bdac92bb74f2502021757d2365d6# algohex-ovm-default-prop branch on 2016-10-16
         SOURCE_DIR "${EXTERNAL_DIR}/libHexEx"
         )
     FetchContent_MakeAvailable(hexex)
@@ -41,7 +41,7 @@ endif()
 if(NOT TARGET HexHex)
     FetchContent_Declare(hexhex
         GIT_REPOSITORY https://github.com/cgg-bern/libHexHex.git
-        GIT_TAG main
+        GIT_TAG b1f37fc23938dd69e3c1eeff819902b0a26ca200
         SOURCE_DIR "${EXTERNAL_DIR}/libHexHex"
         )
     FetchContent_MakeAvailable(hexhex)
@@ -67,9 +67,11 @@ endif()
 
 if(NOT TARGET tinyad::tinyad)
     FetchContent_Declare(tinyad
-        GIT_REPOSITORY  https://github.com/patr-schm/TinyAD
-        GIT_TAG 81fab13c3884b787c0f03bbbbb95b0f794e54434 # main 2023-10-10
-        SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/tinyad"
+        GIT_REPOSITORY https://github.com/cgg-bern/TinyAD
+        GIT_TAG dev/cmake-leave-cxx-standard
+        #GIT_REPOSITORY  https://github.com/patr-schm/TinyAD
+        #GIT_TAG 81fab13c3884b787c0f03bbbbb95b0f794e54434 # main 2023-10-10
+        SOURCE_DIR "${EXTERNAL_DIR}/tinyad"
         )
     #FetchContent_Populate(tinyad)
     #set(TINYAD_DIR "${tinyad_SOURCE_DIR}/include")
@@ -89,7 +91,7 @@ endif()
 if(NOT TARGET CoMISo::CoMISo)
     FetchContent_Declare(comiso
         GIT_REPOSITORY https://gitlab.vci.rwth-aachen.de:9000/CoMISo/CoMISo.git
-        GIT_TAG 553b8a111c6855e3c74d95f8be7f6b3566d13f57 # master 2025-12-02
+        GIT_TAG dd756589e733eb063fd2090f989c67e31a174610 # mastter 2026-10-14
         SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/CoMISo" # case matters
         )
     set(COMISO_NO_INSTALL YES)
@@ -108,7 +110,7 @@ endif()
 if(NOT TARGET CLI11::CLI11)
     FetchContent_Declare(cli11
         GIT_REPOSITORY https://github.com/CLIUtils/CLI11.git
-        GIT_TAG        v2.5.0
+        GIT_TAG        cbd58a3696887b34c70949aef21a71735a0c2ad5 # v2.7.2
         SOURCE_DIR "${EXTERNAL_DIR}/CLI11"
         )
     FetchContent_MakeAvailable(cli11)
@@ -118,7 +120,7 @@ endif()
 if(NOT TARGET TS3D:TS3D)
     FetchContent_Declare(ts3d
         GIT_REPOSITORY https://github.com/cgg-bern/TrulySeamless3D
-        GIT_TAG        cgg
+        GIT_TAG        e0e84878328cacf423f3fb5054a5d1f1feee4db9 # cgg branch on 2026-10-16
         SOURCE_DIR "${EXTERNAL_DIR}/TrulySeamless3D"
         )
     FetchContent_MakeAvailable(ts3d)
@@ -128,7 +130,7 @@ endif()
 if(NOT TARGET MC3D:MC3D)
     FetchContent_Declare(mc3d
         GIT_REPOSITORY https://github.com/cgg-bern/MC3D
-        GIT_TAG        cgg
+        GIT_TAG        01ccc86f5a4e60059e758aef3dcd0323de74da7b # cgg branch on 2026-10-16
         SOURCE_DIR "${EXTERNAL_DIR}/MC3D"
         )
     FetchContent_MakeAvailable(mc3d)
@@ -138,7 +140,7 @@ endif()
 if(NOT TARGET QGP3D:QGP3D)
     FetchContent_Declare(qgp3d
         GIT_REPOSITORY https://github.com/cgg-bern/QGP3D
-        GIT_TAG        cgg
+        GIT_TAG        deea41c2cc35550dd4b88d64979d44009cefdad5 # cgg branch on 2026-10-16
         SOURCE_DIR "${EXTERNAL_DIR}/QGP3D"
         )
     FetchContent_MakeAvailable(qgp3d)
