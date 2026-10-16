@@ -91,7 +91,7 @@ if(NOT TARGET CoMISo::CoMISo)
     FetchContent_Declare(comiso
         GIT_REPOSITORY https://gitlab.vci.rwth-aachen.de:9000/CoMISo/CoMISo.git
         GIT_TAG dd756589e733eb063fd2090f989c67e31a174610 # mastter 2026-10-14
-        SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/CoMISo" # case matters
+        SOURCE_DIR "${EXTERNAL_DIR}/CoMISo"
         )
     set(COMISO_NO_INSTALL YES)
     set(COMISO_ENABLE_DEFAULT OFF CACHE BOOL "" FORCE)
