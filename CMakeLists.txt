@@ -59,8 +59,8 @@ if (ALGOHEX_IS_ROOT)
         add_definitions(-D_GLIBCXX_DEBUG=1)
         add_definitions(-D_GLIBCXX_DEBUG_PEDANTIC=1)
     endif ()
-    set(ALGOHEX_CXX_STANDARD 17 CACHE STRING "C++ standard version to use")
-    set_property(CACHE ALGOHEX_CXX_STANDARD PROPERTY STRINGS 17 20)
+    set(ALGOHEX_CXX_STANDARD 20 CACHE STRING "C++ standard version to use")
+    set_property(CACHE ALGOHEX_CXX_STANDARD PROPERTY STRINGS 20 23 26)
     set(CMAKE_CXX_STANDARD ${ALGOHEX_CXX_STANDARD})
     set(CMAKE_CXX_STANDARD_REQUIRED YES)
     set(CMAKE_CXX_EXTENSIONS OFF)
@@ -89,7 +89,6 @@ endif()
 set(ALGOHEX_EXTERNAL "${CMAKE_CURRENT_SOURCE_DIR}/external")
 
 set(ACG_COMMON_DO_NOT_COPY_POST_BUILD TRUE)
-set(WANT_COMISO_QT OFF CACHE BOOL "Enable Qt support in CoMISo")
 include(AlgoHexDependencies)
 
 # add library
@@ -236,8 +235,6 @@ set_source_files_properties(
         PROPERTIES COMPILE_FLAGS
         "$<IF:$<CXX_COMPILER_ID:MSVC>,/O2,-O3>"
 )
-
-target_compile_features(AlgoHex PUBLIC cxx_std_17)
 
 # Precompiled header for the heavy third-party header stack.
 # Clang only: GCC's PCH reuse measured slower than no-PCH
