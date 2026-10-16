@@ -45,7 +45,6 @@ if(NOT TARGET HexHex)
         SOURCE_DIR "${EXTERNAL_DIR}/libHexHex"
         )
     FetchContent_MakeAvailable(hexhex)
-    add_library(HexHex::HexHex ALIAS HexHex)
 endif()
 
 if(NOT TARGET Eigen3::Eigen)
