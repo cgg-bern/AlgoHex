@@ -6,15 +6,22 @@
 #*  All contributors are stated in CREDITS.txt.                              *
 #\*===========================================================================*/
 
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.29)
+project(AlgoHexCLI)
+
+if (NOT TARGET AlgoHex::AlgoHex)
+    find_package (AlgoHex)
+endif()
 
 if (NOT CMAKE_BUILD_TYPE)
     message(STATUS "No build type selected, default to Release")
     set(CMAKE_BUILD_TYPE "Release")
 endif ()
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED YES)
+if(PROJECT_IS_TOP_LEVEL)
+    set(CMAKE_CXX_STANDARD 20)
+    set(CMAKE_CXX_STANDARD_REQUIRED YES)
+endif()
 
 add_executable(HexMeshing
         ./HexMeshing.cc
