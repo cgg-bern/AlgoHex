@@ -1,7 +1,7 @@
 #include <CLI/CLI.hpp>
 #include <AlgoHex/TypeDef.hh>
 #include <AlgoHex/MeshGeometry.hh>
-#include <AlgoHex/FrameFieldOptimizer3DT.hh>
+#include <AlgoHex/FrameFieldOptimizer3D.hh>
 
 #include <AlgoHex/LocallyMeshableField/LocalMeshabilityChecker.hh>
 
@@ -33,8 +33,7 @@ int main(int argc, const char *argv[])
     return app.exit(e);
   }
 
-  using Vec3d = OpenVolumeMesh::Geometry::Vec3d;
-  using TetMesh = OVM::TetrahedralGeometryKernel<Vec3d, OVM::TetrahedralMeshTopologyKernel>;
+  using TetMesh = AlgoHex::TetMesh;
 
   OpenVolumeMesh::IO::FileManager fm;
   TetMesh tetmesh;
@@ -44,7 +43,7 @@ int main(int argc, const char *argv[])
   {
     fm.readFile(in_filename, tetmesh);
 
-    AlgoHex::FrameFieldOptimizer3DT <TetMesh> ffopt(tetmesh);
+    AlgoHex::FrameFieldOptimizer3D ffopt(tetmesh);
 //    ffopt.enable_save_locally_non_meshable(args.locallyNonMeshableFileName);
 
     ffopt.import_frames_from_vec3d_properties();

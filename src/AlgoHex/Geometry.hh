@@ -15,17 +15,23 @@
 
 namespace AlgoHex
 {
-template<typename Point>
-static Vec3d ovm2eigen(const Point &_p)
+template<typename VecT>
+static Vec3d anyVec2eigen(const VecT &_p)
 {
   return Eigen::Vector3d(_p[0], _p[1], _p[2]);
 }
 
-static OpenVolumeMesh::Vec3d eigen2ovm(const Vec3d &_p)
+template<typename VecT>
+static OpenVolumeMesh::Vec3d anyVec2ovm(const VecT &_p)
 {
   return OpenVolumeMesh::Vec3d(_p[0], _p[1], _p[2]);
 }
 
+template<typename VecT>
+static TetMesh::PointT anyVec2point(const VecT &_p)
+{
+  return TetMesh::PointT(_p[0], _p[1], _p[2]);
+}
 
 static double signed_angle(const Vec2d &_a, const Vec2d &_b)
 {

@@ -11,11 +11,10 @@
 
 namespace AlgoHex
 {
-template<class MeshT>
-class RemeshingAssist
+class ALGOHEX_EXPORT RemeshingAssist
 {
 public:
-  using Point = typename MeshT::PointT;
+  using Point = TetMesh::PointT;
 
   //compare the imrm energies
   static bool is_quality_improved(const std::vector<std::vector<Point> > &_new_cells_points,
@@ -49,24 +48,7 @@ private:
 
   static void comformalIMRMHessian(const double *_x, double *_h);
 
-//    public:
-//        template <typename Vec3>
-//        static Point_3 to_CGAL_point(const Vec3& _pt) {
-//            return Point_3(_pt[0], _pt[1], _pt[2]);
-//        }
-//
-//        template <typename Vec3>
-//        static Point_3S to_CGAL_point_S(const Vec3& _pt) {
-//            return Point_3S(_pt[0], _pt[1], _pt[2]);
-//        }
-
 };
 }
 //=============================================================================
-#if defined(INCLUDE_TEMPLATES) && !defined(REMESHINGASSIST_C)
-#define REMESHINGASSIST_TEMPLATES
-
-#include "RemeshingAssist_impl.hh"
-
-#endif
 //=============================================================================

@@ -16,35 +16,18 @@ namespace AlgoHex
 
 using VFullConstraints = std::vector<std::pair<VH, Quaternion>>;
 
-template<typename MeshT>
-VFullConstraints &get_vertex_full_constraints(MeshT &mesh)
-{
-  auto prop = mesh.template request_mesh_property<VFullConstraints>("vertex full constraints");
-  mesh.set_persistent(prop);
-  return prop[OVM::MeshHandle(0)];
-}
-
-template<typename MeshT>
-using VNormalConstraints = std::vector<std::pair<VH, typename MeshT::PointT>>;
-
-template<typename MeshT>
-VNormalConstraints<MeshT> &get_vertex_normal_constraints(MeshT &mesh)
-{
-  auto prop = mesh.template request_mesh_property<VNormalConstraints<MeshT>>("vertex normal constraints");
-  mesh.set_persistent(prop);
-  return prop[OVM::MeshHandle(0)];
-}
+ VFullConstraints &get_vertex_full_constraints(TetMesh &mesh);
 
 
-template<typename MeshT>
-using CPartialConstraints = std::vector<std::pair<CH, typename MeshT::PointT>>;
+using VNormalConstraints = std::vector<std::pair<VH, TetMesh::PointT>>;
 
-template<typename MeshT>
-CPartialConstraints<MeshT> &get_cell_partial_constraints(MeshT &mesh)
-{
-  auto prop = mesh.template request_mesh_property<CPartialConstraints<MeshT>>("cell partial constraints");
-  mesh.set_persistent(prop);
-  return prop[OVM::MeshHandle(0)];
-}
+ VNormalConstraints &get_vertex_normal_constraints(TetMesh &mesh);
+
+
+
+using CPartialConstraints = std::vector<std::pair<CH, TetMesh::PointT>>;
+
+ CPartialConstraints &get_cell_partial_constraints(TetMesh &mesh);
+
 
 }

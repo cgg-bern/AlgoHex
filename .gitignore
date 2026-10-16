@@ -5,3 +5,5 @@
 .idea/
 CMakeLists.txt.user
 .cache
+.vscode
+*.tar

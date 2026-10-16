@@ -7,6 +7,8 @@
 \*===========================================================================*/
 #pragma once
 
+#include <AlgoHex/Config/Export.hh>
+
 //== INCLUDES =================================================================
 
 #include <OpenVolumeMesh/Core/Handles.hh>
@@ -60,6 +62,26 @@ using CEIt = OVM::CellEdgeIter;
 using CFIt = OVM::CellFaceIter;
 
 using TVIt = OVM::TetVertexIter;
+
+
+// TODOs to make it work fully
+// Enable interfacing of libHexHex with Eigen vector
+// Enable interfacing of QGP3D with Eigen vector
+// Fix OpenVolumeMesh interfacing with Eigen vector
+#define ALGOHEX_OVM_VECT 1
+#define ALGOHEX_OM_VECT 0
+#define ALGOHEX_EIGEN_VECT 0
+
+#if ALGOHEX_OVM_VECT
+using Point = OVM::Vec3d;
+#elif ALGOHEX_OM_VECT
+using Point = OpenMesh::Vec3d;
+#elif ALGOHEX_EIGEN_VECT
+using Point = Eigen::Vector3d;
+#else
+static_assert(false);
+#endif
+using TetMesh = OVM::TetrahedralGeometryKernel<Point, OVM::TetrahedralMeshTopologyKernel>;
 
 
 template<typename T>

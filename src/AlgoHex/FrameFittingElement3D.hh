@@ -307,8 +307,7 @@ public:
     }
   }
 
-  template<class VecT>
-  static void estimate_sizing(const Mat3x4dT &_P0, const Mat3x4dT &_P, const Mat3x3dT &_F, VecT &_optimal_sizing)
+  static void estimate_sizing(const Mat3x4dT &_P0, const Mat3x4dT &_P, const Mat3x3dT &_F, Eigen::Map<Vec3dT> &_optimal_sizing)
   {
     // compute gradients of pwl basis functions g1, g2, g3
 

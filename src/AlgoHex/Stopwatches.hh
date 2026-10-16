@@ -6,6 +6,8 @@
  *  All contributors are stated in CREDITS.txt.                              *
 \*===========================================================================*/
 #pragma once
+#include <AlgoHex/TypeDef.hh>
+
 
 #include <AlgoHex/Util/ScopedStopWatch.hh>
 

@@ -96,26 +96,31 @@ include(AlgoHexDependencies)
 add_library(AlgoHex
         src/AlgoHex/Args.hh
         src/AlgoHex/FaceNormalCache.hh
+        src/AlgoHex/FaceNormalCache.cc
         src/AlgoHex/FieldConstraints.hh
+        src/AlgoHex/FieldConstraints.cc
         src/AlgoHex/FieldConstraintGenerator.hh
-        src/AlgoHex/FrameFieldOptimizer3DT.hh
-        src/AlgoHex/FrameFieldOptimizer3DT_impl.hh
+        src/AlgoHex/FieldConstraintGenerator.cc
+        src/AlgoHex/FrameFieldOptimizer3D.hh
+        src/AlgoHex/FrameFieldOptimizer3D.cc
         src/AlgoHex/Geometry.hh
         src/AlgoHex/MeshGeometry.hh
-        src/AlgoHex/Parametrization3DT.hh
-        src/AlgoHex/Parametrization3DT_impl.hh
-        src/AlgoHex/SingularGraphExtractionT.hh
-        src/AlgoHex/SingularGraphExtractionT_impl.hh
-        src/AlgoHex/SmoothOctahedralFieldGeneratorT.hh
-        src/AlgoHex/SmoothOctahedralFieldGeneratorT_impl.hh
-        src/AlgoHex/SmoothOctahedralFieldGeneratorCellBasedT.hh
-        src/AlgoHex/SmoothOctahedralFieldGeneratorCellBasedT_impl.hh
+        src/AlgoHex/MeshGeometry.cc
+        src/AlgoHex/Parametrization3D.hh
+        src/AlgoHex/Parametrization3D.cc
+        src/AlgoHex/SingularGraphExtraction.hh
+        src/AlgoHex/SingularGraphExtraction.cc
+        src/AlgoHex/SmoothOctahedralFieldGenerator.hh
+        src/AlgoHex/SmoothOctahedralFieldGenerator.cc
+        src/AlgoHex/SmoothOctahedralFieldGeneratorCellBased.hh
+        src/AlgoHex/SmoothOctahedralFieldGeneratorCellBased.cc
         src/AlgoHex/Stopwatches.hh
         src/AlgoHex/Stopwatches.cc
         src/AlgoHex/TransitionQuaternionEigen.cc
         src/AlgoHex/TransitionQuaternionEigen.hh
         src/AlgoHex/TypeDef.hh
         src/AlgoHex/AxisAlignment.hh
+        src/AlgoHex/AxisAlignment.cc
         src/AlgoHex/AMIPSFrameElement3D.hh
         src/AlgoHex/AMIPSFrameElement3DTinyAD.hh
         src/AlgoHex/BarrierElements.hh
@@ -151,53 +156,65 @@ add_library(AlgoHex
         src/AlgoHex/SphericalHarmonics/SHProjectorSDP.hh
         src/AlgoHex/SphericalHarmonics/SHProjectorSDP.cc
 
-        src/AlgoHex/LocallyMeshableField/ArcZippingT.hh
-        src/AlgoHex/LocallyMeshableField/ArcZippingT_impl.hh
+        src/AlgoHex/LocallyMeshableField/ArcZipping.hh
+        src/AlgoHex/LocallyMeshableField/ArcZipping.cc
         src/AlgoHex/LocallyMeshableField/CellInfo.hh
+        src/AlgoHex/LocallyMeshableField/Comparisons/CollapsePaper.hh
+        src/AlgoHex/LocallyMeshableField/Comparisons/CollapsePaper.cc
+        src/AlgoHex/LocallyMeshableField/Comparisons/SplitPaper.hh
+        src/AlgoHex/LocallyMeshableField/Comparisons/SplitPaper.cc
         src/AlgoHex/LocallyMeshableField/CommonFuncs.hh
-        src/AlgoHex/LocallyMeshableField/CommonFuncs_impl.hh
-        src/AlgoHex/LocallyMeshableField/DuplicateOneRingMeshT.hh
-        src/AlgoHex/LocallyMeshableField/DuplicateOneRingMeshT_impl.hh
-        src/AlgoHex/LocallyMeshableField/DetachAtInvalidSingularNodeT.hh
-        src/AlgoHex/LocallyMeshableField/DetachAtInvalidSingularNodeT_impl.hh
-        src/AlgoHex/LocallyMeshableField/EdgeMonodromyHelperT.hh
+        src/AlgoHex/LocallyMeshableField/CommonFuncs.cc
+        src/AlgoHex/LocallyMeshableField/DuplicateOneRingMesh.hh
+        src/AlgoHex/LocallyMeshableField/DuplicateOneRingMesh.cc
+        src/AlgoHex/LocallyMeshableField/DetachAtInvalidSingularNode.hh
+        src/AlgoHex/LocallyMeshableField/DetachAtInvalidSingularNode.cc
+        src/AlgoHex/LocallyMeshableField/EdgeMonodromyHelper.hh
+        src/AlgoHex/LocallyMeshableField/EdgeMonodromyHelper.cc
         src/AlgoHex/LocallyMeshableField/EnergyFunctions.hh
-        src/AlgoHex/LocallyMeshableField/EnsureEdgeMeshabilityT.hh
-        src/AlgoHex/LocallyMeshableField/EnsureEdgeMeshabilityT_impl.hh
+        src/AlgoHex/LocallyMeshableField/EnsureEdgeMeshability.hh
+        src/AlgoHex/LocallyMeshableField/EnsureEdgeMeshability.cc
         src/AlgoHex/LocallyMeshableField/ExpDeformationElements3D.hh
-        src/AlgoHex/LocallyMeshableField/FieldAngleCalculatorT.hh
-        src/AlgoHex/LocallyMeshableField/FieldAngleCalculatorT_impl.hh
-        src/AlgoHex/LocallyMeshableField/FixZipperNodeT.hh
-        src/AlgoHex/LocallyMeshableField/FixZipperNodeT_impl.hh
-        src/AlgoHex/LocallyMeshableField/FixConstrainedZipperNodeT.hh
-        src/AlgoHex/LocallyMeshableField/FixConstrainedZipperNodeT_impl.hh
-        src/AlgoHex/LocallyMeshableField/FrameFieldOptimizationT.hh
-        src/AlgoHex/LocallyMeshableField/FrameFieldOptimizationT_impl.hh
-        src/AlgoHex/LocallyMeshableField/LocallyMeshableFieldGenerationT.hh
-        src/AlgoHex/LocallyMeshableField/LocallyMeshableFieldGenerationT_impl.hh
+        src/AlgoHex/LocallyMeshableField/FieldAngleCalculator.hh
+        src/AlgoHex/LocallyMeshableField/FieldAngleCalculator.cc
+        src/AlgoHex/LocallyMeshableField/FixZipperNode.hh
+        src/AlgoHex/LocallyMeshableField/FixZipperNode.cc
+        src/AlgoHex/LocallyMeshableField/FixConstrainedZipperNode.hh
+        src/AlgoHex/LocallyMeshableField/FixConstrainedZipperNode.cc
+        src/AlgoHex/LocallyMeshableField/FrameFieldOptimization.hh
+        src/AlgoHex/LocallyMeshableField/FrameFieldOptimization.cc
+        src/AlgoHex/LocallyMeshableField/LocallyMeshableFieldGeneration.hh
+        src/AlgoHex/LocallyMeshableField/LocallyMeshableFieldGeneration.cc
         src/AlgoHex/LocallyMeshableField/LocalMeshabilityChecker.hh
+        src/AlgoHex/LocallyMeshableField/LocalMeshabilityChecker.cc
         src/AlgoHex/LocallyMeshableField/LocalMeshabilityCheckerWithFrames.hh
-        src/AlgoHex/LocallyMeshableField/LocalMeshabilityRepairT.hh
-        src/AlgoHex/LocallyMeshableField/LocalMeshabilityRepairT_impl.hh
-        src/AlgoHex/LocallyMeshableField/MeshOptimizationT.hh
-        src/AlgoHex/LocallyMeshableField/MeshOptimizationT_impl.hh
+        src/AlgoHex/LocallyMeshableField/LocalMeshabilityCheckerWithFrames.cc
+        src/AlgoHex/LocallyMeshableField/LocalMeshabilityRepair.hh
+        src/AlgoHex/LocallyMeshableField/LocalMeshabilityRepair.cc
+        src/AlgoHex/LocallyMeshableField/MeshOptimization.hh
+        src/AlgoHex/LocallyMeshableField/MeshOptimization.cc
         src/AlgoHex/LocallyMeshableField/MeshProperties.hh
+        src/AlgoHex/LocallyMeshableField/MeshProperties.cc
         src/AlgoHex/LocallyMeshableField/OneringParameterizationChecker.hh
-        src/AlgoHex/LocallyMeshableField/PushSingularVertexT.hh
-        src/AlgoHex/LocallyMeshableField/PushSingularVertexT_impl.hh
+        src/AlgoHex/LocallyMeshableField/OneringParameterizationChecker.cc
+        src/AlgoHex/LocallyMeshableField/PushSingularVertex.hh
+        src/AlgoHex/LocallyMeshableField/PushSingularVertex.cc
         src/AlgoHex/LocallyMeshableField/QuaternionsSmoothing.hh
+        src/AlgoHex/LocallyMeshableField/QuaternionsSmoothing.cc
         src/AlgoHex/LocallyMeshableField/RemeshingAssist.hh
-        src/AlgoHex/LocallyMeshableField/RemeshingAssist_impl.hh
-        src/AlgoHex/LocallyMeshableField/SeparableSingularArcFinderT.hh
-        src/AlgoHex/LocallyMeshableField/SeparableSingularArcFinderT_impl.hh
+        src/AlgoHex/LocallyMeshableField/RemeshingAssist.cc
+        src/AlgoHex/LocallyMeshableField/SeparableSingularArcFinder.hh
+        src/AlgoHex/LocallyMeshableField/SeparableSingularArcFinder.cc
         src/AlgoHex/LocallyMeshableField/SingularVertexOptProblem.hh
-        src/AlgoHex/LocallyMeshableField/SplitHelperT.hh
-        src/AlgoHex/LocallyMeshableField/TetRemeshingT.hh
-        src/AlgoHex/LocallyMeshableField/TetRemeshingT_impl.hh
-        src/AlgoHex/LocallyMeshableField/TransversalUnzippingT.hh
-        src/AlgoHex/LocallyMeshableField/TransversalUnzippingT_impl.hh
-        src/AlgoHex/LocallyMeshableField/VertexOptimizeT.hh
-        src/AlgoHex/LocallyMeshableField/VertexOptimizeT_impl.hh
+        src/AlgoHex/LocallyMeshableField/SingularVertexOptProblem.cc
+        src/AlgoHex/LocallyMeshableField/SplitHelper.hh
+        src/AlgoHex/LocallyMeshableField/SplitHelper.cc
+        src/AlgoHex/LocallyMeshableField/TetRemeshing.hh
+        src/AlgoHex/LocallyMeshableField/TetRemeshing.cc
+        src/AlgoHex/LocallyMeshableField/TransversalUnzipping.hh
+        src/AlgoHex/LocallyMeshableField/TransversalUnzipping.cc
+        src/AlgoHex/LocallyMeshableField/VertexOptimize.hh
+        src/AlgoHex/LocallyMeshableField/VertexOptimize.cc
         )
 
 set_source_files_properties(

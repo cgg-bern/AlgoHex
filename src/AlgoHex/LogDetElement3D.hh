@@ -329,8 +329,7 @@ public:
     else return 0.0;
   }
 
-  template<class MatT>
-  inline bool diagonally_dominant(const MatT &_A) const
+  inline bool diagonally_dominant(const Eigen::Matrix<double, 9, 9> &_A) const
   {
     // only works for square matrices
     assert(_A.cols() == _A.rows());
@@ -350,12 +349,11 @@ public:
     return true;
   }
 
-  template<class MatT>
-  inline void project_to_positive_semidefinite(MatT &_A) const
+  inline void project_to_positive_semidefinite(Eigen::Matrix<double, 9, 9> &_A) const
   {
-    typename Eigen::SelfAdjointEigenSolver<MatT> es(_A);
+    Eigen::SelfAdjointEigenSolver<Eigen::Matrix<double, 9, 9>> es(_A);
 
-    typename Eigen::SelfAdjointEigenSolver<MatT>::RealVectorType ev = es.eigenvalues();
+    Eigen::SelfAdjointEigenSolver<Eigen::Matrix<double, 9, 9>>::RealVectorType ev = es.eigenvalues();
 //      ev.cwiseMax(0.0); // ToDo: why does cwiseMax not work?
     for (unsigned int i = 0; i < ev.size(); ++i)
       ev[i] = std::max(ev[i], 0.0);

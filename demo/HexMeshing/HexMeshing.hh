@@ -13,23 +13,23 @@
 #include <string>
 #include <AlgoHex/TypeDef.hh>
 #include <AlgoHex/Args.hh>
-#include <AlgoHex/SmoothOctahedralFieldGeneratorT.hh>
-#include <AlgoHex/SmoothOctahedralFieldGeneratorCellBasedT.hh>
+#include <AlgoHex/SmoothOctahedralFieldGenerator.hh>
+#include <AlgoHex/SmoothOctahedralFieldGeneratorCellBased.hh>
 #include <AlgoHex/FieldConstraintGenerator.hh>
-#include <AlgoHex/SingularGraphExtractionT.hh>
-#include <AlgoHex/Parametrization3DT.hh>
-#include <AlgoHex/FrameFieldOptimizer3DT.hh>
+#include <AlgoHex/SingularGraphExtraction.hh>
+#include <AlgoHex/Parametrization3D.hh>
+#include <AlgoHex/FrameFieldOptimizer3D.hh>
 #include <AlgoHex/Config/Export.hh>
 
 #include <HexEx/HexExtractor.hh>
 
-#include <AlgoHex/LocallyMeshableField/LocallyMeshableFieldGenerationT.hh>
+#include <AlgoHex/LocallyMeshableField/LocallyMeshableFieldGeneration.hh>
 #include <AlgoHex/LocallyMeshableField/OneringParameterizationChecker.hh>
 #include <AlgoHex/LocallyMeshableField/LocalMeshabilityCheckerWithFrames.hh>
 #include <AlgoHex/LocallyMeshableField/LocalMeshabilityChecker.hh>
 
-#include <AlgoHex/LocallyMeshableField/Comparisons/SplitPaperT.hh>
-#include <AlgoHex/LocallyMeshableField/Comparisons/CollapsePaperT.hh>
+#include <AlgoHex/LocallyMeshableField/Comparisons/SplitPaper.hh>
+#include <AlgoHex/LocallyMeshableField/Comparisons/CollapsePaper.hh>
 
 //== FORWARDDECLARATIONS ======================================================
 
@@ -42,47 +42,31 @@ void hexMeshing(Args &args);
 
 void hexMeshing_from_seamless_map(const Args &args);
 
-template<class MeshT>
-void load_tetmesh(const Args &args, MeshT &tetmesh);
+void load_tetmesh(const Args &args, TetMesh &tetmesh);
 
-template<class MeshT>
-void get_initial_frame_field(const Args &args, MeshT &tetmesh);
+void get_initial_frame_field(const Args &args, TetMesh &tetmesh);
 
-template<class MeshT>
-void modify_frame_field(Args &args, MeshT &tetmesh);
+void modify_frame_field(Args &args, TetMesh &tetmesh);
 
-template<class MeshT>
-void parameterization(const Args &args, MeshT &tetmesh, nlohmann::json &json_data);
+void parameterization(const Args &args, TetMesh &tetmesh, nlohmann::json &json_data);
 
-template<class MeshT>
-void extract_hexmesh(const Args &args, MeshT &tetmesh);
+void extract_hexmesh(const Args &args, TetMesh &tetmesh);
 
-template<class MeshT>
-void check_local_meshability(const Args &args, MeshT &tetmesh, nlohmann::json &json_data);
+void check_local_meshability(const Args &args, TetMesh &tetmesh, nlohmann::json &json_data);
 
-template<typename MeshT>
-void write_ovmb_file(const std::string &filename, MeshT &mesh);
+void write_ovmb_file(const std::string &filename, TetMesh &mesh);
 
-template<typename MeshT>
-void read_ovmb_file(const std::string &filename, MeshT &mesh);
+void read_ovmb_file(const std::string &filename, TetMesh &mesh);
 
-template<class MeshT>
-void initialize_feature_properties(const Args &args, MeshT &tetmesh);
+void initialize_feature_properties(const Args &args, TetMesh &tetmesh);
 
-template<class MeshT>
-std::vector<EH> get_feature_edges(MeshT &tetmesh);
+std::vector<EH> get_feature_edges(TetMesh &tetmesh);
 
-template<class MeshT>
-void load_cell_quaternions(const Args &args, MeshT &tetmesh);
+void load_cell_quaternions(const Args &args, TetMesh &tetmesh);
 
-template<class MeshT>
-void save_cell_quaternions(const std::string &_filename, MeshT &_mesh);
+void save_cell_quaternions(const std::string &_filename, TetMesh &_mesh);
 
-//    template <class MeshT>
-//    void get_algohex_feature_face_property(MeshT& tetmesh);
-
-template<class MeshT>
-void set_locally_hexmeshable_field_coeffs(Args &args, LocallyMeshableFieldGenerationT <MeshT> &lmfg);
+void set_locally_hexmeshable_field_coeffs(Args &args, LocallyMeshableFieldGeneration &lmfg);
 
 double hexmesh_volume(const HexEx::HexahedralMesh &_hexmesh);
 
@@ -92,8 +76,7 @@ void create_sub_hexmesh(const HexEx::HexahedralMesh &_hexmesh, HexEx::Hexahedral
 
 void store_json_file(const Args &_args, const nlohmann::json &_json_data);
 
-template<class MeshT>
-void attach_feature_information(MeshT &tetmesh, const std::string &_filename);
+void attach_feature_information(TetMesh &tetmesh, const std::string &_filename);
 
 //=============================================================================
 } // namespace AlgoHex

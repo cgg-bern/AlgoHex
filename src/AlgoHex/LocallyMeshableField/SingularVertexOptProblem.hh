@@ -10,6 +10,7 @@
 #include <CoMISo/NSolver/NProblemInterface.hh>
 #include <AlgoHex/TypeDef.hh>
 #include "EnergyFunctions.hh"
+#include <iomanip>
 
 namespace AlgoHex
 {
@@ -657,10 +658,7 @@ public:
   //project px to the plane defined by p0 and n
   template<typename Vec3>
   static void project_on_tangent_plane(const Vec3 &_p0, const Vec3 &_px, const Vec3 &_n,
-                                       Vec3 &_pp)
-  {
-    _pp = _px - (_px - _p0).dot(_n) * _n;
-  }
+                                       Vec3 &_pp);
 
 
   virtual void eval_gradient(const double *_x, double *_g)
@@ -1386,10 +1384,7 @@ private:
   Mat3d h_rpe_;
 };
 
+extern template void ALGOHEX_EXPORT SingularVertexOptProblemQuaternion::project_on_tangent_plane<OVM::Geometry::Vec3d>(const OVM::Geometry::Vec3d &, const OVM::Geometry::Vec3d &, const OVM::Geometry::Vec3d &, OVM::Geometry::Vec3d &);
+extern template void ALGOHEX_EXPORT SingularVertexOptProblemQuaternion::project_on_tangent_plane<Eigen::Vector3d>(const Eigen::Vector3d &, const Eigen::Vector3d &, const Eigen::Vector3d &, Eigen::Vector3d &);
+
 }
-
-
-
-
-
-

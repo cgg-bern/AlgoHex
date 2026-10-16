@@ -15,49 +15,26 @@ namespace AlgoHex
 {
 
 
-template<typename MeshT>
-class FaceNormalCache
+class ALGOHEX_EXPORT FaceNormalCache
 {
 public:
-  using Normal = typename MeshT::PointT;
+  using Normal = TetMesh::PointT;
 
-  FaceNormalCache(const MeshT &mesh)
-          : mesh_(mesh) {}
+  FaceNormalCache(const TetMesh &mesh);
+
 
   FaceNormalCache(const FaceNormalCache &) = delete;
 
-  Normal operator[](HFH hfh)
-  {
-    FH fh = mesh_.face_handle(hfh);
-    if (hfh.idx() & 1)
-    {
-      return -face_normal(fh);
-    }
-    else
-    {
-      return face_normal(fh);
-    }
-  }
+  Normal operator[](HFH hfh);
+
 
 private:
 
   /// Get normal from cache if available, otherwise compute it (and update cache)
-  const Normal &face_normal(FH fh)
-  {
-    auto it = face_normal_.find(fh);
-    if (it != face_normal_.end())
-    {
-      return it->second;
-    }
-    else
-    {
-      Normal n = mesh_.normal(mesh_.halfface_handle(fh, 0));
-      return face_normal_.emplace(fh, n).first->second;
-    }
+  const Normal &face_normal(FH fh);
 
-  }
 
-  const MeshT &mesh_;
+  const TetMesh &mesh_;
   std::map<FH, Normal> face_normal_;
 
 };

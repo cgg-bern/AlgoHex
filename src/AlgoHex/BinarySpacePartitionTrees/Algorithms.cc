@@ -52,6 +52,7 @@
 
 #include "Algorithms.hh"
 
+#include <Eigen/Core>
 
 #ifdef max
 #  undef max
@@ -69,12 +70,24 @@ namespace ACG {
 namespace Geometry {
 
 
-//== IMPLEMENTATION ========================================================== 
+namespace {
+double sqrnorm(const Eigen::Vector3d& v)
+{
+  return v.squaredNorm();
+}
+
+double sqrnorm(const OVM::Vec3d& v)
+{
+  return v.sqrnorm();
+}
+}
+
+//== IMPLEMENTATION ==========================================================
 
 
-//== 3D STUFF ================================================================ 
+//== 3D STUFF ================================================================
 
-  
+
 template<typename Scalar>
 bool
 baryCoord( const VectorT<Scalar,3> & _p,
@@ -87,7 +100,7 @@ baryCoord( const VectorT<Scalar,3> & _p,
                           wu = _w - _u,
                           pu = _p - _u;
 
-  
+
   // find largest absolute coodinate of normal
   Scalar nx = vu[1]*wu[2] - vu[2]*wu[1],
          ny = vu[2]*wu[0] - vu[0]*wu[2],
@@ -121,14 +134,14 @@ baryCoord( const VectorT<Scalar,3> & _p,
   switch (max_coord) {
 
     case 0:
-    {      
+    {
       if (1.0+ax == 1.0) return false;
       _result[1] = 1.0 + (pu[1]*wu[2]-pu[2]*wu[1])/nx - 1.0;
       _result[2] = 1.0 + (vu[1]*pu[2]-vu[2]*pu[1])/nx - 1.0;
       _result[0] = 1.0 - _result[1] - _result[2];
     }
     break;
-      
+
     case 1:
     {
       if (1.0+ay == 1.0) return false;
@@ -137,7 +150,7 @@ baryCoord( const VectorT<Scalar,3> & _p,
       _result[0] = 1.0 - _result[1] - _result[2];
     }
     break;
-      
+
     case 2:
     {
       if (1.0+az == 1.0) return false;
@@ -145,7 +158,7 @@ baryCoord( const VectorT<Scalar,3> & _p,
       _result[2] = 1.0 + (vu[0]*pu[1]-vu[1]*pu[0])/nz - 1.0;
       _result[0] = 1.0 - _result[1] - _result[2];
     }
-    break;    
+    break;
   }
 
   return true;
@@ -161,7 +174,7 @@ triangleAreaSquared( const Vec& _v0,
 		     const Vec& _v1,
 		     const Vec& _v2 )
 {
-  return 0.25 * ((_v1-_v0)%(_v2-_v0)).sqrnorm();
+  return 0.25 * sqrnorm(((_v1-_v0)%(_v2-_v0)));
 }
 
 
@@ -176,14 +189,14 @@ distPointLineSquared( const Vec& _p,
 		      Vec*       _min_v )
 {
   Vec d1(_p-_v0), d2(_v1-_v0), min_v(_v0);
-  typename Vec::value_type t = (d1|d2)/ d2.sqrnorm();
+  typename Vec::value_type t = (d1.dot(d2))/ sqrnorm(d2);
 
   if (t >  1.0)       d1 = _p - (min_v = _v1);
   else if (t > 0.0)   d1 = _p - (min_v = _v0 + d2*t);
 
   if (_min_v) *_min_v = min_v;
-  return d1.sqrnorm();
-}    
+  return sqrnorm(d1);
+}
 
   //-----------------------------------------------------------------------------
 
@@ -198,16 +211,16 @@ distPointTriangleSquared( const Vec& _p,
 {
   Vec v0v1 = _v1 - _v0;
   Vec v0v2 = _v2 - _v0;
-  Vec n = v0v1 % v0v2; // not normalized !
-  typename Vec::value_type d = n.sqrnorm();
+  Vec n = v0v1.cross(v0v2); // not normalized !
+  typename Vec::value_type d = sqrnorm(n);
 
-  
+
   // Check if the triangle is degenerated
   if (d < FLT_MIN && d > -FLT_MIN) {
     if (_stable) {
-      const double l0 = v0v1.sqrnorm();
-      const double l1 = v0v2.sqrnorm();
-      const double l2 = (_v2 - _v1).sqrnorm();
+      const double l0 = sqrnorm(v0v1);
+      const double l1 = sqrnorm(v0v2);
+      const double l2 = sqrnorm(_v2 - _v1);
       if (l0 > l1 && l0 > l2) {
         return distPointLineSquared(_p, _v0, _v1, &_nearestPoint);
       }
@@ -224,29 +237,29 @@ distPointTriangleSquared( const Vec& _p,
   }
   typename Vec::value_type invD = typename Vec::value_type(1.0) / d;
 
-  
+
   // these are not needed for every point, should still perform
   // better with many points against one triangle
   Vec v1v2 = _v2 - _v1;
-  typename Vec::value_type inv_v0v2_2 = typename Vec::value_type(1.0) / v0v2.sqrnorm();
-  typename Vec::value_type inv_v0v1_2 = typename Vec::value_type(1.0) / v0v1.sqrnorm();
-  typename Vec::value_type inv_v1v2_2 = typename Vec::value_type(1.0) / v1v2.sqrnorm();
+  typename Vec::value_type inv_v0v2_2 = typename Vec::value_type(1.0) / sqrnorm(v0v2);
+  typename Vec::value_type inv_v0v1_2 = typename Vec::value_type(1.0) / sqrnorm(v0v1);
+  typename Vec::value_type inv_v1v2_2 = typename Vec::value_type(1.0) / sqrnorm(v1v2);
 
-  
+
   Vec v0p = _p - _v0;
-  Vec t = v0p % n;
+  Vec t = v0p.cross(n);
   typename Vec::value_type  s01, s02, s12;
-  typename Vec::value_type a = (t | v0v2) * -invD;
-  typename Vec::value_type b = (t | v0v1) * invD;
+  typename Vec::value_type a = (t.dot(v0v2)) * -invD;
+  typename Vec::value_type b = (t.dot(v0v1)) * invD;
 
-  
+
   if (a < 0)
   {
     // Calculate the distance to an edge or a corner vertex
-    s02 = ( v0v2 | v0p ) * inv_v0v2_2;
+    s02 = ( v0v2.dot(v0p) ) * inv_v0v2_2;
     if (s02 < 0.0)
     {
-      s01 = ( v0v1 | v0p ) * inv_v0v1_2;
+      s01 = ( v0v1.dot(v0p) ) * inv_v0v1_2;
       if (s01 <= 0.0) {
 	v0p = _v0;
       } else if (s01 >= 1.0) {
@@ -255,7 +268,7 @@ distPointTriangleSquared( const Vec& _p,
 	v0p = _v0 + v0v1 * s01;
       }
     } else if (s02 > 1.0) {
-      s12 = ( v1v2 | ( _p - _v1 )) * inv_v1v2_2;
+      s12 = ( v1v2.dot( _p - _v1 )) * inv_v1v2_2;
       if (s12 >= 1.0) {
 	v0p = _v2;
       } else if (s12 <= 0.0) {
@@ -268,10 +281,10 @@ distPointTriangleSquared( const Vec& _p,
     }
   } else if (b < 0.0) {
     // Calculate the distance to an edge or a corner vertex
-    s01 = ( v0v1 | v0p ) * inv_v0v1_2;
+    s01 = ( v0v1.dot(v0p) ) * inv_v0v1_2;
     if (s01 < 0.0)
     {
-      s02 = ( v0v2 |  v0p ) * inv_v0v2_2;
+      s02 = ( v0v2.dot( v0p) ) * inv_v0v2_2;
       if (s02 <= 0.0) {
 	v0p = _v0;
       } else if (s02 >= 1.0) {
@@ -280,7 +293,7 @@ distPointTriangleSquared( const Vec& _p,
 	v0p = _v0 + v0v2 * s02;
       }
     } else if (s01 > 1.0) {
-      s12 = ( v1v2 | ( _p - _v1 )) * inv_v1v2_2;
+      s12 = ( v1v2.dot( _p - _v1 )) * inv_v1v2_2;
       if (s12 >= 1.0) {
 	v0p = _v2;
       } else if (s12 <= 0.0) {
@@ -293,9 +306,9 @@ distPointTriangleSquared( const Vec& _p,
     }
   } else if (a+b > 1.0) {
     // Calculate the distance to an edge or a corner vertex
-    s12 = ( v1v2 | ( _p - _v1 )) * inv_v1v2_2;
+    s12 = ( v1v2.dot( _p - _v1 )) * inv_v1v2_2;
     if (s12 >= 1.0) {
-      s02 = ( v0v2 | v0p ) * inv_v0v2_2;
+      s02 = ( v0v2.dot(v0p) ) * inv_v0v2_2;
       if (s02 <= 0.0) {
 	v0p = _v0;
       } else if (s02 >= 1.0) {
@@ -304,7 +317,7 @@ distPointTriangleSquared( const Vec& _p,
 	v0p = _v0 + v0v2*s02;
       }
     } else if (s12 <= 0.0) {
-      s01 = ( v0v1 |  v0p ) * inv_v0v1_2;
+      s01 = ( v0v1.dot(v0p) ) * inv_v0v1_2;
       if (s01 <= 0.0) {
 	v0p = _v0;
       } else if (s01 >= 1.0) {
@@ -318,12 +331,12 @@ distPointTriangleSquared( const Vec& _p,
   } else {
     // Calculate the distance to an interior point of the triangle
     _nearestPoint = _p - n*((n|v0p) * invD);
-    return (_nearestPoint - _p).sqrnorm();
+    return sqrnorm(_nearestPoint - _p);
   }
-  
+
   _nearestPoint = v0p;
 
-  return (_nearestPoint - _p).sqrnorm();
+  return sqrnorm(_nearestPoint - _p);
 }
 
 //-----------------------------------------------------------------------------
@@ -378,15 +391,15 @@ distLineLineSquared( const VectorT<Scalar,3>& _v00,
   VectorT<Scalar,3> d0 = _v01-_v00;
   VectorT<Scalar,3> d1 = _v11-_v10;
 
-  Scalar fA00 = d0.sqrnorm();
+  Scalar fA00 = sqrnorm(d0);
   Scalar fA01 = -(d0|d1);
-  Scalar fA11 = d1.sqrnorm();
+  Scalar fA11 = sqrnorm(d1);
   Scalar fB0  = (kDiff|d0);
-  Scalar fC   = kDiff.sqrnorm();
+  Scalar fC   = sqrnorm(kDiff);
   Scalar fDet = fabs(fA00*fA11-fA01*fA01);
   Scalar fB1, fS, fT, fSqrDist, fTmp;
 
-  
+
   if ( fDet >= FLT_MIN )
   {
     // line segments are not parallel
@@ -394,7 +407,7 @@ distLineLineSquared( const VectorT<Scalar,3>& _v00,
     fS = fA01*fB1-fA11*fB0;
     fT = fA01*fB0-fA00*fB1;
 
-    
+
     // conservative approximation only?
     if (_fastApprox)
     {
@@ -404,7 +417,7 @@ distLineLineSquared( const VectorT<Scalar,3>& _v00,
       else if ( fT > fDet ) fT = fDet;
     }
 
-    
+
     if ( fS >= 0.0 )
     {
       if ( fS <= fDet )
@@ -563,7 +576,7 @@ distLineLineSquared( const VectorT<Scalar,3>& _v00,
 	}
       }
     }
-    else 
+    else
     {
       if ( fT >= 0.0 )
       {
@@ -747,7 +760,7 @@ distPointPlane(const VectorT& _porigin,
                const VectorT& _point)
 {
   assert( fabs(_pnormal.norm()) > 0.0000000001) ;
-  return( ( (_point - _porigin) | _pnormal ) );
+  return( ( (_point - _porigin).dot(_pnormal) ) );
 }
 
 
@@ -758,14 +771,14 @@ VectorT projectToEdge(const VectorT& _start , const VectorT& _end , const Vector
 {
   VectorT direction = ( _end - _start ).normalize();
   assert( fabs(direction.norm()) > 0.0000000001) ;
-  const VectorT projected_point = ( ( _point - _start ) | direction ) * direction + _start;
-  
-  if ( ( ( projected_point - _start ) | direction ) > ( ( _end - _start ) | direction ) )
+  const VectorT projected_point = ( ( _point - _start ).dot(direction) ) * direction + _start;
+
+  if ( ( ( projected_point - _start ).dot(direction) ) > ( ( _end - _start ).dot(direction) ) )
     return _end;
-  
-  if ( ( ( projected_point - _start ) | direction ) < 0 )
+
+  if ( ( ( projected_point - _start ).dot(direction) ) < 0 )
     return _start;
-  
+
   return projected_point;
 }
 
@@ -795,7 +808,7 @@ circumCenter( const VectorT<Scalar,3>&  _v0,
                            b(_v2-_v0),
                            c(_v0-_v1),
                            G((_v0+_v1+_v2)/3.0);
-  
+
   Scalar d0 = -(b|c),
          d1 = -(c|a),
          d2 = -(a|b),
@@ -828,14 +841,14 @@ circumRadiusSquared( const VectorT<Scalar,3>&  _v0,
                           v0v2(_v2-_v0),
                           v1v2(_v2-_v1);
 
-  Scalar denom = 4.0*((v0v1%v0v2).sqrnorm());
-  if (denom < std::numeric_limits<Scalar>::min()  && 
-      denom > -std::numeric_limits<Scalar>::min())  
+  Scalar denom = 4.0*(sqrnorm(v0v1%v0v2));
+  if (denom < std::numeric_limits<Scalar>::min()  &&
+      denom > -std::numeric_limits<Scalar>::min())
     return std::numeric_limits<Scalar>::max();
 
-  return ( v0v1.sqrnorm() *
-	   v0v2.sqrnorm() *
-	   v1v2.sqrnorm() /
+  return ( sqrnorm(v0v1) *
+	   sqrnorm(v0v2) *
+	   sqrnorm(v1v2) /
 	   denom );
 }
 
@@ -858,7 +871,7 @@ rotationOfTwoVectors( const VectorT<Scalar,3>&  _v0,
     v1.normalize();
 
     // Get rotation axis
-    _axis = (v0 % v1).normalize();
+    _axis = (v0.cross(v1)).normalize();
 
     // Is nan?
     if ( std::isnan(_axis[0]) || std::isnan(_axis[1]) || std::isnan(_axis[2])  ) {
@@ -866,7 +879,7 @@ rotationOfTwoVectors( const VectorT<Scalar,3>&  _v0,
     }
 
     // Get rotation angle (in radiant)
-    _angle = acos(v0 | v1);
+    _angle = acos(v0.dot(v1));
 
     // Is nan?
     if ( std::isnan(_angle) )
@@ -924,7 +937,7 @@ minSphere(const VectorT<Scalar,3>&  _v0,
          d1 = -(c|a),
          d2 = -(a|b);
 
-  
+
   // obtuse angle ?
   if (d2 < std::numeric_limits<Scalar>::min())
   {
@@ -944,11 +957,11 @@ minSphere(const VectorT<Scalar,3>&  _v0,
     _radius = 0.5 * b.norm();
     return true;
   }
-  
+
 
   // acute angle
   VectorT<Scalar,3>   G((_v0+_v1+_v2)/3.0);
-  
+
   Scalar e0 = d1*d2,
          e1 = d2*d0,
          e2 = d0*d1,
@@ -960,7 +973,7 @@ minSphere(const VectorT<Scalar,3>&  _v0,
 
   _center = (Scalar)0.5 * ((Scalar)3.0*G - H);
   _radius = (_center-_v0).norm();
-  
+
   return true;
 }
 
@@ -978,16 +991,16 @@ minRadiusSquared( const VectorT<Scalar,3>&  _v0,
                           v0v2(_v2-_v0),
                           v1v2(_v2-_v1);
 
-  Scalar denom = 4.0*((v0v1%v0v2).sqrnorm());
-  if (denom < std::numeric_limits<Scalar>::min() && 
-      denom > -std::numeric_limits<Scalar>::min())  
+  Scalar denom = 4.0*(sqrnorm(v0v1%v0v2));
+  if (denom < std::numeric_limits<Scalar>::min() &&
+      denom > -std::numeric_limits<Scalar>::min())
     return std::numeric_limits<Scalar>::max();
 
-  Scalar  l0 = v0v1.sqrnorm(),
-          l1 = v0v2.sqrnorm(),
-          l2 = v1v2.sqrnorm(),
+  Scalar  l0 = sqrnorm(v0v1),
+          l1 = sqrnorm(v0v2),
+          l2 = sqrnorm(v1v2),
           l3 = l0*l1*l2/denom;
-  
+
   return  std::max(std::max(l0, l1), std::max(l2, l3));
 }
 
@@ -1015,14 +1028,14 @@ circumCenter( const VectorT<Scalar,3>&  _v0,
 		    v0v1[1]*v0v2[0]*v0v3[2] +
 		    v0v1[2]*v0v2[1]*v0v3[0])) * 2.0;
 
-  if (denom < std::numeric_limits<Scalar>::min() && 
+  if (denom < std::numeric_limits<Scalar>::min() &&
       denom > -std::numeric_limits<Scalar>::min())  return false;
 
-  
-  _result = _v0 + (( v0v3.sqrnorm()*(v0v1%v0v2) +
-		     v0v2.sqrnorm()*(v0v3%v0v1) +
-		     v0v1.sqrnorm()*(v0v2%v0v3) ) / denom);
-  
+
+  _result = _v0 + (( sqrnorm(v0v3)*(v0v1%v0v2) +
+		     sqrnorm(v0v2)*(v0v3%v0v1) +
+		     sqrnorm(v0v1)*(v0v2%v0v3) ) / denom);
+
   return true;
 }
 
@@ -1047,7 +1060,7 @@ perpendicular( const VectorT<Scalar,3>&  v )
 
 
 
-//== 2D STUFF ================================================================ 
+//== 2D STUFF ================================================================
 
 
 
@@ -1071,7 +1084,7 @@ baryCoord( const VectorT<Scalar,2> & _p,
 	      << _w << ")\n";
     return false;
   }
-  
+
   _result[1] = 1.0 + ((p0*w1-p1*w0)/denom) - 1.0;
   _result[2] = 1.0 + ((v0*p1-v1*p0)/denom) - 1.0;
   _result[0] = 1.0 - _result[1] - _result[2];
@@ -1091,13 +1104,13 @@ lineIntersection( const VectorT<Scalar,2>&  _v0,
 		  const VectorT<Scalar,2>&  _v3,
 		  Scalar& _t1,
 		  Scalar& _t2 )
-{      
+{
   _t1 = ((_v0[1]-_v2[1])*(_v3[0]-_v2[0])-(_v0[0]-_v2[0])*(_v3[1]-_v2[1])) /
         ((_v1[0]-_v0[0])*(_v3[1]-_v2[1])-(_v1[1]-_v0[1])*(_v3[0]-_v2[0]));
-      
+
   _t2 = ((_v0[1]-_v2[1])*(_v1[0]-_v0[0])-(_v0[0]-_v2[0])*(_v1[1]-_v0[1])) /
     ((_v1[0]-_v0[0])*(_v3[1]-_v2[1])-(_v1[1]-_v0[1])*(_v3[0]-_v2[0]));
-      
+
   return ((_t1>0.0) && (_t1<1.0) && (_t2>0.0) && (_t2<1.0));
 }
 
@@ -1125,13 +1138,13 @@ circumCenter( const VectorT<Scalar,2>&  _v0,
 
   _result[0] = 0.5*b/a;
   _result[1] = -0.5*c/a;
-  
+
   return true;
 }
 
 
 
-//== N-DIM STUFF ============================================================== 
+//== N-DIM STUFF ==============================================================
 
 
 template <typename Scalar, int N>
@@ -1144,16 +1157,16 @@ aspectRatio( const VectorT<Scalar, N>& _v0,
   VectorT<Scalar,3> d1 = _v1 - _v2;
 
   // finds the max squared edge length
-  Scalar l2, maxl2 = d0.sqrnorm();
-  if ((l2=d1.sqrnorm()) > maxl2)
+  Scalar l2, maxl2 = sqrnorm(d0);
+  if ((l2=sqrnorm(d1)) > maxl2)
     maxl2 = l2;
   // keep searching for the max squared edge length
   d1 = _v2 - _v0;
-  if ((l2=d1.sqrnorm()) > maxl2)
+  if ((l2=sqrnorm(d1)) > maxl2)
     maxl2 = l2;
 
   // squared area of the parallelogram spanned by d0 and d1
-  Scalar a2 = (d0 % d1).sqrnorm();
+  Scalar a2 = sqrnorm(d0.cross(d1));
 
   // the area of the triangle would be
   // sqrt(a2)/2 or length * height / 2
@@ -1180,9 +1193,9 @@ roundness( const VectorT<Scalar, N>& _v0,
 
   double area = 0.5*((_v1-_v0)%(_v2-_v0)).norm();
 
-  return (Scalar) (FOUR_ROOT3 * area / ((_v0-_v1).sqrnorm() +
-					(_v1-_v2).sqrnorm() +
-					(_v2-_v0).sqrnorm() ));
+  return (Scalar) (FOUR_ROOT3 * area / (sqrnorm(_v0-_v1) +
+					sqrnorm(_v1-_v2) +
+					sqrnorm(_v2-_v0) ));
 }
 
 template<typename Vec>
@@ -1205,10 +1218,10 @@ triangleIntersection( const Vec&  _o,
     edge2 = _v2-_v0;
 
     //begin calculating determinant - also used to calculate u parameter
-    pvec = _dir % edge2;
+    pvec = _dir.cross(edge2);
 
     //if determinant is near zero, the ray lies in plane of triangle
-    det = edge1 | pvec;
+    det = edge1.dot(pvec);
 
     static const typename Vec::value_type EPSILON = std::numeric_limits<typename Vec::value_type>::epsilon() * 1e2;
     if (det > -EPSILON && det < EPSILON) {
@@ -1220,20 +1233,20 @@ triangleIntersection( const Vec&  _o,
     tvec = _o - _v0;
 
     //calculate U parameter and test bounds
-    _u = (tvec | pvec) * inv_det;
+    _u = (tvec.dot(pvec)) * inv_det;
     if (_u < 0.0 || _u > 1.0)
         return false;
 
     //prepare to test V parameter
-    qvec = tvec % edge1;
+    qvec = tvec.cross(edge1);
 
     //calculate V parameter and test bounds
-    _v = (_dir | qvec) * inv_det;
+    _v = (_dir.dot(qvec)) * inv_det;
     if (_v < 0.0 || _u + _v > 1.0)
         return false;
 
     //Intersection found! Calculate t and exit...
-    _t = (edge2 | qvec) * inv_det;
+    _t = (edge2.dot(qvec)) * inv_det;
     return true;
 }
 
@@ -1302,7 +1315,7 @@ axisAlignedBBIntersection( const Vec&  _o,
         tmin = tzmin;
     if (tzmax < tmax)
         tmax = tzmax;
-    
+
     return true;
 }
 

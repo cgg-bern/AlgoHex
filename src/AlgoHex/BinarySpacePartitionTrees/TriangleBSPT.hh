@@ -56,6 +56,8 @@
 #include "TriangleBSPCoreT.hh"
 #include "BSPImplT.hh"
 
+#include <AlgoHex/Geometry.hh>
+
 #include <list>
 //== CLASS DEFINITION =========================================================
 
@@ -149,9 +151,7 @@ namespace AlgoHex {
 
         void calculateBoundingBoxRoot(Node *_node) {
             HandleIter it;
-            Point p0, p1, p2, bb_min, bb_max;
-            bb_min.vectorize(FLT_MAX);
-            bb_max.vectorize(-FLT_MAX);
+            Point p0, p1, p2, bb_min(FLT_MAX, FLT_MAX, FLT_MAX), bb_max(-FLT_MAX, -FLT_MAX, -FLT_MAX);
             for (it = _node->begin(); it != _node->end(); ++it) {
                 this->points(*it, p0, p1, p2);
                 bb_min.minimize(p0);
@@ -238,20 +238,20 @@ namespace AlgoHex {
     template<class Mesh>
     class OVMSpecificTriangleBSPTraits {
     public:
-        typedef typename Mesh::PointT Point;
+        typedef typename OVM::Vec3d Point;
         typedef OpenVolumeMesh::FaceHandle Handle;
         typedef OpenVolumeMesh::VertexHandle VertexHandle;
 
         explicit OVMSpecificTriangleBSPTraits(const Mesh &_mesh) : mesh_(_mesh) {}
 
         /// Returns the points belonging to the face handle _h
-        inline void points(const Handle &_h, Point &_p0, Point &_p1, Point &_p2) const {
+        inline void points(const Handle &_h, OVM::Vec3d &_p0, OVM::Vec3d &_p1, OVM::Vec3d &_p2) const {
             const auto &mesh = this->mesh_;
             assert(mesh.valence(_h) == 3);
             auto hfv_it(mesh.hfv_iter(mesh.halfface_handle(_h, 0)));
-            _p0 = mesh.vertex(*hfv_it++);
-            _p1 = mesh.vertex(*hfv_it++);
-            _p2 = mesh.vertex(*hfv_it++);
+            _p0 = anyVec2ovm(mesh.vertex(*hfv_it++));
+            _p1 = anyVec2ovm(mesh.vertex(*hfv_it++));
+            _p2 = anyVec2ovm(mesh.vertex(*hfv_it++));
         }
 
     protected:
@@ -278,4 +278,3 @@ namespace AlgoHex {
 
 }
 //#endif
-

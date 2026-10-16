@@ -100,7 +100,7 @@ public:
   /// constructor: 3 points
   PlaneT( const Vec3& _v0, const Vec3& _v1, const Vec3& _v2 )
   {
-    Vec3 n = (_v1-_v0) % (_v2-_v0);
+    Vec3 n = (_v1-_v0).cross(_v2-_v0);
     coeffs_ = Vec4(n[0], n[1], n[2], -(n|_v0));
     HNF();
   }
@@ -238,4 +238,3 @@ typedef PlaneT<double>  Planed;
 //=============================================================================
 #endif // ACG_PLANE_HH defined
 //=============================================================================
-

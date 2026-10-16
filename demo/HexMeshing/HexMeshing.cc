@@ -21,6 +21,7 @@
 #include <AlgoHex/Util/json.hh>
 
 #include <AlgoHex/Stopwatches.hh>
+#include <AlgoHex/LocallyMeshableField/FrameFieldOptimization.hh>
 
 #include <HexHex/HexHex.hh>
 #include <HexHex/Utils/FileAccessor.hh>
@@ -28,8 +29,6 @@
 
 namespace AlgoHex
 {
-using Point = OpenVolumeMesh::Geometry::Vec3d;
-using TetMesh = OVM::TetrahedralGeometryKernel<Point, OVM::TetrahedralMeshTopologyKernel>;
 
 template<typename MeshT>
 static bool save_volume_mesh(const std::filesystem::path& _path, const MeshT& _mesh)
@@ -96,8 +95,7 @@ void hexMeshing(Args &args)
   }
 }
 
-template<class MeshT>
-void load_tetmesh(const Args &args, MeshT &tetmesh)
+void load_tetmesh(const Args &args, TetMesh &tetmesh)
 {
   if (!args.inFileName.empty())
   {
@@ -126,8 +124,7 @@ void load_tetmesh(const Args &args, MeshT &tetmesh)
   }
 }
 
-template<class MeshT>
-void get_initial_frame_field(const Args &args, MeshT &tetmesh)
+void get_initial_frame_field(const Args &args, TetMesh &tetmesh)
 {
   //if the input is a pure tetmesh
   //1. compute initial field and extract singular graph
@@ -147,7 +144,7 @@ void get_initial_frame_field(const Args &args, MeshT &tetmesh)
       }
       constraint_gen.add_partial_constraints_from_feature_edges(feature_edges);
 
-      AlgoHex::SmoothOctahedralFieldGeneratorT<TetMesh> sofg(tetmesh);
+      AlgoHex::SmoothOctahedralFieldGenerator sofg(tetmesh);
       sofg.solve_spherical_harmonic_coefficients(args.penalty);
       sofg.project();
       sofg.iterate(args.max_field_opt_iters, args.penalty);
@@ -165,14 +162,14 @@ void get_initial_frame_field(const Args &args, MeshT &tetmesh)
       AlgoHex::FieldConstraintGeneratorCellBased constraint_gen{tetmesh, normal_cache};
       constraint_gen.add_partial_constraints(feature_edges);
 
-      AlgoHex::SmoothOctahedralFieldGeneratorCellBasedT<TetMesh> sofg(tetmesh);
+      AlgoHex::SmoothOctahedralFieldGeneratorCellBased sofg(tetmesh);
       sofg.solve_spherical_harmonic_coefficients(args.penalty);
       sofg.project();
       sofg.iterate(args.max_field_opt_iters, args.penalty);
       sofg.print_timings();
     }
 
-    AlgoHex::SingularGraphExtractionT<TetMesh> sge(tetmesh);
+    AlgoHex::SingularGraphExtraction sge(tetmesh);
     if (!args.cell_based)
     {
       if (args.without_refinement)
@@ -196,9 +193,9 @@ void get_initial_frame_field(const Args &args, MeshT &tetmesh)
     if (!args.rfOutFileName.empty())
     {
       //do not save properties
-      auto vqt = tetmesh.template request_vertex_property<Quaternion>("vertex quaternion");
+      auto vqt = tetmesh.request_vertex_property<Quaternion>("vertex quaternion");
       tetmesh.set_persistent(vqt, false);
-      auto shc = tetmesh.template request_vertex_property<SHCoeffs>(
+      auto shc = tetmesh.request_vertex_property<SHCoeffs>(
               "scaled vertex spherical harmonic coefficients");
       tetmesh.set_persistent(shc, false);
 
@@ -223,7 +220,7 @@ void get_initial_frame_field(const Args &args, MeshT &tetmesh)
 
     //read ovm file and load quaternions
 //        fm.readFile(args.rfInFileName, tetmesh);
-//        AlgoHex::SingularGraphExtractionT<TetMesh> sge(tetmesh);
+//        AlgoHex::SingularGraphExtraction sge(tetmesh);
 //        sge.load_cell_quaternions(args.cellQtInFileName);
   }
   else
@@ -233,18 +230,17 @@ void get_initial_frame_field(const Args &args, MeshT &tetmesh)
   }
 }
 
-template<class MeshT>
-void modify_frame_field(Args &args, MeshT &tetmesh)
+void modify_frame_field(Args &args, TetMesh &tetmesh)
 {
   if (args.split_approach)
   {
-    AlgoHex::SingularGraphExtractionT<TetMesh> sge(tetmesh);
-    AlgoHex::FrameFieldOptimizationT<TetMesh> ffo(tetmesh);
+    AlgoHex::SingularGraphExtraction sge(tetmesh);
+    AlgoHex::FrameFieldOptimization ffo(tetmesh);
     ffo.align_quaternions_to_feature(100);
     sge.get_transitions();
     sge.get_edges_valence();
 
-    AlgoHex::SplitApproachT<TetMesh> sa(tetmesh);
+    AlgoHex::SplitApproach sa(tetmesh);
     sa.split_approach();
     auto zz_free = sa.check_zigzag();
     auto n_cpe = sa.n_complex_singular_edges();
@@ -253,13 +249,13 @@ void modify_frame_field(Args &args, MeshT &tetmesh)
   }
   if (args.collapse_approach)
   {
-    AlgoHex::SingularGraphExtractionT<TetMesh> sge(tetmesh);
-    AlgoHex::FrameFieldOptimizationT<TetMesh> ffo(tetmesh);
+    AlgoHex::SingularGraphExtraction sge(tetmesh);
+    AlgoHex::FrameFieldOptimization ffo(tetmesh);
     ffo.align_quaternions_to_feature(100);
     sge.get_transitions();
     sge.get_edges_valence();
 
-    AlgoHex::CollapseApproachT<TetMesh> ca(tetmesh);
+    AlgoHex::CollapseApproach ca(tetmesh);
     ca.collapse_approach();
     auto n_cpe = ca.n_complex_singular_edges();
 
@@ -276,7 +272,7 @@ void modify_frame_field(Args &args, MeshT &tetmesh)
   if (args.generate_locally_meshable_field)
   {
     TetMesh sg_mesh;
-    LocallyMeshableFieldGenerationT <TetMesh> lmfg(tetmesh);
+    LocallyMeshableFieldGeneration lmfg(tetmesh);
     lmfg.set_export_path(args.outFileName.substr(0, args.outFileName.size() - 7));
     set_locally_hexmeshable_field_coeffs(args, lmfg);
 
@@ -296,8 +292,7 @@ void modify_frame_field(Args &args, MeshT &tetmesh)
     save_cell_quaternions(args.finalCellQtOutFileName, tetmesh);
 }
 
-template<class MeshT>
-void parameterization(const Args &args, MeshT &tetmesh, nlohmann::json &json_data)
+void parameterization(const Args &args, TetMesh &tetmesh, nlohmann::json &json_data)
 {
   // hack ---> should be earlier
   if (args.scale_input_mesh != 1.0)
@@ -310,11 +305,11 @@ void parameterization(const Args &args, MeshT &tetmesh, nlohmann::json &json_dat
 
   //parameterize
   OpenVolumeMesh::StatusAttrib status(tetmesh);
-  AlgoHex::Parametrization3DT<TetMesh> param(tetmesh, status);
+  AlgoHex::Parametrization3D param(tetmesh, status);
   param.import_frames_from_quaternion_field();
   param.scale_frames_to_target_complexity(args.num_hex_cells);
 
-  AlgoHex::FrameFieldOptimizer3DT<TetMesh> ffopt(tetmesh);
+  AlgoHex::FrameFieldOptimizer3D ffopt(tetmesh);
 
   // check local meshability
   check_local_meshability(args, tetmesh, json_data);
@@ -349,9 +344,9 @@ void parameterization(const Args &args, MeshT &tetmesh, nlohmann::json &json_dat
 
   // set parameters
   if (args.optimizer == 0)
-    param.set_optimizer(AlgoHex::Parametrization3DT<TetMesh>::OPT_COMISO);
+    param.set_optimizer(AlgoHex::Parametrization3D::OPT_COMISO);
   else if (args.optimizer == 1)
-    param.set_optimizer(AlgoHex::Parametrization3DT<TetMesh>::OPT_GUROBI);
+    param.set_optimizer(AlgoHex::Parametrization3D::OPT_GUROBI);
 
   param.set_timelimit(args.param_timelimit);
   // set stiffening params
@@ -365,7 +360,7 @@ void parameterization(const Args &args, MeshT &tetmesh, nlohmann::json &json_dat
 
   if(!args.seamlessOutFileName.empty()) {
     // save seamless map
-    auto parameters = tetmesh.template request_cell_property<std::map<OpenVolumeMesh::VertexHandle, TetMesh::PointT>>(
+    auto parameters = tetmesh.request_cell_property<std::map<OpenVolumeMesh::VertexHandle, TetMesh::PointT>>(
             "Parametrization");
     HexEx::HexExtractor hexExtractor(tetmesh, parameters);
     hexExtractor.writeToFile(args.seamlessOutFileName);
@@ -421,24 +416,23 @@ void parameterization(const Args &args, MeshT &tetmesh, nlohmann::json &json_dat
   }
 }
 
-template<class MeshT>
-void extract_hexmesh(const Args &args, MeshT &tetmesh)
+void extract_hexmesh(const Args &args, TetMesh &tetmesh)
 {
   ScopedStopWatch sw(sw::hex_extraction);
 
   std::cout << "\n#####Extracting Hex Mesh..." << std::endl;
 
   // Get the per cell parametrization
-  auto c_map_igm = tetmesh.template request_cell_property<std::map<OpenVolumeMesh::VertexHandle, TetMesh::PointT>>(
+  auto c_map_igm = tetmesh.request_cell_property<std::map<OpenVolumeMesh::VertexHandle, TetMesh::PointT>>(
           "Parametrization");
 
   // Convert per cell map to halfface prop used by HexHex
-  auto hf_igm = tetmesh.template request_halfface_property<OVM::Vec3d>("HexHex::Parametrization");
+  auto hf_igm = tetmesh.request_halfface_property<OVM::Vec3d>("HexHex::Parametrization");
   for (auto hf_it = tetmesh.hf_iter(); hf_it.is_valid(); ++hf_it) {
       OVM::CH ch = tetmesh.incident_cell(*hf_it);
       if (!ch.is_valid()) {continue;}
       OVM::VH vh = tetmesh.halfface_opposite_vertex(*hf_it);
-      hf_igm[*hf_it] = c_map_igm[ch].at(vh);
+      hf_igm[*hf_it] = anyVec2ovm(c_map_igm[ch].at(vh));
   }
 
   // Setup HexHex Configuration
@@ -452,28 +446,27 @@ void extract_hexmesh(const Args &args, MeshT &tetmesh)
   config.assert_igm_validity = true;
   config.extract_piecewise_linear_faces = config.extract_piecewise_linear_edges = !args.piecewiseLinearOutFileName.empty();
 
-
   // Save (unsanitized) IGM as .hexex
   if (!args.igmOutFileName.empty()) {
-      HexHex::saveInputToHEXEX(args.igmOutFileName, tetmesh, hf_igm);
+    HexHex::saveInputToHEXEX(args.igmOutFileName, tetmesh, hf_igm);
   }
 
   // Use HexHex to extract mesh
   auto hexhex_res = HexHex::extractHexMesh(tetmesh, hf_igm, config);
   if (hexhex_res.success) {
-      // HexHex was successful :D
-      hexmesh = std::move(hexhex_res.hex_mesh);
+    // HexHex was successful :D
+    hexmesh = std::move(hexhex_res.hex_mesh);
   }
   else
   {
-      // Use HexEx if HexHex fails :(
-      std::cerr << "Using HexEx for Mesh Extraction..." << std::endl;
+    // Use HexEx if HexHex fails :(
+    std::cerr << "Using HexEx for Mesh Extraction..." << std::endl;
 
-      HexEx::HexExtractor hexExtractor(tetmesh, c_map_igm);
+    HexEx::HexExtractor hexExtractor(tetmesh, c_map_igm);
 
-      hexExtractor.extract();
-      hexmesh = std::make_unique<HexEx::HexahedralMesh>();
-      hexExtractor.getHexMesh(*hexmesh, true);
+    hexExtractor.extract();
+    hexmesh = std::make_unique<HexEx::HexahedralMesh>();
+    hexExtractor.getHexMesh(*hexmesh, true);
   }
 
   // Print Mesh Volumes
@@ -542,12 +535,12 @@ void hexMeshing_from_seamless_map(const Args &args)
 
   //parameterize
   OpenVolumeMesh::StatusAttrib status(tetmesh);
-  AlgoHex::Parametrization3DT<TetMesh> param(tetmesh, status);
+  AlgoHex::Parametrization3D param(tetmesh, status);
   // set parameters
   if (args.optimizer == 0)
-    param.set_optimizer(AlgoHex::Parametrization3DT<TetMesh>::OPT_COMISO);
+    param.set_optimizer(AlgoHex::Parametrization3D::OPT_COMISO);
   else if (args.optimizer == 1)
-    param.set_optimizer(AlgoHex::Parametrization3DT<TetMesh>::OPT_GUROBI);
+    param.set_optimizer(AlgoHex::Parametrization3D::OPT_GUROBI);
 
   param.set_timelimit(args.param_timelimit);
   // set stiffening params
@@ -582,8 +575,7 @@ void hexMeshing_from_seamless_map(const Args &args)
   std::cout << "Hexmesh vertices: " << hexmesh.n_vertices() << std::endl;
 }
 
-template<class MeshT>
-void check_local_meshability(const Args &args, MeshT &tetmesh, nlohmann::json &json_data) {
+void check_local_meshability(const Args &args, TetMesh &tetmesh, nlohmann::json &json_data) {
   if (args.with_local_meshability_test || !args.locallyNonMeshableFileName.empty())
   {
     std::cerr << "******** CHECK LOCAL MESHABILITY ************" << std::endl;
@@ -617,9 +609,8 @@ void check_local_meshability(const Args &args, MeshT &tetmesh, nlohmann::json &j
   }
 }
 
-template<class MeshT>
 void
-set_locally_hexmeshable_field_coeffs(Args &args, LocallyMeshableFieldGenerationT <MeshT> &lmfg)
+set_locally_hexmeshable_field_coeffs(Args &args, LocallyMeshableFieldGeneration &lmfg)
 {
   if (args.with_local_meshability_test)
     args.field_alignment_weight = 1.;
@@ -650,15 +641,14 @@ set_locally_hexmeshable_field_coeffs(Args &args, LocallyMeshableFieldGenerationT
 }
 
 
-template<class MeshT>
-void initialize_feature_properties(const Args &args, MeshT &tetmesh)
+void initialize_feature_properties(const Args &args, TetMesh &tetmesh)
 {
-  if (!args.force_feature_threshold && tetmesh.template edge_property_exists<int>("AlgoHex::FeatureEdges"))
+  if (!args.force_feature_threshold && tetmesh.edge_property_exists<int>("AlgoHex::FeatureEdges"))
   {
     std::cout << "Found AlgoHex feature edges." << std::endl;
-    if (!tetmesh.template face_property_exists<int>("AlgoHex::FeatureFaces"))
+    if (!tetmesh.face_property_exists<int>("AlgoHex::FeatureFaces"))
     {
-      auto feature_fprop = tetmesh.template request_face_property<int>("AlgoHex::FeatureFaces", 0);
+      auto feature_fprop = tetmesh.request_face_property<int>("AlgoHex::FeatureFaces", 0);
       for (const auto fhi: tetmesh.faces())
         if (tetmesh.is_boundary(fhi))
           feature_fprop[fhi] = 1;
@@ -667,16 +657,16 @@ void initialize_feature_properties(const Args &args, MeshT &tetmesh)
 
       tetmesh.set_persistent(feature_fprop, true);
     }
-    MeshPropertiesT <MeshT> mp(tetmesh);
+    MeshProperties mp(tetmesh);
     mp.initialize_feature_vertex_property();
   }
-  else if (!args.force_feature_threshold && tetmesh.template edge_property_exists<int>("edge_colors"))
+  else if (!args.force_feature_threshold && tetmesh.edge_property_exists<int>("edge_colors"))
   {
     std::cout << "Found prescribed feature colors (from vtk file)." << std::endl;
-    if (!tetmesh.template face_property_exists<int>("face_colors"))
+    if (!tetmesh.face_property_exists<int>("face_colors"))
       std::cerr << "Error: no input feature face colors" << std::endl;
 
-    MeshPropertiesT <MeshT> mp(tetmesh);
+    MeshProperties mp(tetmesh);
     mp.import_feature_properties();
     mp.initialize_feature_vertex_property();
   }
@@ -684,7 +674,7 @@ void initialize_feature_properties(const Args &args, MeshT &tetmesh)
   {
     std::cout << "No prescribed feature tags found. Set boundary faces to feature faces and edges w.r.t. dihedral angle threshold "<<args.dihedral_angle<<" to feature edges." << std::endl;
     //Feature faces
-    auto feature_fprop = tetmesh.template request_face_property<int>("AlgoHex::FeatureFaces", 0);
+    auto feature_fprop = tetmesh.request_face_property<int>("AlgoHex::FeatureFaces", 0);
     for (const auto fhi: tetmesh.faces())
       if (tetmesh.is_boundary(fhi))
         feature_fprop[fhi] = 1;
@@ -700,24 +690,23 @@ void initialize_feature_properties(const Args &args, MeshT &tetmesh)
     auto feature_edges = feature_detector.compute(args.dihedral_angle);
 
     //set feature edge property
-    auto feature_edge_prop = tetmesh.template request_edge_property<int>("AlgoHex::FeatureEdges", 0);
+    auto feature_edge_prop = tetmesh.request_edge_property<int>("AlgoHex::FeatureEdges", 0);
     tetmesh.set_persistent(feature_edge_prop, true);
     for (const auto eh: feature_edges)
       feature_edge_prop[eh] = 1;
 
-    MeshPropertiesT <MeshT> mp(tetmesh);
+    MeshProperties mp(tetmesh);
     mp.initialize_feature_vertex_property();
   }
 }
 
-template<class MeshT>
-std::vector<EH> get_feature_edges(MeshT &tetmesh)
+std::vector<EH> get_feature_edges(TetMesh &tetmesh)
 {
   std::vector<EH> feature_edges;
-  auto feature_edge_prop = tetmesh.template request_edge_property<int>("AlgoHex::FeatureEdges");
+  auto feature_edge_prop = tetmesh.request_edge_property<int>("AlgoHex::FeatureEdges");
 
   //split for singular alignment
-  AlgoHex::SplitHelperT<MeshT>::split_for_dof(tetmesh);
+  AlgoHex::SplitHelper::split_for_dof(tetmesh);
 
   feature_edges.clear();
   for (const auto eh: tetmesh.edges())
@@ -756,7 +745,7 @@ double hexmesh_volume(const HexEx::HexahedralMesh &_hexmesh)
         auto p2 = _hexmesh.vertex(_hexmesh.halfedge(heh).to_vertex());
         auto p3 = _hexmesh.vertex(_hexmesh.halfedge(heh).from_vertex());
 
-        vol += 1. / 6. * ((fb - cb) % (p2 - cb) | (p3 - cb));
+        vol += 1. / 6. * ((fb - cb).cross(p2 - cb).dot(p3 - cb));
       }
     }
   }
@@ -855,8 +844,7 @@ void store_json_file(const Args &_args, const nlohmann::json &_json_data)
 }
 
 
-template<class MeshT>
-void attach_feature_information(MeshT &mesh, const std::string &_filename)
+void attach_feature_information(TetMesh &mesh, const std::string &_filename)
 {
   std::ofstream os(_filename, std::ofstream::app);
 
@@ -866,25 +854,25 @@ void attach_feature_information(MeshT &mesh, const std::string &_filename)
   std::vector<OpenVolumeMesh::FaceHandle> ft_faces;
 
   // collect
-  if (mesh.template vertex_property_exists<int>("AlgoHex::FeatureVertices"))
+  if (mesh.vertex_property_exists<int>("AlgoHex::FeatureVertices"))
   {
-    auto feature_vprop = mesh.template request_vertex_property<int>("AlgoHex::FeatureVertices");
+    auto feature_vprop = mesh.request_vertex_property<int>("AlgoHex::FeatureVertices");
     for (const auto vh: mesh.vertices())
       if (feature_vprop[vh] > 0)
         ft_vertices.push_back(vh);
   }
 
-  if (mesh.template edge_property_exists<int>("AlgoHex::FeatureEdges"))
+  if (mesh.edge_property_exists<int>("AlgoHex::FeatureEdges"))
   {
-    auto feature_eprop = mesh.template request_edge_property<int>("AlgoHex::FeatureEdges");
+    auto feature_eprop = mesh.request_edge_property<int>("AlgoHex::FeatureEdges");
     for (const auto eh: mesh.edges())
       if (feature_eprop[eh] > 0)
         ft_edges.push_back(eh);
   }
 
-  if (mesh.template face_property_exists<int>("AlgoHex::FeatureFaces"))
+  if (mesh.face_property_exists<int>("AlgoHex::FeatureFaces"))
   {
-    auto feature_fprop = mesh.template request_face_property<int>("AlgoHex::FeatureFaces");
+    auto feature_fprop = mesh.request_face_property<int>("AlgoHex::FeatureFaces");
     for (const auto fh: mesh.faces())
       if (feature_fprop[fh] > 0)
         ft_faces.push_back(fh);
@@ -923,9 +911,9 @@ void read_feature_information(...)
             << "read #feature_vertices = " << n_ftf << std::endl;
 
 // request/add feature properties
-  auto feature_vprop = mesh.template request_vertex_property<bool>("AlgoHex::FeatureVertices", false);
-  auto feature_eprop = mesh.template request_edge_property<int>("AlgoHex::FeatureEdges", false);
-  auto feature_fprop = mesh.template request_face_property<int>("AlgoHex::FeatureFaces", false);
+  auto feature_vprop = mesh.request_vertex_property<bool>("AlgoHex::FeatureVertices", false);
+  auto feature_eprop = mesh.request_edge_property<int>("AlgoHex::FeatureEdges", false);
+  auto feature_fprop = mesh.request_face_property<int>("AlgoHex::FeatureFaces", false);
 
   mesh.set_persistent(feature_vprop, true);
   mesh.set_persistent(feature_eprop, true);
@@ -972,14 +960,13 @@ void read_feature_information(...)
 }
  */
 
-template<class MeshT>
-void load_cell_quaternions(const Args &_args, MeshT &tetmesh)
+void load_cell_quaternions(const Args &_args, TetMesh &tetmesh)
 {
   std::ifstream fin;
   fin.open(_args.cellQtInFileName);
 
   OpenVolumeMesh::CellPropertyT <Eigen::Quaterniond> quaternion_prop =
-          tetmesh.template request_cell_property<Eigen::Quaterniond>("FrameFieldQuaternions");
+          tetmesh.request_cell_property<Eigen::Quaterniond>("FrameFieldQuaternions");
   tetmesh.set_persistent(quaternion_prop, true);
 
   auto num_c = tetmesh.n_cells();
@@ -997,11 +984,10 @@ void load_cell_quaternions(const Args &_args, MeshT &tetmesh)
   fin.close();
 }
 
-template<class MeshT>
-void save_cell_quaternions(const std::string &_filename, MeshT &_mesh)
+void save_cell_quaternions(const std::string &_filename, TetMesh &_mesh)
 {
   std::ofstream f_write(_filename);
-  auto quaternion_prop = _mesh.template request_cell_property<Eigen::Quaterniond>("FrameFieldQuaternions");
+  auto quaternion_prop = _mesh.request_cell_property<Eigen::Quaterniond>("FrameFieldQuaternions");
 
   for (const auto ch: _mesh.cells())
   {
@@ -1015,8 +1001,7 @@ void save_cell_quaternions(const std::string &_filename, MeshT &_mesh)
   f_write.close();
 }
 
-template<typename MeshT>
-void write_ovmb_file(const std::string &filename, MeshT &mesh)
+void write_ovmb_file(const std::string &filename, TetMesh &mesh)
 {
   //ovmb
   OVM::IO::WriteOptions wo;
@@ -1030,8 +1015,7 @@ void write_ovmb_file(const std::string &filename, MeshT &mesh)
   off.close();
 }
 
-template<typename MeshT>
-void read_ovmb_file(const std::string &filename, MeshT &mesh)
+void read_ovmb_file(const std::string &filename, TetMesh &mesh)
 {
   OVM::IO::ReadOptions ro;
   OVM::IO::PropertyCodecs propCodecs = OVM::IO::g_default_property_codecs;
