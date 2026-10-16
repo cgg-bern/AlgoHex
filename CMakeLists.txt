@@ -26,21 +26,13 @@ project(AlgoHex
         VERSION 0.0.1
         LANGUAGES C CXX
         )
-set(CMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY ON)
-option(BUILD_SHARED_LIBS "Build shared library (*.dll, *.so, *.dylib) instead of static library (*.a, *.lib)" ON)
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-    set(ALGOHEX_IS_ROOT TRUE)
+if (PROJECT_IS_TOP_LEVEL)
     set(ALGOHEX_TARGET_PREFIX "")
-else ()
-    set(ALGOHEX_IS_ROOT FALSE)
-    set(ALGOHEX_TARGET_PREFIX "AlgoHex_")
-endif ()
 
-
-if (ALGOHEX_IS_ROOT)
+    set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+    set(CMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY ON)
     if (WIN32)
         set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/Build")
     else ()
@@ -49,6 +41,9 @@ if (ALGOHEX_IS_ROOT)
 
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/Build/lib")
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/Build/lib")
+
+    option(BUILD_SHARED_LIBS "Build shared library (*.dll, *.so, *.dylib) instead of static library (*.a, *.lib)" ON)
+
     option(STL_DEBUG "Enable STL debug checks. Warning: This must be consistent across the whole build! Not compatible with the libc++ shipped with Apple XCode as of 2019." OFF)
     if (STL_DEBUG)
         # We do not know which STL will be used, defining both is the easist way.
@@ -64,6 +59,8 @@ if (ALGOHEX_IS_ROOT)
     set(CMAKE_CXX_STANDARD ${ALGOHEX_CXX_STANDARD})
     set(CMAKE_CXX_STANDARD_REQUIRED YES)
     set(CMAKE_CXX_EXTENSIONS OFF)
+else()
+    set(ALGOHEX_TARGET_PREFIX "AlgoHex_")
 endif ()
 
 if (NOT CMAKE_BUILD_TYPE)
@@ -294,7 +291,7 @@ set_target_properties(AlgoHex PROPERTIES
         CXX_VISIBILITY_PRESET hidden
         )
 
-if (ALGOHEX_IS_ROOT)
+if (PROJECT_IS_TOP_LEVEL)
     set_target_properties(AlgoHex PROPERTIES
             LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
             RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
@@ -350,13 +347,13 @@ target_include_directories(AlgoHex
         #"${CMAKE_CURRENT_BINARY_DIR}/src"
         )
 
-option(ALGOHEX_BUILD_DEMO "Build AlgoHex demo commandline tool" ${ALGOHEX_IS_ROOT})
+option(ALGOHEX_BUILD_DEMO "Build AlgoHex demo commandline tools" ${PROJECT_IS_TOP_LEVEL})
 if (ALGOHEX_BUILD_DEMO)
     add_subdirectory(demo/HexMeshing)
     add_subdirectory(demo/LocalMeshabilityCheck)
 endif ()
 
-option(ALGOHEX_BUILD_TESTS "Build AlgoHex unit tests" ${ALGOHEX_IS_ROOT})
+option(ALGOHEX_BUILD_TESTS "Build AlgoHex unit tests" ${PROJECT_IS_TOP_LEVEL})
 if (ALGOHEX_BUILD_TESTS)
     enable_testing()
     add_subdirectory(tests)
