@@ -14,6 +14,7 @@
 #include "TypeDef.hh"
 #include "FieldConstraints.hh"
 #include <AlgoHex/Stopwatches.hh>
+#include <libTimekeeper/StopWatchPrinting.hh>
 
 #include <fstream>
 

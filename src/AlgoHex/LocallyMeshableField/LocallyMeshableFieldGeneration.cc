@@ -17,6 +17,7 @@
 #include <AlgoHex/LocallyMeshableField/LocalMeshabilityChecker.hh>
 #include <AlgoHex/MeshGeometry.hh>
 #include "../Stopwatches.hh"
+#include <libTimekeeper/StopWatchPrinting.hh>
 
 namespace AlgoHex
 {

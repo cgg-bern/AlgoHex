@@ -13,7 +13,7 @@
 #include <string>
 #include <AlgoHex/TypeDef.hh>
 #include <AlgoHex/Args.hh>
-#include <AlgoHex/Util/json.hh>
+#include <nlohmann/json.hpp>
 
 #include <Typedefs.hh>
 

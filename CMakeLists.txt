@@ -142,10 +142,6 @@ add_library(AlgoHex
         src/AlgoHex/LogDetElement3D.hh
         src/AlgoHex/LogDetElement3D.cc
 
-        src/AlgoHex/Util/StopWatch.hh
-        src/AlgoHex/Util/ScopedStopWatch.hh
-        src/AlgoHex/Util/ScopedStopWatch.cc
-
         src/AlgoHex/OpenNL/OpenNL_psm.c
         src/AlgoHex/OpenNL/OpenNL_psm.h
 
@@ -327,7 +323,8 @@ target_link_libraries(AlgoHex PUBLIC
         GMM::GMM
         QGP3D::QGP3D
         tinyad::tinyad
-        )
+        nlohmann_json::nlohmann_json
+        Timekeeper::libTimekeeper)
 
 
 configure_file(

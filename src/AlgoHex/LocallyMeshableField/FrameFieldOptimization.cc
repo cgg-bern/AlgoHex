@@ -14,7 +14,6 @@
 #include "CommonFuncs.hh"
 #include <AlgoHex/AxisAlignment.hh>
 #include "QuaternionsSmoothing.hh"
-#include <AlgoHex/Util/ScopedStopWatch.hh>
 #include <AlgoHex/Stopwatches.hh>
 
 

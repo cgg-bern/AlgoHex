@@ -29,6 +29,7 @@
 #include <CoMISo/NSolver/TruncatedNewtonPCG.hh>
 #include <CoMISo/NSolver/TrustregionNewtonPCG.hh>
 #include <CoMISo/NSolver/ConstraintTools.hh>
+#include <AlgoHex/Stopwatches.hh>
 
 #include <Eigen/Geometry>
 

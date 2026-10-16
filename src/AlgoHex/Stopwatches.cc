@@ -50,6 +50,7 @@ HSW frame_field_int_opt{"FrameField Integrability Optimization", total};
 HSW frame_field_int_dual_opt{"FrameField Dual Integrability Optimization", total};
 
 HSW parameterization{"Parameterization", total};
+HSW stiffening{"Parameterization", parameterization};
 
 HSW hex_extraction{"Hexmesh extraction", total};
 } // namespace AlgoHex::sw

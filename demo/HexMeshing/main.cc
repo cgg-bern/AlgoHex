@@ -7,6 +7,7 @@
 \*===========================================================================*/
 #include <CoMISo/Config/config.hh>
 #include <CLI/CLI.hpp>
+#include <libTimekeeper/StopWatchPrinting.hh>
 #if COMISO_MPI_AVAILABLE == 1
 #  include <mpi.h>
 #endif

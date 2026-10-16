@@ -12,7 +12,7 @@
 #include <map>
 #include <vector>
 
-#include <AlgoHex/Util/json.hh>
+#include <nlohmann/json.hpp>
 
 #include <CoMISo/NSolver/LinearConstraint.hh>
 #include <CoMISo/NSolver/FiniteElementProblem.hh>

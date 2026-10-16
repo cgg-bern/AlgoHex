@@ -9,7 +9,7 @@
 #pragma once
 #include <AlgoHex/TypeDef.hh>
 
-#include <AlgoHex/Util/json.hh>
+#include <nlohmann/json.hpp>
 
 #include <AlgoHex/TransitionQuaternionEigen.hh>
 
