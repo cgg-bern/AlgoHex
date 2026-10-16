@@ -27,7 +27,7 @@
 
 #include <Eigen/Dense>
 
-#include <CoMISo/Base/Debug/DebConfig.hh>
+#include <Base/Debug/DebConfig.hh>
 #include <CoMISo/NSolver/NProblemInterface.hh>
 #include <CoMISo/NSolver/FiniteElementHessianProjection.hh>
 #include <CoMISo/NSolver/FiniteElementTinyAD.hh>

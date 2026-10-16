@@ -16,7 +16,7 @@
 #include "QuaternionsSmoothing.hh"
 #include "TetRemeshing.hh"
 
-#include <CoMISo/Base/Debug/DebConfig.hh>
+#include <Base/Debug/DebConfig.hh>
 
 namespace AlgoHex
 {

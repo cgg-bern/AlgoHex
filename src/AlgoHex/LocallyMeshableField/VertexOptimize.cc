@@ -14,7 +14,7 @@
 #include <AlgoHex/Geometry.hh>
 #include <AlgoHex/AxisAlignment.hh>
 #include <CoMISo/NSolver/NewtonSolver.hh>
-#include <CoMISo/Base/Debug/DebConfig.hh>
+#include <Base/Debug/DebConfig.hh>
 
 
 namespace AlgoHex

@@ -9,6 +9,7 @@
 
 #include <AlgoHex/TypeDef.hh>
 #include <AlgoHex/Config/Export.hh>
+#include <OpenVolumeMesh/Core/Properties/Defaults.hh>
 #include <ostream>
 
 namespace AlgoHex
@@ -117,3 +118,9 @@ ALGOHEX_EXPORT SHCoeffs Ey(const SHCoeffs &a);
 ALGOHEX_EXPORT SHCoeffs Ez(const SHCoeffs &a);
 
 } // namespace AlgoHex
+
+template<>
+struct OpenVolumeMesh::default_prop<AlgoHex::SHCoeffs> {
+    inline static const AlgoHex::SHCoeffs value = {{0., 0., 0., 0., 0., 0., 0., 0., 0.}}; // set appropriate value
+};
+

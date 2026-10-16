@@ -14,13 +14,13 @@
 #include <OpenVolumeMesh/Core/Handles.hh>
 #include <OpenVolumeMesh/Core/BaseEntities.hh>
 #include <OpenVolumeMesh/Core/Properties/PropertyPtr.hh>
-//#include <OpenVolumeMesh/Core/PropertyDefines.hh>
+#include <OpenVolumeMesh/Core/Properties/Defaults/Eigen.hh>
+#include <OpenVolumeMesh/Core/Properties/Defaults/common.hh>
 #include <OpenVolumeMesh/Geometry/VectorT.hh>
 #include <OpenVolumeMesh/Mesh/TetrahedralGeometryKernel.hh>
 #include <OpenVolumeMesh/Core/GeometryKernel.hh>
 #include <OpenVolumeMesh/Mesh/HexahedralMeshTopologyKernel.hh>
 #include <OpenVolumeMesh/Attribs/StatusAttrib.hh>
-#include "OpenVolumeMesh/Attribs/InterfaceAttrib.hh"
 
 #include <Eigen/Geometry>
 #include <Eigen/Core>

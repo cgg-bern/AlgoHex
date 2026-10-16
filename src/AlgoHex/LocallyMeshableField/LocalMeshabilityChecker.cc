@@ -9,7 +9,7 @@
 
 #include <iomanip>
 
-#include <CoMISo/Base/Debug/DebConfig.hh>
+#include <Base/Debug/DebConfig.hh>
 
 namespace AlgoHex
 {

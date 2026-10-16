@@ -6,16 +6,15 @@
 #*  All contributors are stated in CREDITS.txt.                              *
 #\*===========================================================================*/
 
-cmake_minimum_required(VERSION 3.14)
-
-# AutoMOC/AutoUIC
-if (${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.17")
-    cmake_policy(SET CMP0100 NEW)
-endif ()
+cmake_minimum_required(VERSION 3.31)
 
 # honor $*_ROOT environment variables:
 if(POLICY CMP0074)
   cmake_policy(SET CMP0074 NEW)
+endif()
+
+if(POLICY CMP0097) # ExternalProject_Add() with GIT_SUBMODULES "" initializes no submodules.
+  cmake_policy(SET CMP0097 NEW)
 endif()
 
 
