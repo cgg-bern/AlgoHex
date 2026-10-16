@@ -6,12 +6,7 @@
 #*  All contributors are stated in CREDITS.txt.                              *
 #\*===========================================================================*/
 
-cmake_minimum_required(VERSION 3.14)
-
-# AutoMOC/AutoUIC
-if (${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.17")
-    cmake_policy(SET CMP0100 NEW)
-endif ()
+cmake_minimum_required(VERSION 3.21)
 
 # honor $*_ROOT environment variables:
 if(POLICY CMP0074)
@@ -31,16 +26,14 @@ option(BUILD_SHARED_LIBS "Build shared library (*.dll, *.so, *.dylib) instead of
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-    set(ALGOHEX_IS_ROOT TRUE)
+if (PROJECT_IS_TOP_LEVEL)
     set(ALGOHEX_TARGET_PREFIX "")
 else ()
-    set(ALGOHEX_IS_ROOT FALSE)
     set(ALGOHEX_TARGET_PREFIX "AlgoHex_")
 endif ()
 
 
-if (ALGOHEX_IS_ROOT)
+if (PROJECT_IS_TOP_LEVEL)
     if (WIN32)
         set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/Build")
     else ()
@@ -249,7 +242,7 @@ set_target_properties(AlgoHex PROPERTIES
         CXX_VISIBILITY_PRESET hidden
         )
 
-if (ALGOHEX_IS_ROOT)
+if (PROJECT_IS_TOP_LEVEL)
     set_target_properties(AlgoHex PROPERTIES
             LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
             RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
@@ -305,13 +298,13 @@ target_include_directories(AlgoHex
         #"${CMAKE_CURRENT_BINARY_DIR}/src"
         )
 
-option(ALGOHEX_BUILD_DEMO "Build AlgoHex demo commandline tool" ${ALGOHEX_IS_ROOT})
+option(ALGOHEX_BUILD_DEMO "Build AlgoHex demo commandline tools" ${PROJECT_IS_TOP_LEVEL})
 if (ALGOHEX_BUILD_DEMO)
     add_subdirectory(demo/HexMeshing)
     add_subdirectory(demo/LocalMeshabilityCheck)
 endif ()
 
-option(ALGOHEX_BUILD_TESTS "Build AlgoHex unit tests" ${ALGOHEX_IS_ROOT})
+option(ALGOHEX_BUILD_TESTS "Build AlgoHex unit tests" ${PROJECT_IS_TOP_LEVEL})
 if (ALGOHEX_BUILD_TESTS)
     enable_testing()
     add_subdirectory(tests)
