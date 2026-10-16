@@ -92,7 +92,7 @@ endif()
 if(NOT TARGET CoMISo::CoMISo)
     FetchContent_Declare(comiso
         GIT_REPOSITORY https://gitlab.vci.rwth-aachen.de:9000/CoMISo/CoMISo.git
-        GIT_TAG dd756589e733eb063fd2090f989c67e31a174610 # mastter 2026-10-14
+        GIT_TAG dd756589e733eb063fd2090f989c67e31a174610 # master 2026-10-14
         SOURCE_DIR "${EXTERNAL_DIR}/CoMISo"
         )
     set(COMISO_NO_INSTALL YES)
