@@ -29,7 +29,7 @@
 #include <CoMISo/NSolver/AugmentedLagrangianMethod.hh>
 #include <CoMISo/NSolver/ConstraintTools.hh>
 #include <CoMISo/Utils/Tools.hh>
-#include <AlgoHex/Util/StopWatch.hh>
+#include <AlgoHex/Stopwatches.hh>
 
 #include <Eigen/Geometry>
 

@@ -6,11 +6,16 @@
 #*  All contributors are stated in CREDITS.txt.                              *
 #\*===========================================================================*/
 
-cmake_minimum_required(VERSION 3.21)
+cmake_minimum_required(VERSION 3.31)
+
 
 # honor $*_ROOT environment variables:
 if(POLICY CMP0074)
   cmake_policy(SET CMP0074 NEW)
+endif()
+
+if(POLICY CMP0097) # ExternalProject_Add() with GIT_SUBMODULES "" initializes no submodules.
+  cmake_policy(SET CMP0097 NEW)
 endif()
 
 
@@ -118,10 +123,6 @@ add_library(AlgoHex
         src/AlgoHex/IntegrabilityElements3D.hh
         src/AlgoHex/LinearLeastSquaresElements.hh
         src/AlgoHex/LogDetElement3D.hh
-
-        src/AlgoHex/Util/StopWatch.hh
-        src/AlgoHex/Util/ScopedStopWatch.hh
-        src/AlgoHex/Util/ScopedStopWatch.cc
 
         src/AlgoHex/OpenNL/OpenNL_psm.c
         src/AlgoHex/OpenNL/OpenNL_psm.h
@@ -273,7 +274,8 @@ target_link_libraries(AlgoHex PUBLIC
         GMM::GMM
         QGP3D::QGP3D
         tinyad::tinyad
-        )
+        nlohmann_json::nlohmann_json
+        Timekeeper::libTimekeeper)
 
 
 configure_file(

@@ -14,7 +14,6 @@
 
 #include <AlgoHex/SphericalHarmonics/SHCoeffs.hh>
 #include <AlgoHex/SphericalHarmonics/SHProjectorRay.hh>
-#include <AlgoHex/Util/ScopedStopWatch.hh>
 
 
 //== FORWARDDECLARATIONS ======================================================

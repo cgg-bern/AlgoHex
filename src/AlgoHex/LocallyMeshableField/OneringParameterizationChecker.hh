@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <AlgoHex/Util/json.hh>
+#include <nlohmann/json.hpp>
 #include <AlgoHex/TypeDef.hh>
 #include <OpenVolumeMesh/FileManager/FileManager.hh>
 #include "DuplicateOneRingMeshT.hh"

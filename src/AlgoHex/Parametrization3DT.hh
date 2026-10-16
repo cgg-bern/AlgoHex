@@ -13,7 +13,7 @@
 #include <vector>
 #include <iostream>
 
-#include <AlgoHex/Util/json.hh>
+#include <nlohmann/json.hpp>
 
 #include <Eigen/Sparse>
 

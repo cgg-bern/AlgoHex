@@ -28,8 +28,7 @@
 #include <CoMISo/NSolver/ConstraintTools.hh>
 #include <CoMISo/NSolver/LinearConstraintConverter.hh>
 #include <CoMISo/Utils/Tools.hh>
-#include <AlgoHex/Util/StopWatch.hh>
-#include "Stopwatches.hh"
+#include <AlgoHex/Stopwatches.hh>
 
 #if COMISO_GUROBI_AVAILABLE
 #include <CoMISo/NSolver/GUROBISolver.hh>
@@ -554,43 +553,47 @@ optimize_integer_grid_map(const int _num_hex_cells, const double _anisotropy_alp
 
   // stiffening
 //  std::vector<PairUiV> discrete_constraints2;
-  StopWatch sw;
-  sw.start();
-  std::vector<double> best_found = fe_problem.x();
-  int n_best_found = mesh_.n_cells();
-  ALGOHEX_DEBUG_ONLY(std::cerr << "run stiffening with weight = " << stiffening_weight_ << " and #max iters = "
-                               << max_stiffening_iters_ << std::endl;)
-  for (unsigned int i = 0; i < max_stiffening_iters_; ++i)
-  {
-    if (opt_type_ == OPT_COMISO)
-      comiso.solve(&fe_problem, constraint_pointers, discrete_constraints, 0.0, false);
-    else if (opt_type_ == OPT_GUROBI)
-    {
-#if COMISO_GUROBI_AVAILABLE
-      gb.solve(&fe_problem, constraint_pointers, discrete_constraints, timelimit_);
-#else
-      std::cerr << "ERROR: Gurobi solver selected, but no Gurobi support compiled in." << std::endl;
-      return;
-#endif
-    }
 
-    int n_invalid = update_cell_weights(fe_problem.x());
-    if (n_invalid < n_best_found)
+  {
+      ScopedStopWatch _{sw::stiffening};
+
+
+    std::vector<double> best_found = fe_problem.x();
+    int n_best_found = mesh_.n_cells();
+    ALGOHEX_DEBUG_ONLY(std::cerr << "run stiffening with weight = " << stiffening_weight_ << " and #max iters = "
+                                << max_stiffening_iters_ << std::endl;)
+    for (unsigned int i = 0; i < max_stiffening_iters_; ++i)
     {
-      best_found = fe_problem.x();
-      n_best_found = n_invalid;
+        if (opt_type_ == OPT_COMISO)
+        comiso.solve(&fe_problem, constraint_pointers, discrete_constraints, 0.0, false);
+        else if (opt_type_ == OPT_GUROBI)
+        {
+#if COMISO_GUROBI_AVAILABLE
+        gb.solve(&fe_problem, constraint_pointers, discrete_constraints, timelimit_);
+#else
+        std::cerr << "ERROR: Gurobi solver selected, but no Gurobi support compiled in." << std::endl;
+        return;
+#endif
+        }
+
+        int n_invalid = update_cell_weights(fe_problem.x());
+        if (n_invalid < n_best_found)
+        {
+        best_found = fe_problem.x();
+        n_best_found = n_invalid;
+        }
+        ALGOHEX_DEBUG_ONLY(std::cerr << "stiffening iter " << i << " #invalid: " << n_invalid << std::endl;)
+        if (n_invalid == 0)
+        break;
+        else
+        setup_frame_objective_function(fe_ff, _anisotropy_alpha, sizing_scale_factor);
     }
-    ALGOHEX_DEBUG_ONLY(std::cerr << "stiffening iter " << i << " #invalid: " << n_invalid << std::endl;)
-    if (n_invalid == 0)
-      break;
-    else
-      setup_frame_objective_function(fe_ff, _anisotropy_alpha, sizing_scale_factor);
+    // restore best solution
+    fe_problem.x() = best_found;
+    ALGOHEX_DEBUG_ONLY(std::cerr << "best stiffening solution has: " << n_best_found << " degenerate or inverted cells"
+                                << std::endl;)
+    //ALGOHEX_DEBUG_ONLY(std::cerr << "time stiffening: " << sw.stop() / 1000.0 << "s" << std::endl;)
   }
-  // restore best solution
-  fe_problem.x() = best_found;
-  ALGOHEX_DEBUG_ONLY(std::cerr << "best stiffening solution has: " << n_best_found << " degenerate or inverted cells"
-                               << std::endl;)
-  ALGOHEX_DEBUG_ONLY(std::cerr << "time stiffening: " << sw.stop() / 1000.0 << "s" << std::endl;)
 
 
   // solve

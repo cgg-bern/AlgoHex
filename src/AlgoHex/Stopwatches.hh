@@ -7,14 +7,19 @@
 \*===========================================================================*/
 #pragma once
 
-#include <AlgoHex/Util/ScopedStopWatch.hh>
+#include <libTimekeeper/StopWatch.hh>
 
 #include <AlgoHex/Config/Export.hh>
+
+namespace AlgoHex {
+    using HierarchicalStopWatch = Timekeeper::HierarchicalStopWatch;
+    using ScopedStopWatch = Timekeeper::ScopedStopWatch;
+}
 
 namespace AlgoHex::sw
 {
 
-using HSW = ::AlgoHex::HierarchicalStopWatch;
+using HSW = ::Timekeeper::HierarchicalStopWatch;
 
 extern ALGOHEX_EXPORT HSW total;
 
@@ -52,6 +57,7 @@ extern ALGOHEX_EXPORT HSW frame_field_int_opt;
 extern ALGOHEX_EXPORT HSW frame_field_int_dual_opt;
 
 extern ALGOHEX_EXPORT HSW parameterization;
+extern ALGOHEX_EXPORT HSW stiffening;
 
 extern ALGOHEX_EXPORT HSW hex_extraction;
 

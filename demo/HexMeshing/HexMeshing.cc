@@ -18,9 +18,11 @@
 #include <OpenVolumeMesh/IO/ReadOptions.hh>
 #include <OpenVolumeMesh/IO/ovmb_read.hh>
 
-#include <AlgoHex/Util/json.hh>
+#include <nlohmann/json.hpp>
 
 #include <AlgoHex/Stopwatches.hh>
+#include <libTimekeeper/StopWatchPrinting.hh>
+#include <libTimekeeper/json.hh>
 
 #include <HexHex/HexHex.hh>
 #include <HexHex/Utils/FileAccessor.hh>
@@ -82,18 +84,19 @@ void hexMeshing(Args &args)
 
     // save timings in json file
     sw::total.watch().stop();
-    std::cout << sw::total;
 
-    json_data["time_total"] = sw::total.watch().elapsed_ms();
-    json_data["time_frame_field_opt"] = sw::field_opt.watch().elapsed_ms();
-    json_data["time_singularity_opt"] = sw::lhfg_total.watch().elapsed_ms();
-    json_data["time_frame_field_integrability_opt"] = sw::frame_field_int_opt.watch().elapsed_ms();
-    json_data["time_parameterization"] = sw::parameterization.watch().elapsed_ms();
-    json_data["time_hexex"] = sw::hex_extraction.watch().elapsed_ms();
+    json_data["time"] = Timekeeper::HierarchicalStopWatchResult{sw::total};
+    json_data["time_total"] = sw::total.watch().elapsed();
+    json_data["time_frame_field_opt"] = sw::field_opt.watch().elapsed();
+    json_data["time_singularity_opt"] = sw::lhfg_total.watch().elapsed();
+    json_data["time_frame_field_integrability_opt"] = sw::frame_field_int_opt.watch().elapsed();
+    json_data["time_parameterization"] = sw::parameterization.watch().elapsed();
+    json_data["time_hexex"] = sw::hex_extraction.watch().elapsed();
 
     std::cerr << "save json data file into " << args.jsonOutFileName << std::endl;
     store_json_file(args, json_data);
   }
+  std::cout << sw::total;
 }
 
 template<class MeshT>
