@@ -148,4 +148,13 @@ ALGOHEX_EXPORT SHCoeffs Ey(const SHCoeffs &a);
 
 ALGOHEX_EXPORT SHCoeffs Ez(const SHCoeffs &a);
 
+
+
 } // namespace AlgoHex
+
+template<>
+struct OpenVolumeMesh::default_prop<AlgoHex::SHCoeffs> {
+    inline static const AlgoHex::SHCoeffs value = AlgoHex::SHCoeffs{
+        std::array<double, 9>{0., 0., 0., 0., 0., 0., 0., 0., 0.}};
+};
+
