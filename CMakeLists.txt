@@ -356,6 +356,7 @@ if (ALGOHEX_BUILD_DEMO)
 endif ()
 
 option(ALGOHEX_BUILD_TESTS "Build AlgoHex unit tests" ${PROJECT_IS_TOP_LEVEL})
+option(ALGOHEX_BUILD_EXPENSIVE_TESTS "Build AlgoHex unit tests" ${PROJECT_IS_TOP_LEVEL})
 if (ALGOHEX_BUILD_TESTS)
     enable_testing()
     add_subdirectory(tests)

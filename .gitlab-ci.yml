@@ -1,0 +1,49 @@
+stages:
+    - build
+
+variables:
+  GIT_STRATEGY: fetch
+  GIT_DEPTH: 10
+  GIT_SUBMODULE_STRATEGY: recursive
+  GIT_SUBMODULE_FORCE_HTTPS: "true" # rewrite git:// submodule urls to https
+  GIT_SUBMODULE_UPDATE_FLAGS: --jobs 16
+
+include:
+- component: $CI_SERVER_FQDN/CGG-public/ci-components/cmake-cxx/debian@v0.4.0
+  inputs:
+    job_name: "debian-trixie-debug"
+    stage: build
+    CMAKE_BUILD_TYPE: Debug
+    cmake_options: "-DALGOHEX_BUILD_EXPENSIVE_TESTS=Off"
+    enable_asan: true
+    enable_ctest: true
+    enable_coverage: true
+    image_variant: algohex
+
+- component: $CI_SERVER_FQDN/CGG-public/ci-components/cmake-cxx/debian@v0.4.0
+  inputs:
+    job_name: "debian-trixie-release"
+    stage: build
+    CMAKE_BUILD_TYPE: Release
+    enable_ctest: true
+    image_variant: algohex
+
+- component: $CI_SERVER_FQDN/CGG-public/ci-components/cmake-cxx/macos@v0.4.0
+  inputs:
+    job_name: "macos-golden-gate"
+    stage: build
+    macos_release: golden-gate
+    CMAKE_BUILD_TYPE: RelWithDebInfo
+    enable_ctest: true
+    # before_script:
+    #   - brew install gmp ipopt suite-sparse clp
+
+# Windows lacks dependencies.
+##- component: $CI_SERVER_FQDN/CGG-public/ci-components/cmake-cxx/windows@v0.4.0
+#  inputs:
+#    job_name: "windows-vs2022-ninja-release"
+#    stage: build
+#    msvc_release: vs2022
+#    CMAKE_GENERATOR: Ninja
+#    CMAKE_BUILD_TYPE: Release
+#    enable_ctest: true
