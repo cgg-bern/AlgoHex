@@ -31,17 +31,17 @@ SHCoeffs SHCoeffs::from_quaternion(const Quaternion &q)
 
 void SHCoeffs::rotate_x(double radians)
 {
-  *this = RB_y_pi2
+  *this = RB_y_pi2()
           * (RB_z(radians)
-             * (RB_y_minus_pi2
+             * (RB_y_minus_pi2()
                 * vec()));
 }
 
 void SHCoeffs::rotate_y(double radians)
 {
-  *this = RB_x_minus_pi2
+  *this = RB_x_minus_pi2()
           * rot_z(radians,
-                  (RB_x_pi2 * vec()));
+                  (RB_x_pi2() * vec()));
 }
 
 void SHCoeffs::rotate_z(double radians)

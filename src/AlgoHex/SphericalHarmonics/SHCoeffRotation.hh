@@ -14,10 +14,10 @@ namespace AlgoHex
 namespace SHRotation
 {
 
-extern const Mat9d RB_x_pi2;
-extern const Mat9d RB_x_minus_pi2;
-extern const Mat9d RB_y_pi2;
-extern const Mat9d RB_y_minus_pi2;
+const Mat9d &RB_x_pi2();
+const Mat9d &RB_x_minus_pi2();
+const Mat9d &RB_y_pi2();
+const Mat9d &RB_y_minus_pi2();
 
 Mat9d RB_z(double radians);
 

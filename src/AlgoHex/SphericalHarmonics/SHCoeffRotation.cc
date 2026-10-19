@@ -15,7 +15,9 @@ namespace AlgoHex
 namespace SHRotation
 {
 
-const Mat9d RB_x_pi2 = (Mat9d() <<
+const Mat9d &RB_x_pi2()
+{
+  static const Mat9d m = (Mat9d() <<
                                 0, 0, 0, 0, 0, sqrt(14.) / 4., 0, -sqrt(2.) / 4., 0,
         0, -3. / 4., 0, sqrt(7.) / 4., 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, sqrt(2.) / 4., 0, sqrt(14.) / 4., 0,
@@ -24,11 +26,28 @@ const Mat9d RB_x_pi2 = (Mat9d() <<
         -sqrt(14.) / 4., 0, -sqrt(2.) / 4., 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, sqrt(5.) / 4., 0, 1. / 2., 0, -sqrt(7.) / 4.,
         sqrt(2.) / 4., 0, -sqrt(14.) / 4., 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, sqrt(35.) / 8., 0, -sqrt(7.) / 4., 0, 1. / 8.).finished();
+        0, 0, 0, 0, sqrt(35.) / 8., 0, -sqrt(7.) / 4., 0, 1. / 8.)
+                                 .finished();
+  return m;
+}
 
-const Mat9d RB_x_minus_pi2 = RB_x_pi2.transpose();
-const Mat9d RB_y_pi2 = RB_x_minus_pi2 * (RB_z(M_PI / 2) * RB_x_pi2);
-const Mat9d RB_y_minus_pi2 = RB_y_pi2.transpose();
+const Mat9d &RB_x_minus_pi2()
+{
+  static const Mat9d m = RB_x_pi2().transpose();
+  return m;
+}
+
+const Mat9d &RB_y_pi2()
+{
+  static const Mat9d m = RB_x_minus_pi2() * (RB_z(M_PI / 2) * RB_x_pi2());
+  return m;
+}
+
+const Mat9d &RB_y_minus_pi2()
+{
+  static const Mat9d m = RB_y_pi2().transpose();
+  return m;
+}
 
 template<typename Scalar>
 /// Efficiently compute sin and cos of (gamma, 2*gamma, 3*gamma, 4*gamma)
@@ -61,12 +80,12 @@ Mat9d RB_z(double radians)
 
 Mat9d RB_x(double radians)
 {
-  return RB_y_pi2 * RB_z(radians) * RB_y_minus_pi2;
+  return RB_y_pi2() * RB_z(radians) * RB_y_minus_pi2();
 }
 
 Mat9d RB_y(double radians)
 {
-  return RB_x_minus_pi2 * RB_z(radians) * RB_x_pi2;
+  return RB_x_minus_pi2() * RB_z(radians) * RB_x_pi2();
 }
 
 Mat9d RB_from_quat(const Quaternion &q)
