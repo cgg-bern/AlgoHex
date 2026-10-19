@@ -59,13 +59,19 @@ if (PROJECT_IS_TOP_LEVEL)
     set(CMAKE_CXX_STANDARD ${ALGOHEX_CXX_STANDARD})
     set(CMAKE_CXX_STANDARD_REQUIRED YES)
     set(CMAKE_CXX_EXTENSIONS OFF)
+
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE)
+    set(ALGOHEX_IPO OFF CACHE BOOL "Use interprocedural optimization in non-Release builds (slower compile)")
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_DEBUG ${ALGOHEX_IPO})
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELWITHDEBINFO ${ALGOHEX_IPO})
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_MINSIZEREL ${ALGOHEX_IPO})
 else()
     set(ALGOHEX_TARGET_PREFIX "AlgoHex_")
 endif ()
 
 if (NOT CMAKE_BUILD_TYPE)
-    message(STATUS "No build type selected, default to RelWithDebInfo")
-    set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
+    message(STATUS "No build type selected, default to Release")
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif()
 
 
