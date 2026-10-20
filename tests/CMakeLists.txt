@@ -1,20 +1,17 @@
 set(TARGET_NAME "${ALGOHEX_TARGET_PREFIX}unittests")
 
 enable_testing()
-find_package(GTest QUIET)
 
 if (NOT TARGET GTest::gtest)
     message(STATUS "AlgoHex tests enabled, but GTest not found - downloading using FetchContent.")
     include(FetchContent)
 
     set(FETCHCONTENT_QUIET OFF)
-    set(EXTERNAL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../external")
 
     FetchContent_Declare(googletest
-        GIT_REPOSITORY https://github.com/google/googletest.git
-        GIT_TAG        v1.18.x
+        URL https://github.com/google/googletest/releases/download/v1.18.0/googletest-1.18.0.tar.gz
+        URL_HASH SHA256=6e3191c1455468b3fc35a417fb565c1c5071aee1b7e7f85e30cf48a98d37d8b5
         EXCLUDE_FROM_ALL # do not install
-        SOURCE_DIR "${EXTERNAL_DIR}/googletest"
     )
     if(WIN32)
         # avoid linking errors, cf https://stackoverflow.com/questions/12540970/how-to-make-gtest-build-mdd-instead-of-mtd-by-default-using-cmake
