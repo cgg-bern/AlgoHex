@@ -135,7 +135,7 @@ endif()
 if(NOT TARGET TS3D::TS3D)
     FetchContent_Declare(ts3d
         GIT_REPOSITORY https://github.com/cgg-bern/TrulySeamless3D
-        GIT_TAG        e0e84878328cacf423f3fb5054a5d1f1feee4db9 # cgg branch on 2026-10-16
+        GIT_TAG        9f7e1f8a61ae83b1e24c3a8a2c030b50700d0dae # cgg branch on 2026-10-20
         SOURCE_DIR "${EXTERNAL_DIR}/TrulySeamless3D"
         GIT_SUBMODULES ""
         GIT_SUBMODULES_RECURSE NO
@@ -147,7 +147,7 @@ endif()
 if(NOT TARGET MC3D::MC3D)
     FetchContent_Declare(mc3d
         GIT_REPOSITORY https://github.com/cgg-bern/MC3D
-        GIT_TAG        01ccc86f5a4e60059e758aef3dcd0323de74da7b # cgg branch on 2026-10-16
+        GIT_TAG        bfeb409e66679a5cb6c7617fd463d971f0a14831 # cgg branch on 2026-10-20
         SOURCE_DIR "${EXTERNAL_DIR}/MC3D"
         GIT_SUBMODULES ""
         GIT_SUBMODULES_RECURSE NO
@@ -171,7 +171,7 @@ endif()
 if (NOT TARGET nlohmann_json::nlohmann_json)
     set(JSON_Install TRUE  CACHE BOOL "" FORCE)
     FetchContent_Declare(nlohmann_json
-        #GIT_REPOSITORY  https://github.com/nlohmann/json.git 
+        #GIT_REPOSITORY  https://github.com/nlohmann/json.git
         #GIT_TAG v3.12.0
         URL https://github.com/nlohmann/json/releases/download/v3.12.0/json.tar.xz
         URL_HASH SHA256=42f6e95cad6ec532fd372391373363b62a14af6d771056dbfc86160e6dfff7aa
@@ -180,4 +180,3 @@ if (NOT TARGET nlohmann_json::nlohmann_json)
     FetchContent_MakeAvailable(nlohmann_json)
     message("Downloaded nlohmann-json to ${nlohmann_json_SOURCE_DIR}")
 endif()
-
