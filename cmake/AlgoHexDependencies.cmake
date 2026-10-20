@@ -147,6 +147,9 @@ endif()
 # important: glog before MC3D
 if (NOT TARGET glog::glog)
     set(WITH_GTEST FALSE CACHE BOOL "" FORCE)
+    set(WITH_GFLAGS FALSE CACHE BOOL "" FORCE)
+    set(BUILD_EXAMPLES FALSE CACHE BOOL "" FORCE)
+    set(BUILD_TESTING FALSE CACHE BOOL "" FORCE)
     FetchContent_Declare(glog
         GIT_REPOSITORY https://github.com/google/glog.git
         GIT_TAG        53d58e4531c7c90f71ddab503d915e027432447a # newest commit (archived repo)
