@@ -146,9 +146,10 @@ endif()
 
 # important: glog before MC3D
 if (NOT TARGET glog::glog)
+    set(WITH_GTEST FALSE CACHE BOOL "" FORCE)
     FetchContent_Declare(glog
         GIT_REPOSITORY https://github.com/google/glog.git
-        GIT_TAG        53d58e4531c7c90f71ddab503d915e027432447a # cgg branch on 2026-10-20
+        GIT_TAG        53d58e4531c7c90f71ddab503d915e027432447a # newest commit (archived repo)
         SOURCE_DIR "${EXTERNAL_DIR}/glog"
         GIT_SUBMODULES ""
         GIT_SUBMODULES_RECURSE NO
@@ -174,7 +175,7 @@ if(NOT TARGET QGP3D::QGP3D)
     set(QGP3D_SUBMODULES_MANUAL TRUE  CACHE BOOL "" FORCE)
     FetchContent_Declare(qgp3d
         GIT_REPOSITORY https://github.com/cgg-bern/QGP3D
-        GIT_TAG        2cae86efaea802a50a5749003e958fb56cfc9f55 # cgg branch on 2026-10-16
+        GIT_TAG        2cae86efaea802a50a5749003e958fb56cfc9f55 # cgg branch on 2026-10-20
         SOURCE_DIR "${EXTERNAL_DIR}/QGP3D"
         GIT_SUBMODULES ""
         GIT_SUBMODULES_RECURSE NO
