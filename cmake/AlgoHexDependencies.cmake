@@ -133,6 +133,7 @@ endif()
 
 # important: TS3D before MC3D
 if(NOT TARGET TS3D::TS3D)
+    set(TS3D_SUBMODULES_MANUAL TRUE  CACHE BOOL "" FORCE)
     FetchContent_Declare(ts3d
         GIT_REPOSITORY https://github.com/cgg-bern/TrulySeamless3D
         GIT_TAG        9f7e1f8a61ae83b1e24c3a8a2c030b50700d0dae # cgg branch on 2026-10-20
@@ -143,11 +144,24 @@ if(NOT TARGET TS3D::TS3D)
     FetchContent_MakeAvailable(ts3d)
 endif()
 
+# important: glog before MC3D
+if (NOT TARGET glog::glog)
+    FetchContent_Declare(glog
+        GIT_REPOSITORY https://github.com/google/glog.git
+        GIT_TAG        53d58e4531c7c90f71ddab503d915e027432447a # cgg branch on 2026-10-20
+        SOURCE_DIR "${EXTERNAL_DIR}/glog"
+        GIT_SUBMODULES ""
+        GIT_SUBMODULES_RECURSE NO
+        )
+    FetchContent_MakeAvailable(glog)
+endif()
+
 # important: MC3D before QGP3D
 if(NOT TARGET MC3D::MC3D)
+    set(MC3D_SUBMODULES_MANUAL TRUE  CACHE BOOL "" FORCE)
     FetchContent_Declare(mc3d
         GIT_REPOSITORY https://github.com/cgg-bern/MC3D
-        GIT_TAG        bfeb409e66679a5cb6c7617fd463d971f0a14831 # cgg branch on 2026-10-20
+        GIT_TAG        3c652f44882907c07db40b2e56b19450e7f60abe # cgg branch on 2026-10-20
         SOURCE_DIR "${EXTERNAL_DIR}/MC3D"
         GIT_SUBMODULES ""
         GIT_SUBMODULES_RECURSE NO
@@ -157,9 +171,10 @@ endif()
 
 
 if(NOT TARGET QGP3D::QGP3D)
+    set(QGP3D_SUBMODULES_MANUAL TRUE  CACHE BOOL "" FORCE)
     FetchContent_Declare(qgp3d
         GIT_REPOSITORY https://github.com/cgg-bern/QGP3D
-        GIT_TAG        deea41c2cc35550dd4b88d64979d44009cefdad5 # cgg branch on 2026-10-16
+        GIT_TAG        2cae86efaea802a50a5749003e958fb56cfc9f55 # cgg branch on 2026-10-16
         SOURCE_DIR "${EXTERNAL_DIR}/QGP3D"
         GIT_SUBMODULES ""
         GIT_SUBMODULES_RECURSE NO
