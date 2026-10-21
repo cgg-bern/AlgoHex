@@ -24,7 +24,7 @@ endif()
 if(NOT TARGET OpenVolumeMesh::OpenVolumeMesh)
     FetchContent_Declare(openvolumemesh
         GIT_REPOSITORY  https://www.graphics.rwth-aachen.de:9000/OpenVolumeMesh/OpenVolumeMesh.git
-        GIT_TAG 44612d167168f43f63a362ad3f432c94cffd4a00 # master on 2026-10-16
+        GIT_TAG b70df3adab139d37fbd118d3287577d541b3590a # master on 2026-10-21
         SOURCE_DIR "${EXTERNAL_DIR}/OpenVolumeMesh"
         )
     FetchContent_MakeAvailable(openvolumemesh)
@@ -136,7 +136,7 @@ if(NOT TARGET TS3D::TS3D)
     set(TS3D_SUBMODULES_MANUAL TRUE  CACHE BOOL "" FORCE)
     FetchContent_Declare(ts3d
         GIT_REPOSITORY https://github.com/cgg-bern/TrulySeamless3D
-        GIT_TAG        9f7e1f8a61ae83b1e24c3a8a2c030b50700d0dae # cgg branch on 2026-10-20
+        GIT_TAG        218a4b1ff858eff2ce78e7a0d4b7f8e4f00cc720 # cgg branch on 2026-10-21
         SOURCE_DIR "${EXTERNAL_DIR}/TrulySeamless3D"
         GIT_SUBMODULES ""
         GIT_SUBMODULES_RECURSE NO
@@ -165,7 +165,7 @@ if(NOT TARGET MC3D::MC3D)
     set(MC3D_SUBMODULES_MANUAL TRUE  CACHE BOOL "" FORCE)
     FetchContent_Declare(mc3d
         GIT_REPOSITORY https://github.com/cgg-bern/MC3D
-        GIT_TAG        3c652f44882907c07db40b2e56b19450e7f60abe # cgg branch on 2026-10-20
+        GIT_TAG        29c321fad52aec2371f035f51ccd2d1e9f0f2c64 # cgg branch on 2026-10-21
         SOURCE_DIR "${EXTERNAL_DIR}/MC3D"
         GIT_SUBMODULES ""
         GIT_SUBMODULES_RECURSE NO
@@ -178,7 +178,7 @@ if(NOT TARGET QGP3D::QGP3D)
     set(QGP3D_SUBMODULES_MANUAL TRUE  CACHE BOOL "" FORCE)
     FetchContent_Declare(qgp3d
         GIT_REPOSITORY https://github.com/cgg-bern/QGP3D
-        GIT_TAG        2cae86efaea802a50a5749003e958fb56cfc9f55 # cgg branch on 2026-10-20
+        GIT_TAG        1f15db94be38fbceeea9ad0fe29386916a321666 # cgg branch on 2026-10-21
         SOURCE_DIR "${EXTERNAL_DIR}/QGP3D"
         GIT_SUBMODULES ""
         GIT_SUBMODULES_RECURSE NO
