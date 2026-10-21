@@ -9,7 +9,7 @@ variables:
   GIT_SUBMODULE_UPDATE_FLAGS: --jobs 16
 
 include:
-- component: $CI_SERVER_FQDN/CGG-public/ci-components/cmake-cxx/debian@v0.4.0
+- component: $CI_SERVER_FQDN/CGG-public/ci-components/cmake-cxx/debian@v0.6.0
   inputs:
     job_name: "debian-trixie-debug"
     stage: build
@@ -17,18 +17,28 @@ include:
     cmake_options: "-DALGOHEX_BUILD_EXPENSIVE_TESTS=Off"
     enable_asan: true
     enable_ctest: true
-    enable_coverage: true
+    #enable_coverage: true # this is rather slow for -- currently - no benefit
     image_variant: algohex
 
-- component: $CI_SERVER_FQDN/CGG-public/ci-components/cmake-cxx/debian@v0.4.0
+- component: $CI_SERVER_FQDN/CGG-public/ci-components/cmake-cxx/debian@v0.6.0
   inputs:
-    job_name: "debian-trixie-release"
+    job_name: "debian-trixie-release-asan"
     stage: build
     CMAKE_BUILD_TYPE: Release
+    enable_asan: true
     enable_ctest: true
     image_variant: algohex
 
-- component: $CI_SERVER_FQDN/CGG-public/ci-components/cmake-cxx/macos@v0.4.0
+- component: $CI_SERVER_FQDN/CGG-public/ci-components/cmake-cxx/debian@v0.6.0
+  inputs:
+    job_name: "debian-trixie-release-shared"
+    stage: build
+    CMAKE_BUILD_TYPE: Release
+    BUILD_SHARED_LIBS: ON
+    enable_ctest: true
+    image_variant: algohex
+
+- component: $CI_SERVER_FQDN/CGG-public/ci-components/cmake-cxx/macos@v0.6.0
   inputs:
     job_name: "macos-golden-gate"
     stage: build
@@ -39,7 +49,7 @@ include:
     #   - brew install gmp ipopt suite-sparse clp
 
 # Windows lacks dependencies.
-##- component: $CI_SERVER_FQDN/CGG-public/ci-components/cmake-cxx/windows@v0.4.0
+##- component: $CI_SERVER_FQDN/CGG-public/ci-components/cmake-cxx/windows@v0.6.0
 #  inputs:
 #    job_name: "windows-vs2022-ninja-release"
 #    stage: build
