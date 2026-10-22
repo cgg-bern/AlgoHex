@@ -182,7 +182,7 @@ if(NOT TARGET QGP3D::QGP3D)
     FetchContent_Declare(qgp3d
         GIT_REPOSITORY https://github.com/HendrikBrueckler/QGP3D
         #GIT_REPOSITORY https://github.com/cgg-bern/QGP3D
-        GIT_TAG        1f15db94be38fbceeea9ad0fe29386916a321666 # main branch on 2026-10-21
+        GIT_TAG        a3f976c754f20a5e0b7de0b34c474a1684920535 # main branch on 2026-10-21
         SOURCE_DIR "${EXTERNAL_DIR}/QGP3D"
         GIT_SUBMODULES ""
         GIT_SUBMODULES_RECURSE NO
